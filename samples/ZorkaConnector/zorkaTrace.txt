@@ -1,0 +1,96 @@
+SQL:
+{
+	JK_CORR_SID=097f2620-2538-4031-96e7-c482b56c1a1d,
+	JK_CORR_RID=b68873c8-ce15-49b9-babe-499468ac6150,
+	MARKER=SQL_TNT4J_STREAMS,
+	METHOD=executeQuery,
+	CALLS=1,
+	CLASS=com.mysql.jdbc.PreparedStatement,
+	CLOCK=1453468485149,
+	METHOD_TIME=4090213,
+	SIGNATURE=()Ljava/sql/ResultSet;,
+	DB=sh,
+	SQL=SELECT ID, NAME, VALUE FROM KEYVALUEENTITY
+}
+
+SQL-ERROR:
+{
+    JK_CORR_SID=2a4af5a3-fb4e-41b7-86b9-cb3d3c8ceed3,
+    JK_CORR_RID=b68873c8-ce15-49b9-babe-499445044045,
+    MARKER=SQL_TNT4J_STREAMS,
+    EXCEPTION=com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'BOOKOASD' in 'field list',
+    METHOD=executeQuery,
+    CALLS=1,
+    CLASS=com.mysql.jdbc.PreparedStatement,
+    CLOCK=1454068726650,
+    METHOD_TIME=5125882,
+    SIGNATURE=()Ljava/sql/ResultSet;,
+    DB=sh,
+    SQL=SELECT BOOKOASD
+}
+
+LDAP:
+{
+	FILTER=(objectclass=person),
+	JK_CORR_SID=097f2620-2538-4031-96e7-c482b56c1a1d,
+	JK_CORR_RID=b68873c8-ce15-49b9-babe-499468ac6150,
+	MARKER=LDAP_TNT4J_STREAMS,
+	METHOD=search,
+	CALLS=68,
+	CLASS=javax.naming.directory.InitialDirContext,
+	CLOCK=1453469672015,
+	METHOD_TIME=3909097,
+	SIGNATURE=(Ljava/lang/String;Ljava/lang/String;Ljavax/naming/directory/SearchControls;)Ljavax/naming/NamingEnumeration;,
+	NAME=DC=dx,
+	DC=testng,
+	DC=slabs,
+	DC=com
+}
+
+HTTP:
+{
+	HdrIn__host=localhost:8080,
+	JK_CORR_SID=097f2620-2538-4031-96e7-c482b56c1a1d,
+	JK_CORR_RID=b68873c8-ce15-49b9-babe-499468ac6150,
+	HdrIn__connection=keep-alive,
+	CLASS=org.apache.catalina.core.StandardEngineValve,
+	URI=/SimpleJSF/faces/Index.xhtml,
+	SIGNATURE=(Lorg/apache/catalina/connector/Request;Lorg/apache/catalina/connector/Response;)V,
+	STATUS=200,
+	HdrIn__accept=text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,
+	HdrIn__accept-language=en-US,en;q=0.8,lt;q=0.6,
+	HdrIn__cache-control=max-age=0,
+	FILTER=(objectclass=person),
+	MARKER=HTTP,
+	SQL=SELECT ID, NAME, VALUE FROM KEYVALUEENTITY,
+	NAME=DC=dx,DC=testng,DC=slabs,DC=com,
+	HdrIn__cookie=JSESSIONID=5AB273C27216B384458B814504CFD6D6,
+	CookieIn__JSESSIONID=5AB273C27216B384458B814504CFD6D6,
+	HdrIn__user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36,
+	METHOD=invoke,
+	CALLS=11606,
+	HdrIn__upgrade-insecure-requests=1,
+	CLOCK=1453468485141,
+	METHOD_TIME=27198860,
+	HdrIn__accept-encoding=gzip, deflate, sdch,
+	DB=sh
+}
+
+JMS:
+{
+	TSTAMP=Thu Jan 01 02:00:00 EET 1970, 
+	JK_CORR_SID=fc240293-8c27-4684-8625-bd2787be2af3, 
+	JK_CORR_RID=d5821d36-06ca-4ff6-be16-5fac00332b7a, 
+	MARKER=JMS_TNT4J_STREAMS,
+	PRIORITY=0, 
+	TEXT=Zorka test, 
+	CLASS=org.apache.activemq.ActiveMQMessageProducerSupport, 
+	SIGNATURE=(Ljavax/jms/Message;)V, 
+	PERSIST=1, 
+	EXPIRATION=0, 
+	REDELIVERY=false, 
+	METHOD=send, 
+	CALLS=199, 
+	CLOCK=1453810356903, 
+	METHOD_TIME=2588456
+}

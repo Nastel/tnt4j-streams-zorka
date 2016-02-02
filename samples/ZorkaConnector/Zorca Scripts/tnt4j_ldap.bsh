@@ -1,0 +1,39 @@
+ /*
+ * Copyright 2014-2016 JKOOL, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+  
+zorka.require("tnt4j_base_tomcat.bsh", "ldap.bsh");
+  
+// This script gets TNT4J Correlation IDs
+  
+__tnt4j_ldap() {
+  
+    spy.add(spy.instrument("LDAP_TNT4J_STREAMS_TRACKER")
+        .onEnter(spy.fetchArg("NAME", 1), spy.fetchArg("FILTER", 2),
+            spy.tlGet("JK_CORR_SID", tnt4j._JK_CORR_SID),
+            spy.tlGet("JK_CORR_RID", tnt4j._JK_CORR_RID),
+            tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
+            tracer.attr("JK_CORR_SID", "JK_CORR_SID")
+        )
+        .include(
+            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "javax.naming.Name"),
+            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "javax.naming.directory.Attributes"),
+            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String", "javax.naming.directory.SearchControls")
+        ));
+
+    return this;
+}
+			
+tnt4j_ldap = __tnt4j_ldap();
