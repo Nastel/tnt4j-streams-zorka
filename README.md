@@ -51,10 +51,11 @@ and JavaDocs.
 
 This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico
 service as listener (client) depending on defined configuration. Default is `localhost:8640`.
+Most basic way to use sample is to send Http request to Zorka monitored Tomcat server.
 
 Sample files can be found in `samples\ZorkaConnector` directory.
 
-How to use and configure Zorka, see `samples\ZorkaConnector\readme.md`
+How to use and configure Zorka, see `samples\ZorkaConnector\readme.md`.
 
 Sample stream configuration:
 ```xml
@@ -219,6 +220,8 @@ Sample stream configuration:
 
     <stream name="FileStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
+        <!--<property name="Host" value="localhost"/>-->
+        <!--<property name="Port" value="8640"/>-->
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>
@@ -232,15 +235,43 @@ Sample stream configuration:
 Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`,
 `ZorkaWebService` and `ZorkaJMS` shall be used.
 
-`CharacterStream` starts server socket on port defined using `Port` property. `HaltIfNoParser` property indicates that
-stream should skip unparseable entries.
+`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property
+indicates that stream should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map`
+data structure and puts it to buffer queue to be processed by referenced parsers. Note that parsers uses attribute
+`tags` to map concrete parser with received trace over trace attribute `MARKER`.
 
-`JSONEnvelopeParser` transforms received JSON data package to Map with entries `MsgBody`, `sinkName`, `chanelName` and
-`headers`. `MsgBody` entry value is passed to stacked parser named `AccessLogParserCommon`.  Note that activity event
-will contain all fields processed by all stacked parsers. Custom fields values can be found as activity event properties.
+`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is
+`HTTP`, thus parser `tags` value should be same.
 
-Details on `AccessLogParserCommon` (or `ApacheAccessLogParser` in general) can be found in section
-'Apache Access log single file' and 'Parsers configuration # Apache access log parser'.
+`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is
+`SQL`.
+
+`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is
+`LDAP`.
+
+`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service
+ trace marker is `WS_TNT4J_STREAMS_TRACKER`.
+
+`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is
+`JMS_TNT4J_STREAMS_TRACKER`.
+
+Activity event mapped fields:
+
+* `EventType` we set static value `CALL`
+* `StartTime` is mapped from trace attribute named `CLOCK`. Zorka returns this field as UNIX timestamp.
+* `EventName` is mapped from trace attribute named `MARKER`.
+* `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
+* `Class` is mapped from trace attribute named `CLASS`. It represents class name of object trace was taken from.
+* `Method` is mapped from trace attribute named `METHOD`. It represents method name trace was taken from.
+* `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and
+`JK_CORR_SID` values are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION`
+value is retrieved from JMS message field `correlationId`.
+* `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
+then this field is filled with trace data as string.
+
+Additional fields can be mapped on used demand.
+
+Custom fields values defined in parser fields mapping can be found as activity event properties.
 
 NOTE: Stream stops only when critical runtime error/exception occurs or application gets terminated.
 

@@ -223,7 +223,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	}
 
 	private void processTrace(TraceRecord rec) {
-		processTraceRecursive(rec, rec.getChildren());
+		// processTraceRecursive(rec, rec.getChildren()); //NOTE: not required
 		final Map<String, Object> translatedTrace = translateSymbols(rec.getAttrs());
 		addDefaultTraceAttributes(translatedTrace, rec);
 		addInputToBuffer(translatedTrace);
