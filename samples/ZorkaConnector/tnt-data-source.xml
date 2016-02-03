@@ -63,6 +63,7 @@
             <field-map source="505" target="ERROR"/>
             <field-map source="511" target="ERROR"/>
         </field>
+        <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
 
         <field name="Tag" separator=",">
             <field-locator locator="HdrIn__cookie" locator-type="Label"/>
