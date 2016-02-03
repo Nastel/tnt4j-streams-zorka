@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tnt-data-source
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="..\..\..\config\tnt-data-source.xsd">
+        xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -145,6 +145,7 @@
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="TEXT" locator-type="Label"/>

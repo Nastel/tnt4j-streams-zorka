@@ -33,7 +33,7 @@ __javax_jms() {
         .onEnter(spy.fetchArg("MSG", 1),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
             tnt4j._attributeTntCorrIds(),
-            javax_jms._fetchAttrs, javax_jms._fetchText, javax_jms ._fetchMap, javax_jms._fetchProps)
+            javax_jms._fetchAttrs, javax_jms._fetchText, javax_jms._fetchMap, javax_jms._fetchProps)
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void", "javax.jms.Message")));
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_PRODUCER2")
@@ -47,7 +47,7 @@ __javax_jms() {
         .onReturn(spy.fetchRetVal("MSG"),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
             tnt4j._attributeTntCorrIds(),
-            _fetchAttrs, _fetchText, _fetchMap, _fetchProps)
+            javax_jms._fetchAttrs, javax_jms._fetchText, javax_jms._fetchMap, javax_jms._fetchProps)
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageConsumer", "~receive.*", "javax.jms.Message")));
 
     return this;
