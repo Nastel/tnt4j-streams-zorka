@@ -269,7 +269,7 @@ value is retrieved from JMS message field `correlationId`.
 * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
 then this field is filled with trace data as string.
 
-Additional fields can be mapped on used demand.
+Additional fields can be mapped on user demand.
 
 Custom fields values defined in parser fields mapping can be found as activity event properties.
 
