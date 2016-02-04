@@ -60,7 +60,7 @@ Starting application with Zorka Agent
 In order to start Apache Tomcat server with Zorka agent
 you need to add following command line arguments:
 
- * `-javaagent:<zorka.path>zorka.jar -Dzorka.home.dir=<zorka.path>`
+* `-javaagent:<zorka.path>zorka.jar -Dzorka.home.dir=<zorka.path>`
 
 
 Zorka configuration
@@ -69,11 +69,14 @@ Zorka configuration
 Depending on your configuration you need to setup your Zorka agent to instrument (spy) methods
 needed.
 
+The basic approach configuring zorka:
+	*	Add `*.bsh` script to zorka configuration file `zorka.properties` 
+	*	Configure the script itself
+
 For example if your Web Server is Apache's Tomcat and you use MySQL your configuration may look like:
 
 ```properties
-
-    scripts = jvm.bsh, tnt4j_sql.bsh, tnt4j_ldap.bsh\
+    scripts = jvm.bsh, tnt4j_sql.bsh, tnt4j_ldap.bsh
     sql = yes
     sql.params = yes
     sql.stats = yes
@@ -94,9 +97,86 @@ Zorka sends traces as trace records, each labeled with trace Marker. TNT4J strea
 collects all attributes in trace. These attributes is sent by Zorka depending on Zorka's tracer configuration.
 Trace attributes contains human readable useful process information.
 
-### Correlators
+### Zorka SQL configuration
 
-TNT4J streams comes with example Zorka script to collect and share JKoolCloud correlation ID's in Tomcat server with 
+SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query 
+application performing, database and other valuable information. Trace is retrieved attributes map.
+
+To add SQL traces to your JKoolCloud you need to configure zorka.properties to send SQL traces.
+First of all you need to add `tnt4j_sql.bsh` script to your's configuration. 
+
+```properties
+    scripts = tnt4j_sql.bsh
+```
+
+And configure script behavior itself.  
+
+```properties
+    sql = yes
+	sql.params = yes
+	sql.stats = yes
+	sql.trace = yes
+	sql.trace.time = 1
+```
+
+As for `sql.trace.time` it's your choice to include traces with minimum time specified.
+
+More information about zorka's configuration can be found on (http://zorka.io/install/sql.html)
+
+### Zorka LDAP configuration
+
+In order you need LDAP traces in your JKoolCloud, you:
+* Add `tnt4j_ldap.bsh` to *scripts* in zorka.properties file
+* Configure LDAP trace:
+
+```properties
+    ldap.trace = yes
+    ldap.trace.time = 0
+```
+ 
+### Zorka WebServices configuration
+
+* Add `tnt4j_webService.bsh` to *scripts* in zorka.properties file.
+* Configure SOAP trace:
+
+```properties
+    soap = yes
+    soap.trace = yes
+    soap.fetch.xml = yes
+    soap.fetch.xml.limit = 65536
+    soap.fetch.xml.in = yes
+    soap.fetch.xml.out = yes
+```
+
+### Zorka JMS configuration
+
+* Add `tnt4j_jms.bsh` to *scripts* in zorka.properties file.
+* Configure JMS trace:
+
+```properties
+    jms = yes
+	jms.trace = yes
+    jms.trace.time = 0
+    jms.fetch.all = yes				;  <-- This one neabled gives you all of bellow fetched
+    jms.fetch.attrs = yes			;  <-- Fetch JMS message atributes as "ID", "TSTAMP", "CORRELATION",
+                                    ;	"PERSIST", "REDELIVERY", "JMSTYPE", "PRIORITY", "EXPIRATION"
+                                    ; CORRELATION is particularly important and gives extra correlator available
+                                    ; on JKoolClooud
+    jms.fetch.map = yes				;  <-- Fetches JMS MAP message content to JKoolsCloud message field
+    jms.fetch.text = yes			;  <-- Fetches JMS Text message to JKoolsCloud message field
+```
+
+As in other scripts property `jms.trace.time` is your choice.
+
+To fetch actual message text use `jms.fetch.text = yes`.
+
+NOTE: in default Zorka configuration message's text hidden.
+
+
+Correlators
+-----------
+
+All TNT4J streams comes with example Zorka script to collect and share JKoolCloud correlation ID's in Tomcat server with 
 MySQL database. You may need expand this script to share correlators with other services. 
 
 Basically you will need get these Id from application server, from request's session data, where they are stored. And
@@ -116,41 +196,6 @@ interested to trace and add these correlators. You may look for Zorka example sc
          .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"))));
 
 ```
-
-### Zorka SQL configuration 
-
-SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query 
-application performing, database and other valuable information. Trace is retrieved attributes map.
-To enable SQL traces with'in application include tnt4j_jms.bsh in your `zorka.properties`:
-```
-    scripts = jvm.bsh, tnt4j_sql.bsh
-```
-
-
-### Zorka JMS configuration
-
-To enable JMS traces and include correlators in your JMS message trace please use `tnt4j_jms.bsh`
-script:
-```
-    scripts = jvm.bsh, tnt4j_jms.bsh
-```
-
-in `zorka.proeperties` file please specify:
-```properties
-    jms = yes
-    jms.trace = yes
-    jms.trace.time = 0
-    jms.fetch.text = yes
-```
-
-
-
-As in other scripts property `jms.trace.time` is your choice.
-
-To fetch actual message text use `jms.fetch.text = yes`.
-
-NOTE: in default Zorka configuration message's text hidden.
-
 
 # TNT4J-streams configuration
 
@@ -176,35 +221,46 @@ to use with sample scripts.
 
 In a single `tnt-data-source.xml` configuration file there are defined several parser rules, tnt4j-stream determines
 witch parser to use by **tags** property:
-	`<parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">`
+
+```xml
+    <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+```
 
 The **tags** is compared to Zorka's trace *MARKER* keys Value. Once it comply's, the defined parser is used.
 
 As for general you need no change, but as for going deeper inside Zorka scripts the *MARKER* key is inherited from
-line: 
-	`tarcer.begin("YOUR_CUSTOM_MARKER_GOES_HERE")`
-	
-	
+line:
+```java
+    tarcer.begin("YOUR_CUSTOM_MARKER_GOES_HERE")
+```
+
 ### Attributes to Fields
 
 To bind Zorka's trace attribute to JKool activity event field simply use locator of type `Label`.
 Field name represents JKool activity event field name to bind, and locator value - trace attribute from witch
 the field is parsed/mapped from.   
 
-   `<field name="EventFieldName" locator="MARKER" locator-type="Label"/>`
+```xml
+    <field name="EventFieldName" locator="MARKER" locator-type="Label"/>
+```
 
 For date/time related trace attributes use one of these:
 
 * For Unix time stamp
 
-    `<field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>`
+```xml
+    <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+```
+
 * For Formatted date
 
-    `<field name="EndTime" locator="TSTAMP" locator-type="Label" datatype="DateTime" format="yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'" timezone="GMT"/>`
+```xml
+    <field name="EndTime" locator="TSTAMP" locator-type="Label" datatype="DateTime" format="yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'" timezone="GMT"/>
+```
 
 To map attributes values use: 
 	
-```
+```xml
     <field name="CompCode" locator="STATUS" locator-type="Label">
     <field-map source="100" target="SUCCESS"/>
     <field-map source="101" target="SUCCESS"/>
