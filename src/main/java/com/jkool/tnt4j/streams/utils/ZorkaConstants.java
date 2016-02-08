@@ -5,9 +5,13 @@ package com.jkool.tnt4j.streams.utils;
  *
  * @version $Revision: 1 $
  */
-public class ZorkaConstants {
+public final class ZorkaConstants {
 	/**
 	 * Resource bundle name constant for TNT4J-Streams "zorka" module.
 	 */
 	public static final String RESOURCE_BUNDLE_ZORKA = "tnt4j-streams-zorka"; // NON-NLS
+
+	private ZorkaConstants() {
+
+	}
 }

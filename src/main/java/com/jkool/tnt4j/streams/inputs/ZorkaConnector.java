@@ -123,7 +123,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setProperties(Collection<Map.Entry<String, String>> props) throws Throwable {
+	public void setProperties(Collection<Map.Entry<String, String>> props) throws Exception {
 		if (props == null) {
 			return;
 		}
@@ -144,7 +144,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initialize() throws Throwable {
+	protected void initialize() throws Exception {
 		super.initialize();
 		symbolRegistry = new SymbolRegistry();
 		// traceDataStore = new TraceRecordStore()
@@ -203,6 +203,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	 * @throws IOException
 	 *             if error occurs while processing received trace data object
 	 */
+	@Override
 	public void process(Object obj) throws IOException {
 		if (obj instanceof Symbol) {
 			processSymbol((Symbol) obj);
@@ -282,8 +283,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	/**
 	 * Implements {@code ZicoDataProcessor} method. Does nothing.
 	 */
+	@Override
 	public void commit() {
-
+		// operation not required and does nothing now.
 	}
 
 	/**
