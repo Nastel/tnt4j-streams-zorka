@@ -70,7 +70,7 @@ and extracts these attributes in `attributes_processor()` and adds attributes by
 
 
 Attributes processor fetches `JK_CORR_RID` and `JK_CORR_SID` and put them to ThreadLocal for later use.
-And method _attributeTntCorrIds() is called in every script supplied by TNT4J-zorka to attribute all traces 
+And method _attributeTntCorrIds() is called in every script supplied by tnt4j-streams-zorka to attribute all traces 
 by application services (SQL, LDAP, JMS etc.) to attribute these traces with correct correlator.
 
 JMS message correlator is retrieved over JMS spy as message attribute. Mapping into TNT4J activity event is performed
