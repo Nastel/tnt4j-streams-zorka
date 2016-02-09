@@ -1,5 +1,5 @@
-How TNT4J-Zorka correlators work?
-=================================
+How tnt4j-streams-zorka correlators work?
+=========================================
 
 ```
   Web application
@@ -30,20 +30,18 @@ Zorka Thread local variable                                                 |
 
 
 
-JKool cloud accepts variety of correlators into field `correlator`. These correlators user to relate 
+jKool cloud accepts variety of correlators into field `correlator`. These correlators user to relate 
 Your event data into connected events bundle.
 
-You set Your correlators in the application as session attributes in backing bean:
+You set your correlators in the application as session attributes in backing bean:
 
 ```java
-    if ((String)session.getAttribute("JK_CORR_SID") == null)
-    {
+    if ((String)session.getAttribute("JK_CORR_SID") == null) {
         id = UUID.randomUUID().toString();
         session.setAttribute("JK_CORR_SID", id);
         this.sid = id;
     }
-    else
-    {
+    else {
         id = (String)session.getAttribute("JK_CORR_SID");
     }
     String rid = null;
