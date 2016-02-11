@@ -31,7 +31,7 @@ Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter
 * As standalone application
     * write streams configuration file. See 'Streams configuration' chapter for more details
     * configure Your loggers
-    * use `bin\tnt4j-streams.bat` or `bin\tnt4j-streams.sh` to run standalone application
+    * use `bin/tnt4j-streams.bat` or `bin/tnt4j-streams.sh` to run standalone application
 * As API integrated into Your product
     * Write streams configuration file. See 'Streams configuration' chapter for more details
     * use `StreamsAgent.runFromAPI(configFileName)` in your code
@@ -53,9 +53,9 @@ This sample shows how to stream activity events from Zorka produced traces data.
 service as listener (client) depending on defined configuration. Default is `localhost:8640`.
 Most basic way to use sample is to send Http request to Zorka monitored Tomcat server.
 
-Sample files can be found in `samples\ZorkaConnector` directory.
+Sample files can be found in `samples/ZorkaConnector` directory.
 
-How to use and configure Zorka, see `samples\ZorkaConnector\readme.md`.
+How to use and configure Zorka, see `samples/ZorkaConnector/readme.md`.
 
 Sample stream configuration:
 ```xml
