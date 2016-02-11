@@ -2,30 +2,30 @@ How tnt4j-streams-zorka correlators work?
 =========================================
 
 ```
-  Web application
-        |
-        | (JK_CORR_SID & _RID in attributes)
-        v
-     Request
-        |-------------------------->----------------------------------------|
-        v                                                                   |
-  Processing Chain                                                          |   SQL, LDAP, JMS (Optional)
-        |                                                                   |     corresponding spy
-        |  StandardContextValve.process Spy                                 |
-        v                                                                   |
-Zorka Thread local variable                                                 |
-        |                                                                   |
-        |--------->----------JK_CORR_SID & _RID varibales---->--------------|
-        v                                                                   |
-      Zorka-------------------------<--------------------------<------------|
-        |
-        |   (Zorka trace)
-        v
-    TNT4J-Zorka connector
-        |
-        |   (field correlator mapping)
-        v
-    JKoolCloud
+          Web application
+                |
+                | (JK_CORR_SID & _RID in attributes)
+                v
+             Request
+                |-------------------------->----------------------------------------|
+                v                                                                   |
+          Processing Chain                                                          |   SQL, LDAP, JMS (Optional)
+                |                                                                   |     corresponding spy
+                |  StandardContextValve.process Spy                                 |
+                v                                                                   |
+    Zorka Thread local variable                                                     |
+                |                                                                   |
+                |--------->----------JK_CORR_SID & _RID varibales---->--------------|
+                v                                                                   |
+              Zorka-------------------------<--------------------------<------------|
+                |
+                |   (Zorka trace)
+                v
+   TNT4J-Streams-Zorka connector
+                |
+                |   (field correlator mapping)
+                v
+            JKoolCloud
 ```
 
 

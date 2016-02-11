@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 RUNDIR=`pwd`
 CLASSPATH="$RUNDIR/../lib/*:$RUNDIR/../lib_dep/*"
 TNT4JOPTS=-Dtnt4j.config="$RUNDIR/../config/tnt4j.properties"
