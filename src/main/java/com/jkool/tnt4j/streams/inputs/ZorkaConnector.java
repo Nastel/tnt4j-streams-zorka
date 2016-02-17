@@ -51,8 +51,8 @@ import com.nastel.jkool.tnt4j.sink.EventSink;
  * be recorded. Zico service (Zorka traces producer) to listen is defined using
  * "Host" and "Port" properties in stream configuration.
  * <p>
- * This activity stream requires parsers that can support {@code Map} data. On
- * trace data package reception, trace fields are packed into {@code Map} data
+ * This activity stream requires parsers that can support {@link Map} data. On
+ * trace data package reception, trace fields are packed into {@link Map} data
  * structure.
  * <p>
  * This activity stream supports the following properties:
@@ -193,8 +193,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 
 	/**
 	 * Performs processing of received trace data object. If received object is
-	 * {@code Symbol}, it gets registered in symbols registry. If received
-	 * object is {@code TraceRecord}, data gets transformed to {@code Map}
+	 * {@link Symbol}, it gets registered in symbols registry. If received
+	 * object is {@link TraceRecord}, data gets transformed to {@link Map}
 	 * structure and added to buffer.
 	 *
 	 * @param obj
@@ -281,7 +281,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	}
 
 	/**
-	 * Implements {@code ZicoDataProcessor} method. Does nothing.
+	 * Implements {@link ZicoDataProcessor} method. Does nothing.
 	 */
 	@Override
 	public void commit() {
