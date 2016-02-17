@@ -25,10 +25,10 @@ __tnt4j() {
 
     _attributeTntCorrIds() {
         return (com.jitlogic.zorka.core.spy.SpyProcessor) spy.subchain(
-            spy.tlGet("JK_CORR_SID", _JK_CORR_SID),
             spy.tlGet("JK_CORR_RID", _JK_CORR_RID),
-            tracer.attr("JK_CORR_SID", "JK_CORR_SID"),
-            tracer.attr("JK_CORR_RID", "SQL_COR_RID")
+            spy.tlGet("JK_CORR_SID", _JK_CORR_SID),
+            tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
+            tracer.attr("JK_CORR_SID", "JK_CORR_SID")
         );
     }
 
@@ -52,11 +52,14 @@ __tnt4j() {
             spy.fetchArg("RESP", 2),
             attributes_processor(),
             spy.format("URI", "${REQ.request.requestURI}"),
-            tracer.attr("URI", "URI"))
+            tracer.attr("URI", "URI")
+         )
         .onReturn(
-            _attributeTntCorrIds()
+            spy.zorkaLog("DEBUG", "CORELATORS FECHING", "ON RETURN"),
+            this._attributeTntCorrIds(),
+            tracer.flags(tracer.SUBMIT_TRACE)
         )
-        .include(spy.byMethod("org.apache.catalina.core.StandardContextValve", "invoke")));
+        .include(spy.byMethod("org.apache.catalina.core.StandardEngineValve", "invoke")));
 
     return this;
 }
