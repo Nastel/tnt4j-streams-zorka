@@ -22,6 +22,7 @@ package com.jkool.tnt4j.streams;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.jkool.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
 import com.jkool.tnt4j.streams.inputs.AllInputsTests;
 
 /**
@@ -29,6 +30,6 @@ import com.jkool.tnt4j.streams.inputs.AllInputsTests;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AllInputsTests.class })
+@Suite.SuiteClasses({ ConfigParserHandlerTest.class, AllInputsTests.class })
 public class AllZorkaTests {
 }
