@@ -106,14 +106,16 @@
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
+
     <!-- Allow user-defined types for custom units types in addition to built-in types
          for use with user-defined parsers/streams -->
-    <xs:annotation>
-        <xs:documentation>
-            Can be either one of the internally-supported unit types or a custom one.
-        </xs:documentation>
-    </xs:annotation>
     <xs:simpleType name="DataFormatTypes">
+        <xs:annotation>
+            <xs:documentation>
+                Can be either one of the internally-supported data format types or a custom one.
+            </xs:documentation>
+        </xs:annotation>
+
         <xs:union memberTypes="DataFormats xs:string"/>
     </xs:simpleType>
 
@@ -131,65 +133,23 @@
             <xs:enumeration value="Nanoseconds"/>
         </xs:restriction>
     </xs:simpleType>
+
     <!-- Allow user-defined types for custom units types in addition to built-in types
          for use with user-defined parsers/streams -->
-    <xs:annotation>
-        <xs:documentation>
-            Can be either one of the internally-supported unit types or a custom one.
-        </xs:documentation>
-    </xs:annotation>
     <xs:simpleType name="FieldUnitsTypes">
+        <xs:annotation>
+            <xs:documentation>
+                Can be either one of the internally-supported unit types or a custom one.
+            </xs:documentation>
+        </xs:annotation>
         <xs:union memberTypes="UnitsTypes xs:string"/>
     </xs:simpleType>
 
-    <!-- jKool Cloud Service Connection Types -->
-    <xs:simpleType name="TAConnectionTypes">
-        <xs:annotation>
-            <xs:documentation>
-                Supported connection protocols for connecting to jKool Cloud Service.
-            </xs:documentation>
-        </xs:annotation>
-
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="FILE">
-                <xs:annotation>
-                    <xs:documentation>
-                        Write data for jKool Cloud Service to a file.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="HTTP">
-                <xs:annotation>
-                    <xs:documentation>
-                        Connect to jKool Cloud Service using HTTP.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="HTTPS">
-                <xs:annotation>
-                    <xs:documentation>
-                        Connect to jKool Cloud Service using HTTPS.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="TCP">
-                <xs:annotation>
-                    <xs:documentation>
-                        Connect to jKool Cloud Service using TCP/IP.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <!-- TNT Stream Field Types -->
+    <!-- TNT4J Stream Activity Event Field Types -->
     <xs:simpleType name="StreamFieldType">
         <xs:annotation>
             <xs:documentation>
-                Set of supported TNT Stream event components.
+                Set of predefined TNT4J Stream event attributes.
             </xs:documentation>
         </xs:annotation>
 
@@ -405,11 +365,10 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="StreamEventPropFieldType">
+    <!--xs:simpleType name="StreamEventPropFieldType">
         <xs:annotation>
             <xs:documentation>
-                <!--TODO-->
-                Set of supported TNT Stream event components.
+                Activity fields mapped as custom activity event properties.
             </xs:documentation>
         </xs:annotation>
 
@@ -420,17 +379,18 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:restriction>
-    </xs:simpleType>
+    </xs:simpleType-->
 
     <xs:simpleType name="StreamFieldTypeAll">
         <xs:annotation>
             <xs:documentation>
-                <!--TODO-->
-                Set of supported TNT Stream event components.
+                Can be either one of the internally-supported stream activity event field types or a custom one - mapped
+                as activity event property.
             </xs:documentation>
         </xs:annotation>
 
-        <xs:union memberTypes="StreamFieldType StreamEventPropFieldType"/>
+        <!--xs:union memberTypes="StreamFieldType StreamEventPropFieldType"/-->
+        <xs:union memberTypes="StreamFieldType xs:string"/>
     </xs:simpleType>
 
     <!-- Stream Parser Field Value Locator Types -->
@@ -483,6 +443,7 @@
             </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
+
     <!-- Allow user-defined types for custom location types in addition to built-in types
          for use with user-defined parsers/streams -->
     <xs:simpleType name="FieldLocatorTypes">
@@ -495,34 +456,18 @@
         <xs:union memberTypes="FieldLocator xs:string"/>
     </xs:simpleType>
 
-    <!-- Property Names -->
-    <xs:simpleType name="Properties">
+    <!-- Stream Property Names -->
+    <xs:simpleType name="StreamProperties">
         <xs:annotation>
             <xs:documentation>
-                Set of internally-supported parser and stream properties.
+                Set of internally-supported stream properties.
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Channel">
-                <xs:annotation>
-                    <xs:documentation>
-                        Property value is a channel name.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
             <xs:enumeration value="DateTime">
                 <xs:annotation>
                     <xs:documentation>
                         Property value represents an initial, base, or default date, time, or date/time.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="FieldDelim">
-                <xs:annotation>
-                    <xs:documentation>
-                        Property value represents the delimiter between fields in raw activity data.
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
@@ -535,10 +480,10 @@
                 </xs:annotation>
             </xs:enumeration>
 
-            <xs:enumeration value="Pattern">
+            <xs:enumeration value="Host">
                 <xs:annotation>
                     <xs:documentation>
-                        Property value is a regular expression pattern.
+                        Property value represents a connection host name.
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
@@ -552,14 +497,6 @@
                 </xs:annotation>
             </xs:enumeration>
 
-            <xs:enumeration value="Object">
-                <xs:annotation>
-                    <xs:documentation>
-                        Property value is an object name.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
             <xs:enumeration value="QueueManager">
                 <xs:annotation>
                     <xs:documentation>
@@ -568,10 +505,242 @@
                 </xs:annotation>
             </xs:enumeration>
 
-            <xs:enumeration value="SignatureDelim">
+            <xs:enumeration value="Queue">
                 <xs:annotation>
                     <xs:documentation>
-                        Property value is string identifying the delimiter between signature elements.
+                        Property value is a queue name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Topic">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value is a topic name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Subscription">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value is a subscription name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="TopicString">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value is a topic string to subscribe to.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Channel">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value is a channel name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="StripHeaders">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies whether stream should strip RAW activity data (i.e. WMQ message) headers.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="StartFromLatest">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies that streaming should be performed from latest log entry. If 'false' - then
+                        latest log file is streamed from beginning.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="FileReadDelay">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies delay is seconds between file reading iterations.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="HaltIfNoParser">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies whether stream should halt if none of the parsers can parse activity RAW
+                        data. If set to 'false' - puts log entry and continues.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="UseExecutors">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies identifies whether stream should use executor service to process activities
+                        data items asynchronously or not.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ExecutorThreadsQuantity">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines executor service thread pool size.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ExecutorRejectedTaskOfferTimeout">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines time to wait (in seconds) for a executor service to terminate.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ExecutorsTerminationTimeout">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines time to wait (in seconds) for a task to be inserted into bounded queue if max.
+                        queue size is reached.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ExecutorsBoundedModel">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies whether executor service should use bounded tasks queue model.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Keystore">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines keystore path.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="KeystorePass">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines keystore password.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="KeyPass">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines key password.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="JNDIFactory">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines JNDI context factory class name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="JMSConnFactory">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines JMS connection factory class name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ServerURI">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines a connection server URI.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="UserName">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines a user/login name.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Password">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property defines a user/login password.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="UseSSL">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies whether connection should use SSL.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ReadLines">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property indicates that complete activity RAW data (i.e. JSON) package is single line.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="RestartOnInputClose">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property indicates to restart stream if input socked gets closed.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Parser Property Names -->
+    <xs:simpleType name="ParserProperties">
+        <xs:annotation>
+            <xs:documentation>
+                Set of internally-supported parser properties.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Pattern">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value is a regular expression pattern.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="FieldDelim">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value represents the delimiter between fields in raw activity data.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ValueDelim">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property value represents the delimiter between the label and value for a field in raw activity
+                        data.
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
@@ -585,43 +754,154 @@
                 </xs:annotation>
             </xs:enumeration>
 
-            <xs:enumeration value="TopicString">
+            <xs:enumeration value="SignatureDelim">
                 <xs:annotation>
                     <xs:documentation>
-                        Property value is a topic string to subscribe to.
+                        Property value is string identifying the delimiter between signature elements.
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
 
-            <xs:enumeration value="ValueDelim">
+            <xs:enumeration value="RequireDefault">
                 <xs:annotation>
                     <xs:documentation>
-                        Property value represents the delimiter between the label and value for a field in raw activity
-                        data.
+                        Property indicates that all attributes are required by default.
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
+
+            <xs:enumeration value="StripHeaders">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property identifies whether stream should strip RAW activity data (i.e. WMQ message) headers.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Namespace">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property to define additional XML namespace mappings.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="ReadLines">
+                <xs:annotation>
+                    <xs:documentation>
+                        Property indicates that complete activity RAW data (i.e. JSON) package is single line.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
         </xs:restriction>
     </xs:simpleType>
+
     <!-- Allow user-defined types for custom properties in addition to built-in types
-         for use with user-defined parsers/streams -->
-    <xs:simpleType name="PropertyTypes">
+         for use with user-defined streams -->
+    <xs:simpleType name="StreamPropertyTypes">
         <xs:annotation>
             <xs:documentation>
                 Can be either one of the internally-supported properties or a custom one.
             </xs:documentation>
         </xs:annotation>
-        <xs:union memberTypes="Properties xs:string"/>
+        <xs:union memberTypes="StreamProperties xs:string"/>
     </xs:simpleType>
 
-    <!-- Configuration entity property definition -->
+    <!-- Allow user-defined types for custom properties in addition to built-in types
+             for use with user-defined parsers -->
+    <xs:simpleType name="ParserPropertyTypes">
+        <xs:annotation>
+            <xs:documentation>
+                Can be either one of the internally-supported properties or a custom one.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="ParserProperties xs:string"/>
+    </xs:simpleType>
+
+    <!-- Configuration stream property definition -->
+    <xs:complexType name="StreamProperty">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a stream configuration entity property - set of supported properties is entity-specific.
+            </xs:documentation>
+        </xs:annotation>
+
+        <!--xs:complexContent>
+            <xs:restriction base="Property">
+                <xs:attribute name="name" use="required" type="StreamPropertyTypes">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Name of the property from StreamProperties set or custom string.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:restriction>
+        </xs:complexContent-->
+
+        <xs:attribute name="name" use="required" type="StreamPropertyTypes">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="value" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Value of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Configuration parser property definition -->
+    <xs:complexType name="ParserProperty">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a parser configuration entity property - set of supported properties is entity-specific.
+            </xs:documentation>
+        </xs:annotation>
+
+        <!--xs:complexContent>
+            <xs:restriction base="Property">
+                <xs:attribute name="name" use="required" type="ParserPropertyTypes">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Name of the property from ParserProperties set or custom string.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:restriction>
+        </xs:complexContent-->
+
+        <xs:attribute name="name" use="required" type="ParserPropertyTypes">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="value" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Value of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Configuration property definition -->
     <xs:complexType name="Property">
         <xs:annotation>
             <xs:documentation>
-                Defines a configuration entity property - set of supported properties is entity-specific.
+                Defines a generic configuration entity property.
             </xs:documentation>
         </xs:annotation>
-        <xs:attribute name="name" use="required" type="PropertyTypes">
+
+        <xs:attribute name="name" use="required" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     Name of the property.
@@ -769,147 +1049,67 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+
+        <xs:attribute name="type" use="optional" type="FieldMapType" default="Value">
+            <xs:annotation>
+                <xs:documentation>
+                    Type of mapping.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
-    <xs:complexType name="Filter">
+    <!-- Field Mapping Types -->
+    <xs:simpleType name="FieldMapType">
         <xs:annotation>
             <xs:documentation>
-                Defines activity stream filtering criterions.
+                Supported field value mapping types.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Value">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mapping type is straight mapping from source value to target value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Range">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mapping type is from range of source values to single target value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+
+            <xs:enumeration value="Calc">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mapping type is from calculated source value to single target value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Parser reference definition -->
+    <xs:complexType name="ParserRef">
+        <xs:annotation>
+            <xs:documentation>
+                Associates enclosing entity with defined parser reference.
             </xs:documentation>
         </xs:annotation>
 
         <xs:attribute name="name" use="required" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
-                    Name of activity stream filter.
+                    Must be name of a defined parser.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-
-        <xs:sequence>
-            <xs:element name="rule" type="FilterRule" minOccurs="1" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>
-                        Specifies a rule for activities filter.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:sequence>
-        <!--TODO -->
-
     </xs:complexType>
-
-    <xs:complexType name="FilterRule">
-        <xs:annotation>
-            <xs:documentation>
-                <!--TODO -->
-            </xs:documentation>
-        </xs:annotation>
-
-        <xs:attribute name="name" use="optional" type="xs:string">
-            <xs:annotation>
-                <xs:documentation>
-                    <!--TODO -->
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-
-        <xs:attribute name="field-ref" use="required" type="xs:string">
-            <xs:annotation>
-                <xs:documentation>
-                    <!--TODO -->
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-
-        <xs:sequence>
-            <xs:element name="step" minOccurs="1" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>
-                        <!--TODO -->
-                    </xs:documentation>
-                </xs:annotation>
-
-                <xs:complexType>
-                    <xs:attribute name="comparator" use="required" type="FilterComparator">
-                        <xs:annotation>
-                            <xs:documentation>
-                                <!--TODO -->
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-
-                    <xs:attribute name="value" use="required" type="xs:string">
-                        <xs:annotation>
-                            <xs:documentation>
-                                <!--TODO -->
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
-                </xs:complexType>
-
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-    <!-- Filter Comparator Types -->
-    <xs:simpleType name="FilterComparator">
-        <xs:annotation>
-            <xs:documentation>
-                Supported activity field filter comparator types.
-            </xs:documentation>
-        </xs:annotation>
-
-        <xs:restriction base="xs:string">
-            <xs:enumeration value=">=">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Greater or equal'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="<=">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Less or equal'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="=">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Equal'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value=">">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Greater'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="<">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Less'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-
-            <xs:enumeration value="!=">
-                <xs:annotation>
-                    <xs:documentation>
-                        Comparator for 'Not equal'.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
-        </xs:restriction>
-    </xs:simpleType>
 
     <!-- Configuration root -->
     <xs:element name="tnt-data-source">
@@ -932,7 +1132,7 @@
 
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="property" type="ParserProperty" minOccurs="0" maxOccurs="unbounded">
                                 <xs:annotation>
                                     <xs:documentation>
                                         Specifies a configuration property for the parser - property names are
@@ -982,30 +1182,21 @@
                                             </xs:annotation>
                                         </xs:element>
 
-                                        <xs:element name="parser-ref" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:element name="parser-ref" type="ParserRef" minOccurs="0"
+                                                    maxOccurs="unbounded">
                                             <xs:annotation>
                                                 <xs:documentation>
                                                     Associates field with defined parser to additionally process field
                                                     value.
                                                 </xs:documentation>
                                             </xs:annotation>
-
-                                            <xs:complexType>
-                                                <xs:attribute name="name" use="required" type="xs:string">
-                                                    <xs:annotation>
-                                                        <xs:documentation>
-                                                            Must be name of a defined parser.
-                                                        </xs:documentation>
-                                                    </xs:annotation>
-                                                </xs:attribute>
-                                            </xs:complexType>
                                         </xs:element>
                                     </xs:choice>
 
                                     <xs:attribute name="name" use="required" type="StreamFieldTypeAll">
                                         <xs:annotation>
                                             <xs:documentation>
-                                                Name of TNT Stream field from defined list of fields.
+                                                Name of TNT4J Stream field from defined list of fields.
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
@@ -1023,14 +1214,6 @@
                                 </xs:complexType>
                             </xs:element>
 
-                            <xs:element name="filter" type="Filter" minOccurs="0" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Defines a filter of parsed activities. If activity matches filter criterion, it
-                                        is skipped from streaming to jKool Cloud Service.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
                         </xs:sequence>
 
                         <xs:attributeGroup ref="EntityAttributeGroup">
@@ -1056,7 +1239,7 @@
                 <xs:element name="stream" minOccurs="1" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="property" type="StreamProperty" minOccurs="0" maxOccurs="unbounded">
                                 <xs:annotation>
                                     <xs:documentation>
                                         Specifies a configuration property for the stream - property names are
@@ -1065,22 +1248,32 @@
                                 </xs:annotation>
                             </xs:element>
 
-                            <xs:element name="parser-ref" minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="parser-ref" type="ParserRef" minOccurs="1" maxOccurs="unbounded">
                                 <xs:annotation>
                                     <xs:documentation>
                                         Associates a parser with this stream - if multiple parsers, they are applied in
                                         the order specified here until one successfully parses activity string.
                                     </xs:documentation>
                                 </xs:annotation>
+                            </xs:element>
+
+                            <xs:element name="tnt4j-properties" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        Defines set of specific TNT4J properties for this stream.
+                                    </xs:documentation>
+                                </xs:annotation>
 
                                 <xs:complexType>
-                                    <xs:attribute name="name" use="required" type="xs:string">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                Must be name of a defined parser.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:attribute>
+                                    <xs:sequence>
+                                        <xs:element name="property" type="Property" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    Defines a TNT4J property.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>

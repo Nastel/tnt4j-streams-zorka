@@ -80,49 +80,10 @@ Sample stream configuration:
         <field name="EventType" value="SEND"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
         <field name="CompCode" locator="STATUS" locator-type="Label">
-            <field-map source="100" target="SUCCESS"/>
-            <field-map source="101" target="SUCCESS"/>
-            <field-map source="103" target="SUCCESS"/>
-            <field-map source="200" target="SUCCESS"/>
-            <field-map source="201" target="SUCCESS"/>
-            <field-map source="202" target="SUCCESS"/>
-            <field-map source="203" target="SUCCESS"/>
-            <field-map source="204" target="SUCCESS"/>
-            <field-map source="205" target="SUCCESS"/>
-            <field-map source="206" target="SUCCESS"/>
-            <field-map source="300" target="WARNING"/>
-            <field-map source="301" target="WARNING"/>
-            <field-map source="302" target="WARNING"/>
-            <field-map source="303" target="WARNING"/>
-            <field-map source="304" target="WARNING"/>
-            <field-map source="306" target="WARNING"/>
-            <field-map source="307" target="WARNING"/>
-            <field-map source="308" target="WARNING"/>
-            <field-map source="400" target="ERROR"/>
-            <field-map source="401" target="ERROR"/>
-            <field-map source="402" target="ERROR"/>
-            <field-map source="403" target="ERROR"/>
-            <field-map source="404" target="ERROR"/>
-            <field-map source="405" target="ERROR"/>
-            <field-map source="406" target="ERROR"/>
-            <field-map source="407" target="ERROR"/>
-            <field-map source="408" target="ERROR"/>
-            <field-map source="409" target="ERROR"/>
-            <field-map source="410" target="ERROR"/>
-            <field-map source="411" target="ERROR"/>
-            <field-map source="412" target="ERROR"/>
-            <field-map source="413" target="ERROR"/>
-            <field-map source="414" target="ERROR"/>
-            <field-map source="415" target="ERROR"/>
-            <field-map source="416" target="ERROR"/>
-            <field-map source="417" target="ERROR"/>
-            <field-map source="500" target="ERROR"/>
-            <field-map source="501" target="ERROR"/>
-            <field-map source="502" target="ERROR"/>
-            <field-map source="503" target="ERROR"/>
-            <field-map source="504" target="ERROR"/>
-            <field-map source="505" target="ERROR"/>
-            <field-map source="511" target="ERROR"/>
+            <field-map source="100:206" target="SUCCESS" type="Range"/>
+            <field-map source="300:308" target="WARNING" type="Range"/>
+            <field-map source="400:417" target="ERROR" type="Range"/>
+            <field-map source="500:511" target="ERROR" type="Range"/>
         </field>
         <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
 
