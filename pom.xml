@@ -138,6 +138,7 @@
                     <version>true</version>
                     <nodeprecatedlist>false</nodeprecatedlist>
                     <nodeprecatedlist>false</nodeprecatedlist>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
             </plugin>
             <plugin>
