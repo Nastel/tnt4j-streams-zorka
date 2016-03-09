@@ -36,8 +36,8 @@ import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
 import com.jitlogic.zorka.common.zico.ZicoPacket;
-import com.jkool.tnt4j.streams.configure.StreamsConfig;
 import com.jkool.tnt4j.streams.fields.ActivityInfo;
+import com.jkool.tnt4j.streams.configure.StreamProperties;
 import com.jkool.tnt4j.streams.utils.StreamsResources;
 import com.jkool.tnt4j.streams.utils.ZorkaConstants;
 import com.nastel.jkool.tnt4j.core.OpLevel;
@@ -110,10 +110,10 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	 */
 	@Override
 	public Object getProperty(String name) {
-		if (StreamsConfig.PROP_HOST.equalsIgnoreCase(name)) {
+		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
 			return host;
 		}
-		if (StreamsConfig.PROP_PORT.equalsIgnoreCase(name)) {
+		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 			return socketPort;
 		}
 		return super.getProperty(name);
@@ -132,9 +132,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 			String name = prop.getKey();
 			String value = prop.getValue();
 
-			if (StreamsConfig.PROP_HOST.equalsIgnoreCase(name)) {
+			if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
 				host = value;
-			} else if (StreamsConfig.PROP_PORT.equalsIgnoreCase(name)) {
+			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.valueOf(value);
 			}
 		}
