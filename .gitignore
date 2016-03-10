@@ -12,10 +12,11 @@
 hs_err_pid*
 /.svn
 /classes
-/logs
 /.project
 /.classpath
 /.settings/
 /**/target
+/**/logs
+/**/temp
 
 /**/*.iml
