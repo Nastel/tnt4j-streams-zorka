@@ -13,6 +13,8 @@
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Location" locator="HdrIn__host" locator-type="Label"/>
 
@@ -49,6 +51,8 @@
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="SQL" locator-type="Label"/>
@@ -69,6 +73,8 @@
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="FILTER" locator-type="Label"/>
@@ -89,6 +95,8 @@
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
@@ -108,6 +116,8 @@
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
+        <field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="TEXT" locator-type="Label"/>

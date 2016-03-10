@@ -25,13 +25,16 @@ __tnt4j() {
 
     _JK_CORR_SID = new ThreadLocal();
     _JK_CORR_RID = new ThreadLocal();
+    _JK_ZORKA_PARENT_ID = new ThreadLocal();
 
     _attributeTntCorrIds() {
         return (com.jitlogic.zorka.core.spy.SpyProcessor) spy.subchain(
             spy.tlGet("JK_CORR_RID", _JK_CORR_RID),
             spy.tlGet("JK_CORR_SID", _JK_CORR_SID),
+            spy.tlGet("JK_ZORKA_PARENT_ID", _JK_ZORKA_PARENT_ID),
             tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
-            tracer.attr("JK_CORR_SID", "JK_CORR_SID")
+            tracer.attr("JK_CORR_SID", "JK_CORR_SID"),
+            tracer.attr("JK_ZORKA_PARENT_ID", "JK_ZORKA_PARENT_ID")
         );
     }
 
@@ -43,6 +46,8 @@ __tnt4j() {
                 _JK_CORR_SID.set(sid);
                 rid = request.getSession().getAttribute("JK_CORR_RID");
                 _JK_CORR_RID.set(rid);
+                pid = request.getSession().getAttribute("JK_ZORKA_PARENT_ID");
+                _JK_ZORKA_PARENT_ID.set(pid);
             }
             return rec;
         }
