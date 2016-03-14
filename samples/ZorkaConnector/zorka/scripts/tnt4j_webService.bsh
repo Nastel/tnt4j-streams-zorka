@@ -19,7 +19,6 @@
   
 zorka.require("tnt4j_base_tomcat.bsh");
 
-
 __java_webs() {
 
     spy.add(spy.instrument("WS_TNT4J_STREAMS_INVOKER_TUBE")
