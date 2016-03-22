@@ -36,13 +36,15 @@ import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
 import com.jitlogic.zorka.common.zico.ZicoPacket;
-import com.jkool.tnt4j.streams.fields.ActivityInfo;
 import com.jkool.tnt4j.streams.configure.StreamProperties;
+import com.jkool.tnt4j.streams.fields.ActivityInfo;
 import com.jkool.tnt4j.streams.utils.StreamsResources;
 import com.jkool.tnt4j.streams.utils.ZorkaConstants;
 import com.nastel.jkool.tnt4j.core.OpLevel;
 import com.nastel.jkool.tnt4j.sink.DefaultEventSinkFactory;
 import com.nastel.jkool.tnt4j.sink.EventSink;
+import com.nastel.jkool.tnt4j.uuid.JUGFactoryImpl;
+import com.nastel.jkool.tnt4j.uuid.UUIDFactory;
 
 /**
  * <p>
@@ -70,22 +72,26 @@ import com.nastel.jkool.tnt4j.sink.EventSink;
  * @see com.jitlogic.zorka.common.zico.ZicoDataProcessor
  * @see com.jitlogic.zico.core.ZicoService
  */
-public class ZorkaConnector extends AbstractBufferedStream<Object> implements ZicoDataProcessor {
+public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> implements ZicoDataProcessor {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(ZorkaConnector.class);
 
 	private static final int CONNECTION_TIMEOUT = 10 * 1000;
 	private static final int MAX_THREADS = 5;
 	private static final int DEFAULT_PORT = 8640;
 	private static final String DEFAULT_HOSTNAME = "localhost"; // NON-NLS
+	private static final int MAX_TRACE_EVENTS = 100;
 
 	// for persisting symbols inf ile System use PersistentSymbolRegistry
 	private SymbolRegistry symbolRegistry = null;
 
 	private String host = DEFAULT_HOSTNAME;
 	private Integer socketPort = DEFAULT_PORT;
+	private Integer maxTraceEvents = MAX_TRACE_EVENTS;
 
 	private ZicoService zicoService = null;
 	private boolean inputEnd = false;
+
+	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
 	/**
 	 * Construct empty ZorkaConnector. Requires configuration settings to set
@@ -136,6 +142,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.valueOf(value);
+			} else if (ZorkaConstants.MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+				maxTraceEvents = Integer.valueOf(value);
 			}
 		}
 	}
@@ -224,10 +232,16 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 	}
 
 	private void processTrace(TraceRecord rec) {
-		// processTraceRecursive(rec, rec.getChildren()); //NOTE: not required
-		final Map<String, Object> translatedTrace = translateSymbols(rec.getAttrs());
-		addDefaultTraceAttributes(translatedTrace, rec);
-		addInputToBuffer(translatedTrace);
+		if (maxTraceEvents != 0 && rec.getCalls() >= maxTraceEvents) {
+			rec = filterOversizeTrace(rec);
+		}
+		processTraceRecursive(rec, rec.getChildren(), null);
+
+		// final Map<String, Object> translatedTrace =
+		// translateSymbols(rec.getAttrs());
+		// addDefaultTraceAttributes(translatedTrace, rec);
+		// addInputToBuffer(translatedTrace);
+
 	}
 
 	private Map<String, Object> translateSymbols(Map<Integer, Object> attributeMap) {
@@ -242,17 +256,29 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 		return translation;
 	}
 
-	private static void processTraceRecursive(TraceRecord rec, List<TraceRecord> children) {
+	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID) {
+		final Map<String, Object> translatedTrace = new HashMap<String, Object>(); // (rec.getAttrs());
+		addDefaultTraceAttributes(translatedTrace, parentRec);
+		if (parentRec.getParent() == null) {
+			translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
+		}
+		String eventID = uuidGenerator.newUUID();
+		translatedTrace.put("EventID", eventID); // NON-NLS
+		translatedTrace.put("ParentID", parentUUID); // NON-NLS
+		addInputToBuffer(translatedTrace);
 		if (children == null)
 			return;
 
+		parentUUID = eventID;
 		for (TraceRecord child : children) {
-			if (child.getAttrs() != null) {
-				rec.getAttrs().putAll(child.getAttrs());
-				LOGGER.log(OpLevel.DEBUG, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
-						"ZorkaConnector.decorating.child"));
-			}
-			processTraceRecursive(rec, child.getChildren());
+			// if (child.getAttrs() != null) {
+			// rec.getAttrs().putAll(child.getAttrs());
+			// LOGGER.log(OpLevel.DEBUG,
+			// StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
+			// "ZorkaConnector.decorating.child"));
+			//
+			// }
+			processTraceRecursive(child, child.getChildren(), parentUUID);
 		}
 	}
 
@@ -264,9 +290,64 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 		translatedTrace.put("CLASS", symbolRegistry.symbolName(masterRecord.getClassId())); // NON-NLS
 		translatedTrace.put("METHOD", symbolRegistry.symbolName(masterRecord.getMethodId())); // NON-NLS
 		translatedTrace.put("SIGNATURE", symbolRegistry.symbolName(masterRecord.getSignatureId())); // NON-NLS
-		translatedTrace.put("MARKER", symbolRegistry.symbolName(masterRecord.getMarker().getTraceId())); // NON-NLS
+		translatedTrace.put("MARKER", masterRecord.getMarker() == null ? "TRACE" // NON-NLS
+				: symbolRegistry.symbolName(masterRecord.getMarker().getTraceId()));
 
 		return translatedTrace;
+	}
+
+	private TraceRecord filterOversizeTrace(TraceRecord rec) {
+		final Long wholeTraceTime = rec.getTime();
+		final long trCount = countTraceRecord(rec);
+		final Float percentageOffset = (float) ((double) this.maxTraceEvents / (double) trCount);
+		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
+
+		final long reducedTrCount = countTraceRecord(filteredRec);
+		LOGGER.log(OpLevel.INFO, "Reduced trace from " + trCount + " to " + reducedTrCount + " record to comply to "
+				+ maxTraceEvents + " max trace vent count");
+		return filteredRec;
+	}
+
+	private TraceRecord cloneTraceRecord(TraceRecord trToCopyFrom, Long wholeTraceTime, Float percentageOffset) {
+		TraceRecord trReturn = new TraceRecord();
+
+		trReturn.setAttrs(trToCopyFrom.getAttrs());
+		trReturn.setCalls(trToCopyFrom.getCalls());
+		trReturn.setClassId(trToCopyFrom.getClassId());
+		trReturn.setErrors(trToCopyFrom.getErrors());
+		trReturn.setException(trToCopyFrom.getException());
+		trReturn.setFlags(trToCopyFrom.getFlags());
+		trReturn.setMarker(trToCopyFrom.getMarker());
+		trReturn.setMethodId(trToCopyFrom.getMethodId());
+		trReturn.setParent(trToCopyFrom.getParent());
+		trReturn.setSignatureId(trToCopyFrom.getSignatureId());
+		trReturn.setTime(trToCopyFrom.getTime());
+		if (trToCopyFrom.getChildren() == null) {
+			return trReturn;
+		}
+		for (TraceRecord children : trToCopyFrom.getChildren()) {
+			Long methodTime = children.getTime();
+			Float percentageMethod = (float) ((double) methodTime / (double) wholeTraceTime);
+			if (percentageMethod >= percentageOffset) {
+				trReturn.addChild(cloneTraceRecord(children, wholeTraceTime, percentageOffset));
+			}
+		}
+		return trReturn;
+	}
+
+	private long countTraceRecord(TraceRecord tr) {
+		long count = 0;
+		if (tr.getChildren() == null) {
+			return 1;
+		}
+		for (TraceRecord traceRecord : tr.getChildren()) {
+			if (traceRecord != null) {
+				count += countTraceRecord(traceRecord);
+			}
+		}
+
+		count++;
+		return count;
 	}
 
 	/**
@@ -306,6 +387,14 @@ public class ZorkaConnector extends AbstractBufferedStream<Object> implements Zi
 			inputEnd = true;
 		}
 		super.cleanup();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected long getActivityItemByteSize(Map<String, ?> itemMap) {
+		return 0; // TODO
 	}
 
 }

@@ -30,6 +30,11 @@ public final class ZorkaConstants {
 	 */
 	public static final String RESOURCE_BUNDLE_ZORKA = "tnt4j-streams-zorka"; // NON-NLS
 
+	/**
+	 * Constant for filtering Zorka traces to contain max value of
+	 */
+	public static final String MAX_TRACE_EVENTS = "MaxTraceEvents";
+
 	private ZorkaConstants() {
 
 	}

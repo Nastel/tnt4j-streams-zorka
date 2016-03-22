@@ -18,7 +18,7 @@
 
         <field name="Location" locator="HdrIn__host" locator-type="Label"/>
 
-        <field name="EventType" value="SEND"/>
+        <field name="EventType" value="ACTIVITY"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
         <field name="CompCode" locator="STATUS" locator-type="Label">
             <field-map source="100:206" target="SUCCESS" type="Range"/>
@@ -36,7 +36,7 @@
 
 
     <parser name="ZorkaSQL" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" value="ACTIVITY"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
@@ -63,7 +63,7 @@
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -85,7 +85,7 @@
 
     <parser name="ZorkaWebService" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -105,7 +105,7 @@
     </parser>
 
     <parser name="ZorkaJMS" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
