@@ -5,11 +5,11 @@
 
     <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
 
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
@@ -18,10 +18,11 @@
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
-        <field name="Location" locator="HdrIn__host" locator-type="Label"/>
-
         <field name="EventType" value="ACTIVITY"/>
-        <field name="ResourceName" locator="URI" locator-type="Label"/>
+        <field name="Location" separator="">
+            <field-locator locator="HdrIn__host" locator-type="Label"/>
+            <field-locator locator="URI" locator-type="Label"/>
+        </field>
         <field name="CompCode" locator="STATUS" locator-type="Label">
             <field-map source="100:206" target="SUCCESS" type="Range"/>
             <field-map source="300:308" target="WARNING" type="Range"/>
@@ -39,7 +40,7 @@
 
     <parser name="ZorkaSQL" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
         <field name="EventType" value="ACTIVITY"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
             <field-map source="YES" target="ERROR"/>
@@ -47,8 +48,8 @@
         </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
@@ -62,18 +63,16 @@
             <field-locator locator="SQL" locator-type="Label"/>
             <field-locator locator="DB" locator-type="Label"/>
         </field>
-
-        <field name="Tag" locator="MARKER" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
         <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
 
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
@@ -93,11 +92,11 @@
             tags="WS_TNT4J_STREAMS_TRACKER">
         <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
 
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
@@ -115,11 +114,11 @@
     <parser name="ZorkaJMS" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
         <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
 
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
@@ -141,11 +140,11 @@
     <parser name="ZorkaTrace" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
         <field name="EventType" value="ACTIVITY"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
