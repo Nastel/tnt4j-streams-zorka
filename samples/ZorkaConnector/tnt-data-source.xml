@@ -14,6 +14,8 @@
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Location" locator="HdrIn__host" locator-type="Label"/>
@@ -52,6 +54,8 @@
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
@@ -74,6 +78,8 @@
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
@@ -96,6 +102,8 @@
         <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
@@ -117,6 +125,8 @@
         <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
         <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
 
         <field name="Message" separator=",">
@@ -128,6 +138,20 @@
         </field>
     </parser>
 
+    <parser name="ZorkaTrace" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
+        <field name="EventType" value="ACTIVITY"/>
+        <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
+               locator-type="Label"/>
+        <field name="Class" locator="CLASS" locator-type="Label"/>
+        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+    </parser>
+
 
     <stream name="FileStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
@@ -137,5 +161,6 @@
         <parser-ref name="ZorkaLDAP"/>
         <parser-ref name="ZorkaWebService"/>
         <parser-ref name="ZorkaJMS"/>
+        <parser-ref name="ZorkaTrace"/>
     </stream>
 </tnt-data-source>

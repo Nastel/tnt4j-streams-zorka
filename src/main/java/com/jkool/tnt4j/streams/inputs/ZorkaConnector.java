@@ -28,10 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jitlogic.zico.core.ZicoService;
-import com.jitlogic.zorka.common.tracedata.HelloRequest;
-import com.jitlogic.zorka.common.tracedata.Symbol;
-import com.jitlogic.zorka.common.tracedata.SymbolRegistry;
-import com.jitlogic.zorka.common.tracedata.TraceRecord;
+import com.jitlogic.zorka.common.tracedata.*;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
@@ -78,7 +75,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private static final int CONNECTION_TIMEOUT = 10 * 1000;
 	private static final int MAX_THREADS = 5;
 	private static final int DEFAULT_PORT = 8640;
-	private static final String DEFAULT_HOSTNAME = "localhost"; // NON-NLS
+	private static final String DEFAULT_HOSTNAME = "0.0.0.0"; // NON-NLS
 	private static final int MAX_TRACE_EVENTS = 100;
 
 	// for persisting symbols inf ile System use PersistentSymbolRegistry
@@ -263,7 +260,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
 		}
 		String eventID = uuidGenerator.newUUID();
-		translatedTrace.put("EventID", eventID); // NON-NLS
+		translatedTrace.put("TrackingID", eventID); // NON-NLS
 		translatedTrace.put("ParentID", parentUUID); // NON-NLS
 		addInputToBuffer(translatedTrace);
 		if (children == null)
@@ -284,7 +281,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	private Map<String, Object> addDefaultTraceAttributes(Map<String, Object> translatedTrace,
 			TraceRecord masterRecord) {
-		translatedTrace.put("CLOCK", masterRecord.getClock()); // NON-NLS
+		long clock = masterRecord.getClock();
+		translatedTrace.put("CLOCK", clock <= 0 ? System.currentTimeMillis() : clock); // NON-NLS
 		translatedTrace.put("METHOD_TIME", masterRecord.getTime()); // NON-NLS
 		translatedTrace.put("CALLS", masterRecord.getCalls()); // NON-NLS
 		translatedTrace.put("CLASS", symbolRegistry.symbolName(masterRecord.getClassId())); // NON-NLS
@@ -317,7 +315,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		trReturn.setErrors(trToCopyFrom.getErrors());
 		trReturn.setException(trToCopyFrom.getException());
 		trReturn.setFlags(trToCopyFrom.getFlags());
-		trReturn.setMarker(trToCopyFrom.getMarker());
+		trReturn.setMarker(new TraceMarker(trToCopyFrom.getTraceId(), trToCopyFrom.getClock()));
 		trReturn.setMethodId(trToCopyFrom.getMethodId());
 		trReturn.setParent(trToCopyFrom.getParent());
 		trReturn.setSignatureId(trToCopyFrom.getSignatureId());
