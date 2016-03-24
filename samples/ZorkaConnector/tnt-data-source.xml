@@ -11,12 +11,12 @@
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
         <field name="EventName" locator="METHOD" locator-type="Label"/>
 
-        <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
-        <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
+        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="EventType" value="ACTIVITY"/>
         <field name="Location" separator="">
@@ -52,12 +52,12 @@
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
-        <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
-        <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
+        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
             <field-locator locator="SQL" locator-type="Label"/>
@@ -74,12 +74,12 @@
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
         <field name="EventName" locator="METHOD" locator-type="Label"/>
 
-        <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
-        <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
+        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
             <field-locator locator="FILTER" locator-type="Label"/>
@@ -98,12 +98,12 @@
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
         <field name="EventName" locator="METHOD" locator-type="Label"/>
 
-        <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
-        <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
+        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
@@ -120,13 +120,13 @@
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
         <field name="EventName" locator="METHOD" locator-type="Label"/>
 
-        <!--<field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>-->
-        <!--<field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>-->
+        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
+        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
             <field-locator locator="TEXT" locator-type="Label"/>
@@ -148,7 +148,7 @@
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
     </parser>
 
 
