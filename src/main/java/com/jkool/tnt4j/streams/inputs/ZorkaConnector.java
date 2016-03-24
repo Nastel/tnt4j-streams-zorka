@@ -119,6 +119,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 			return socketPort;
 		}
+		if (ZorkaConstants.MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+			return maxTraceEvents;
+		}
 		return super.getProperty(name);
 	}
 
@@ -229,9 +232,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private void processTrace(TraceRecord rec) {
-		if (maxTraceEvents != 0 && rec.getCalls() >= maxTraceEvents) {
-			rec = filterOversizeTrace(rec);
-		}
+
+		rec = filterOversizeTrace(rec);
+
 		processTraceRecursive(rec, rec.getChildren(), null);
 
 		// final Map<String, Object> translatedTrace =
@@ -295,13 +298,16 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private TraceRecord filterOversizeTrace(TraceRecord rec) {
+		final long recCount = countTraceRecord(rec);
+		if (maxTraceEvents == 0 && recCount <= maxTraceEvents) {
+			return rec;
+		}
 		final Long wholeTraceTime = rec.getTime();
-		final long trCount = countTraceRecord(rec);
-		final Float percentageOffset = (float) ((double) this.maxTraceEvents / (double) trCount);
+		final Float percentageOffset = (float) ((double) this.maxTraceEvents / (double) recCount);
 		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
 
 		final long reducedTrCount = countTraceRecord(filteredRec);
-		LOGGER.log(OpLevel.INFO, "Reduced trace from " + trCount + " to " + reducedTrCount + " record to comply to "
+		LOGGER.log(OpLevel.INFO, "Reduced trace from " + recCount + " to " + reducedTrCount + " record to comply to "
 				+ maxTraceEvents + " max trace vent count");
 		return filteredRec;
 	}
