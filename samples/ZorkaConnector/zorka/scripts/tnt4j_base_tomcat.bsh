@@ -26,6 +26,7 @@ __tnt4j() {
     _JK_CORR_SID = new ThreadLocal();
     _JK_CORR_RID = new ThreadLocal();
     _JK_ZORKA_PARENT_ID = new ThreadLocal();
+    _JK_TRACKING_ID = new ThreadLocal();
 
     _attributeTntCorrIds() {
         return (com.jitlogic.zorka.core.spy.SpyProcessor) spy.subchain(
@@ -45,6 +46,9 @@ __tnt4j() {
                 sid = request.getSession().getAttribute("JK_CORR_SID");
                 _JK_CORR_SID.set(sid);
                 rid = request.getSession().getAttribute("JK_CORR_RID");
+                if (rid == null) {
+                    java.util.UUID.randomUUID();
+                }
                 _JK_CORR_RID.set(rid);
                 pid = request.getSession().getAttribute("JK_ZORKA_PARENT_ID");
                 _JK_ZORKA_PARENT_ID.set(pid);
@@ -58,12 +62,15 @@ __tnt4j() {
         .onEnter(
             spy.fetchArg("REQ", 1),
             spy.fetchArg("RESP", 2),
+            spy.call("REQ", "CONTEXT_PATH", "getContextPath"),
+            tracer.attr("CONTEXT_PATH", "CONTEXT_PATH"),
             attributes_processor(),
             spy.format("URI", "${REQ.request.requestURI}"),
             tracer.attr("URI", "URI")
          )
         .onReturn(
             spy.zorkaLog("DEBUG", "CORRELATORS FETCHING", "ON RETURN"),
+            spy.call("RESP", "RESULT", "addHeader", "ZorkaHeader", "MY_SUPER_ID"),
             this._attributeTntCorrIds(),
             tracer.flags(tracer.SUBMIT_TRACE)
         )

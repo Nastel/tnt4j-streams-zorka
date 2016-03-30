@@ -22,13 +22,15 @@ package com.jkool.tnt4j.streams.inputs;
 import java.io.IOException;
 import java.net.Socket;
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import org.apache.commons.collections4.MapUtils;
 
 import com.jitlogic.zico.core.ZicoService;
-import com.jitlogic.zorka.common.tracedata.*;
+import com.jitlogic.zorka.common.tracedata.HelloRequest;
+import com.jitlogic.zorka.common.tracedata.Symbol;
+import com.jitlogic.zorka.common.tracedata.SymbolRegistry;
+import com.jitlogic.zorka.common.tracedata.TraceRecord;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
@@ -155,8 +157,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	protected void initialize() throws Exception {
 		super.initialize();
 		symbolRegistry = new SymbolRegistry();
-		// traceDataStore = new TraceRecordStore()
-		// traceIn
 		ZicoDataProcessorFactory zdf = new ZicoDataProcessorFactory() {
 
 			/**
@@ -232,16 +232,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private void processTrace(TraceRecord rec) {
-
 		rec = filterOversizeTrace(rec);
-
-		processTraceRecursive(rec, rec.getChildren(), null);
-
-		// final Map<String, Object> translatedTrace =
-		// translateSymbols(rec.getAttrs());
-		// addDefaultTraceAttributes(translatedTrace, rec);
-		// addInputToBuffer(translatedTrace);
-
+		processTraceRecursive(rec, rec.getChildren(), null, 1);
 	}
 
 	private Map<String, Object> translateSymbols(Map<Integer, Object> attributeMap) {
@@ -256,29 +248,40 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return translation;
 	}
 
-	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID) {
+	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID,
+			int level) {
+
+		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
+			final Map<String, Object> markerActivity = new HashMap<String, Object>();
+			addDefaultTraceAttributes(markerActivity, parentRec);
+			markerActivity.put("MARKER", symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
+			markerActivity.putAll(translateSymbols(parentRec.getAttrs()));
+
+			String eventID = uuidGenerator.newUUID();
+			markerActivity.put("TrackingID", eventID); // NON-NLS
+			markerActivity.put("ParentID", parentUUID); // NON-NLS
+
+			parentUUID = eventID;
+			addInputToBuffer(markerActivity);
+		}
+
 		final Map<String, Object> translatedTrace = new HashMap<String, Object>(); // (rec.getAttrs());
 		addDefaultTraceAttributes(translatedTrace, parentRec);
-		if (parentRec.getParent() == null) {
-			translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
-		}
-		String eventID = uuidGenerator.newUUID();
-		translatedTrace.put("TrackingID", eventID); // NON-NLS
+
+		translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
+		// ** FOR TRACE TREE ** ACTIVITIES NEEDED IN EUM
+		// String eventID = uuidGenerator.newUUID();
+		// translatedTrace.put("TrackingID", eventID); // NON-NLS
 		translatedTrace.put("ParentID", parentUUID); // NON-NLS
+		translatedTrace.put("Level", level); // NON-NLS
+
 		addInputToBuffer(translatedTrace);
 		if (children == null)
 			return;
 
-		parentUUID = eventID;
+		// parentUUID = eventID;
 		for (TraceRecord child : children) {
-			// if (child.getAttrs() != null) {
-			// rec.getAttrs().putAll(child.getAttrs());
-			// LOGGER.log(OpLevel.DEBUG,
-			// StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
-			// "ZorkaConnector.decorating.child"));
-			//
-			// }
-			processTraceRecursive(child, child.getChildren(), parentUUID);
+			processTraceRecursive(child, child.getChildren(), parentUUID, level + 1);
 		}
 	}
 
@@ -291,8 +294,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		translatedTrace.put("CLASS", symbolRegistry.symbolName(masterRecord.getClassId())); // NON-NLS
 		translatedTrace.put("METHOD", symbolRegistry.symbolName(masterRecord.getMethodId())); // NON-NLS
 		translatedTrace.put("SIGNATURE", symbolRegistry.symbolName(masterRecord.getSignatureId())); // NON-NLS
-		translatedTrace.put("MARKER", masterRecord.getMarker() == null ? "TRACE" // NON-NLS
-				: symbolRegistry.symbolName(masterRecord.getMarker().getTraceId()));
+		translatedTrace.put("MARKER", "TRACE"); // NON-NLS
 
 		return translatedTrace;
 	}
@@ -315,24 +317,16 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private TraceRecord cloneTraceRecord(TraceRecord trToCopyFrom, Long wholeTraceTime, Float percentageOffset) {
 		TraceRecord trReturn = new TraceRecord();
 
-		trReturn.setAttrs(trToCopyFrom.getAttrs());
-		trReturn.setCalls(trToCopyFrom.getCalls());
-		trReturn.setClassId(trToCopyFrom.getClassId());
-		trReturn.setErrors(trToCopyFrom.getErrors());
-		trReturn.setException(trToCopyFrom.getException());
-		trReturn.setFlags(trToCopyFrom.getFlags());
-		trReturn.setMarker(new TraceMarker(trToCopyFrom.getTraceId(), trToCopyFrom.getClock()));
-		trReturn.setMethodId(trToCopyFrom.getMethodId());
-		trReturn.setParent(trToCopyFrom.getParent());
-		trReturn.setSignatureId(trToCopyFrom.getSignatureId());
-		trReturn.setTime(trToCopyFrom.getTime());
+		trReturn = trToCopyFrom.copy();
+		trReturn.setChildren(new ArrayList<TraceRecord>());
 		if (trToCopyFrom.getChildren() == null) {
 			return trReturn;
 		}
 		for (TraceRecord children : trToCopyFrom.getChildren()) {
 			Long methodTime = children.getTime();
 			Float percentageMethod = (float) ((double) methodTime / (double) wholeTraceTime);
-			if (percentageMethod >= percentageOffset) {
+			if (percentageMethod >= percentageOffset || MapUtils.isNotEmpty(children.getAttrs())
+					|| children.getMarker() != null) {
 				trReturn.addChild(cloneTraceRecord(children, wholeTraceTime, percentageOffset));
 			}
 		}
