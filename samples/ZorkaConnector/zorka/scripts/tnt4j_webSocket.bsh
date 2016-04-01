@@ -1,0 +1,123 @@
+ /*
+ * Copyright 2014-2016 JKOOL, LLC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+ zorka.require("tracer.bsh");
+ 
+__java_webSocket() {
+
+    _SESSION = new ThreadLocal();
+	
+    augment_message() {
+        process(rec) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("MESSAGE_ID: ");
+            mid = java.util.UUID.randomUUID().toString();
+            sb.append(mid);
+            sb.append(", ");
+            sb.append("SESSION_ID: ");
+            sb.append(_SESSION.get());
+            sb.append(", ");
+            endpoint = rec.get("ENDPOINT");
+            endpoint.sendText(sb.toString(), false);
+            rec.put("MESSAGE_ID", mid);
+
+            return rec;
+        }
+
+        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+    }
+
+    augment_message_session() {
+        process(rec) {
+            handler = rec.get("MESSAGE_HANDLER");
+            java.lang.reflect.Field myField = getField(handler.getClass(), "session");
+            myField.setAccessible(true);
+            org.apache.tomcat.websocket.WsSession session = myField.get(handler);
+
+            String sessionID = session.getHttpSessionId();
+            StringBuilder sessionUUID = new StringBuilder();
+             //8-4-4-4-12
+            sessionUUID.append(sessionID.substring(0,8));
+            sessionUUID.append("-");
+            sessionUUID.append(sessionID.substring(8,12));
+            sessionUUID.append("-");
+            sessionUUID.append(sessionID.substring(12,16));
+            sessionUUID.append("-");
+            sessionUUID.append(sessionID.substring(16,20));
+            sessionUUID.append("-");
+            sessionUUID.append(sessionID.substring(20,32));
+
+            _SESSION.set(sessionUUID.toString());
+            rec.put("SESSION", sessionUUID);
+
+            return rec;
+        }
+
+        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+    }
+	
+    getField(Class clazz, String fieldName) {
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class superClass = clazz.getSuperclass();
+            if (superClass == null) {
+                throw e;
+            } else {
+                return getField(superClass, fieldName);
+            }
+        }
+    }
+	
+    spy.add(spy.instrument ("WEB_SOCKET_SEND")
+        .onEnter(
+            spy.fetchArg("MSG", 1),
+            spy.fetchArg("ENDPOINT", 0),
+            augment_message(),
+            spy.format("MSG", "${MSG}" ),
+            // spy.and(tracer.inTrace("WebSocket"),
+            // spy.put("EVENT_TYPE", "RECEIVE"),
+            // tracer.begin("WebSocket")),
+            tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
+            tracer.attr("MESSAGE_ID", "MESSAGE_ID"),
+            tracer.attr("MSG", "MSG")
+        )
+        .onReturn(
+            tracer.flags(tracer.SUBMIT_TRACE)
+        )
+        .include(spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String", "boolean")));
+ 
+    spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
+        .onEnter(
+            spy.fetchArg("MESSAGE_HANDLER", 0),
+            augment_message_session(),
+            // spy.format("SESSION", "${MESSAGE_HANDLER.session.getHttpSessionId()}" ),
+            spy.put("EVENT_TYPE", "RECEIVE"),
+            tracer.begin("WebSocket"),
+            tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
+            tracer.attr("SESSION", "SESSION")
+        )
+        .onReturn(
+            tracer.flags(tracer.SUBMIT_TRACE)
+        )
+        .include(spy.byInterface("javax.websocket.MessageHandler$Partial")));
+
+    tracer.include("com.slabs.jsfManaged.**", "org.apache.tomcat.websocket.**");
+
+    return this;
+}
+
+java_webSocket = __java_webSocket();

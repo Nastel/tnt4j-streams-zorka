@@ -17,7 +17,7 @@
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-
+        <field name="SESSIONID" locator="JSESSIONID" locator-type="Label"/>
         <field name="EventType" value="ACTIVITY"/>
         <field name="Location" separator="">
             <field-locator locator="HdrIn__host" locator-type="Label"/>
@@ -150,6 +150,24 @@
         </field>
     </parser>
 
+    <parser name="ZorkaWebSocket" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
+        <field name="EventType" value="ACTIVITY"/>
+        <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
+        <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
+               locator-type="Label"/>
+        <field name="ResourceName" value="WebSocket"/>
+        <field name="EventName" value="WebSocket"/>
+        <field name="EventType" value="Receive"/>
+        <field name="Correlator" locator="SESSION" locator-type="Label"/>
+        <field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/>
+        <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
+        <field name="TrackingId" locator="MESSAGE_ID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Message" locator="MSG" locator-type="Label"/>
+        <field name="Level" locator="Level" locator-type="Label"/>
+    </parser>
+
     <parser name="ZorkaTrace" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
         <field name="EventType" value="EVENT"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -175,6 +193,7 @@
         <parser-ref name="ZorkaLDAP"/>
         <parser-ref name="ZorkaWebService"/>
         <parser-ref name="ZorkaJMS"/>
+        <parser-ref name="ZorkaWebSocket"/>
         <parser-ref name="ZorkaTrace"/>
     </stream>
 </tnt-data-source>
