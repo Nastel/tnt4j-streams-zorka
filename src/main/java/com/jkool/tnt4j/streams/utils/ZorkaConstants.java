@@ -33,7 +33,7 @@ public final class ZorkaConstants {
 	/**
 	 * Constant for filtering Zorka traces to contain max value of
 	 */
-	public static final String MAX_TRACE_EVENTS = "MaxTraceEvents";
+	public static final String MAX_TRACE_EVENTS = "MaxTraceEvents"; // NON-NLS
 
 	private ZorkaConstants() {
 
