@@ -336,8 +336,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
 
 		final long reducedTrCount = countTraceRecord(filteredRec);
-		LOGGER.log(OpLevel.INFO, StreamsResources.getStringFormatted(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
-				"ZorkaConnector.reduced.trace", recCount, reducedTrCount, maxTraceEvents));
+		LOGGER.log(OpLevel.INFO,
+				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, "ZorkaConnector.reduced.trace"),
+				recCount, reducedTrCount, maxTraceEvents);
 		return filteredRec;
 	}
 
