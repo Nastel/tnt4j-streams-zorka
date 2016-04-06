@@ -32,8 +32,10 @@ __tnt4j_ldap() {
         )
         .include(
             spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "javax.naming.Name"),
-            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "javax.naming.directory.Attributes"),
-            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String", "javax.naming.directory.SearchControls")
+            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String",
+                "javax.naming.directory.Attributes"),
+            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String",
+                "javax.naming.directory.SearchControls")
         ));
 
     return this;
