@@ -19,21 +19,24 @@
 __java_webSocket() {
 
     _SESSION = new ThreadLocal();
+    _TRACKING = new ThreadLocal();
 	
     augment_message() {
         process(rec) {
             StringBuilder sb = new StringBuilder();
-            sb.append("MESSAGE_ID: ");
-            mid = java.util.UUID.randomUUID().toString();
-            sb.append(mid);
+            sb.append("{");
+            sb.append("ZORKA: TRUE");
+            sb.append(", ");
+            sb.append("TrackingID: ");
+            String tid = _TRACKING.get();
+            sb.append(tid);
             sb.append(", ");
             sb.append("SESSION_ID: ");
             sb.append(_SESSION.get());
-            sb.append(", ");
             endpoint = rec.get("ENDPOINT");
-            endpoint.sendText(sb.toString(), false);
-            rec.put("MESSAGE_ID", mid);
-
+            sb.append("}");
+            rec.put("TrackingID", tid);
+            endpoint.sendText(sb.toString(), true);
             return rec;
         }
 
@@ -60,7 +63,10 @@ __java_webSocket() {
             sessionUUID.append("-");
             sessionUUID.append(sessionID.substring(20,32));
 
+            tid = java.util.UUID.randomUUID().toString();
+            _TRACKING.set(tid.toString());
             _SESSION.set(sessionUUID.toString());
+            rec.put("TrackingID", tid);
             rec.put("SESSION", sessionUUID);
 
             return rec;
@@ -88,18 +94,14 @@ __java_webSocket() {
             spy.fetchArg("ENDPOINT", 0),
             augment_message(),
             spy.format("MSG", "${MSG}" ),
-            // spy.and(tracer.inTrace("WebSocket"),
-            // spy.put("EVENT_TYPE", "RECEIVE"),
-            // tracer.begin("WebSocket")),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
-            tracer.attr("MESSAGE_ID", "MESSAGE_ID"),
             tracer.attr("MSG", "MSG")
         )
         .onReturn(
             tracer.flags(tracer.SUBMIT_TRACE)
         )
-        .include(spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText",
-            "void", "java.lang.String", "boolean")));
+        .include(spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic",
+            "sendText", "void", "java.lang.String", "boolean")));
  
     spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
         .onEnter(
@@ -109,6 +111,7 @@ __java_webSocket() {
             spy.put("EVENT_TYPE", "RECEIVE"),
             tracer.begin("WebSocket"),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
+            tracer.attr("TrackingID", "TrackingID"),
             tracer.attr("SESSION", "SESSION")
         )
         .onReturn(

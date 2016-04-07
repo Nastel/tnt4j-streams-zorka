@@ -273,12 +273,19 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
 			final Map<String, Object> markerActivity = new HashMap<String, Object>();
+			final Map<String, Object> zorkasActivityRecord = translateSymbols(parentRec.getAttrs());
+			markerActivity.putAll(zorkasActivityRecord);
+
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
-			markerActivity.putAll(translateSymbols(parentRec.getAttrs()));
 
-			final String activityID = uuidGenerator.newUUID();
-			markerActivity.put(TNT4J_PROP_TRACKING_ID, activityID);
+			final String activityID;
+			if (markerActivity.get(TNT4J_PROP_TRACKING_ID) == null) {
+				activityID = uuidGenerator.newUUID();
+				markerActivity.put(TNT4J_PROP_TRACKING_ID, activityID);
+			} else {
+				activityID = markerActivity.get(TNT4J_PROP_TRACKING_ID).toString();
+			}
 			markerActivity.put(TNT4J_PROP_PARENT_ID, parentUUID);
 			markerActivity.put(TNT4J_PROP_EV_TYPE, TRACK_TYPE_ACTIVITY);
 			parentUUID = activityID;
@@ -292,7 +299,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			addInputToBuffer(markerEvent);
 		}
 
-		final Map<String, Object> translatedTrace = new HashMap<String, Object>(); // (rec.getAttrs());
+		final Map<String, Object> translatedTrace = new HashMap<String, Object>();
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
 		translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
