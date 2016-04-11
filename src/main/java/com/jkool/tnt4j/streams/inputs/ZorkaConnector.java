@@ -273,8 +273,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
 			final Map<String, Object> markerActivity = new HashMap<String, Object>();
-			final Map<String, Object> zorkasActivityRecord = translateSymbols(parentRec.getAttrs());
-			markerActivity.putAll(zorkasActivityRecord);
+			final Map<String, Object> zorkaActivityRecord = translateSymbols(parentRec.getAttrs());
+			markerActivity.putAll(zorkaActivityRecord);
 
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
