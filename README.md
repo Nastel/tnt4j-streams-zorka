@@ -39,7 +39,8 @@ Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter
 ## Samples:
 
 ### Running samples
-When release assembly is built samples are located in `samples` directory i.e. `../build/tnt4j-streams-zorka/tnt4j-streams-zorka-1.0.0/samples`.
+When release assembly is built samples are located in `samples` directory i.e.
+`../build/tnt4j-streams-zorka/tnt4j-streams-zorka-1.0.0/samples`.
 To run desired sample:
 * go to sample directory
 * run `run.bat` or `run.sh` depending on Your OS
@@ -65,22 +66,33 @@ Sample stream configuration:
         xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+        <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="URI" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="SESSIONID" locator="JSESSIONID" locator-type="Label"/>
+        <field name="Location" separator="">
+            <field-locator locator="HdrIn__host" locator-type="Label"/>
+        </field>
 
-        <field name="Location" locator="HdrIn__host" locator-type="Label"/>
-
-        <field name="EventType" value="SEND"/>
-        <field name="ResourceName" locator="URI" locator-type="Label"/>
         <field name="CompCode" locator="STATUS" locator-type="Label">
             <field-map source="100:206" target="SUCCESS" type="Range"/>
+            <field-map source="300:308" target="WARNING" type="Range"/>
+            <field-map source="400:417" target="ERROR" type="Range"/>
+            <field-map source="500:511" target="ERROR" type="Range"/>
+        </field>
+        <field name="Severity" locator="STATUS" locator-type="Label">
+            <field-map source="100:206" target="INFO" type="Range"/>
             <field-map source="300:308" target="WARNING" type="Range"/>
             <field-map source="400:417" target="ERROR" type="Range"/>
             <field-map source="500:511" target="ERROR" type="Range"/>
@@ -95,43 +107,55 @@ Sample stream configuration:
 
 
     <parser name="ZorkaSQL" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
-        <field name="EventType" value="CALL"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
             <field-map source="YES" target="ERROR"/>
             <field-map source="" target="SUCCESS"/>
         </field>
+
+        <field name="Severity" locator="ERROR" locator-type="Label">
+            <field-map source="YES" target="ERROR"/>
+            <field-map source="" target="SUCCESS"/>
+        </field>
+
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+
+        <field name="ResourceName" locator="DB" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="SQL" locator-type="Label"/>
             <field-locator locator="DB" locator-type="Label"/>
         </field>
-
-        <field name="Tag" locator="MARKER" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
-        <field name="Message" separator=",">
+        <field name="ResourceName" separator=",">
             <field-locator locator="FILTER" locator-type="Label"/>
             <field-locator locator="DC" locator-type="Label"/>
             <field-locator locator="NAME" locator-type="Label"/>
@@ -140,16 +164,21 @@ Sample stream configuration:
 
     <parser name="ZorkaWebService" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+
+        <field name="ResourceName" locator="SOAP_METHOD" locator-type="Label"/>
 
         <field name="Message" separator=",">
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
@@ -158,17 +187,21 @@ Sample stream configuration:
     </parser>
 
     <parser name="ZorkaJMS" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" value="CALL"/>
+        <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="Class" locator="CLASS" locator-type="Label"/>
-        <field name="Method" locator="METHOD" locator-type="Label"/>
+        <field name="ResourceName" value="JMS"/>
+        <field name="EventName" value="JMS"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
             <field-locator locator="TEXT" locator-type="Label"/>
@@ -179,23 +212,65 @@ Sample stream configuration:
         </field>
     </parser>
 
+    <parser name="ZorkaWebSocket" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
+        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
+        <field name="CompCode" locator="ERROR" locator-type="Label">
+            <field-map source="YES" target="ERROR"/>
+            <field-map source="" target="SUCCESS"/>
+        </field>
+        <field name="Severity" locator="ERROR" locator-type="Label">
+            <field-map source="YES" target="ERROR"/>
+            <field-map source="" target="SUCCESS"/>
+        </field>
+        <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
+               locator-type="Label"/>
+        <field name="ResourceName" value="WebSocket"/>
+        <field name="EventName" value="WebSocket"/>
+        <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
+        <!--field name="Correlator" locator="SESSION" locator-type="Label"/>
+        <field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
+        <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Message" locator="MSG" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+    </parser>
 
-    <stream name="FileStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
+
+    <parser name="ZorkaTrace" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
+        <field name="EventType" value="EVENT"/>
+        <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="Tag" locator="MARKER" locator-type="Label"/>
+        <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
+               locator-type="Label"/>
+        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/>
+        <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Level" locator="Level" locator-type="Label"/>
+        <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
+    </parser>
+
+
+    <stream name="ZorkaStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
-        <!--<property name="Host" value="localhost"/>-->
-        <!--<property name="Port" value="8640"/>-->
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>
         <parser-ref name="ZorkaLDAP"/>
         <parser-ref name="ZorkaWebService"/>
         <parser-ref name="ZorkaJMS"/>
+        <parser-ref name="ZorkaWebSocket"/>
+        <parser-ref name="ZorkaTrace"/>
     </stream>
 </tnt-data-source>
 ```
 
 Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`,
-`ZorkaWebService` and `ZorkaJMS` shall be used.
+`ZorkaWebService`, `ZorkaJMS`, `ZorkaWebSocket` and `ZorkaTrace` shall be used.
 
 `ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property
 indicates that stream should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map`
@@ -217,9 +292,15 @@ data structure and puts it to buffer queue to be processed by referenced parsers
 `ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is
 `JMS_TNT4J_STREAMS_TRACKER`.
 
+`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace
+marker is `WebSocket`.
+
+`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace
+marker is `TRACE`.
+
 Activity event mapped fields:
 
-* `EventType` we set static value `CALL`
+* `EventType` is mapped from trace attribute named `EvType`. Some parsers sets static value `EVENT`.
 * `StartTime` is mapped from trace attribute named `CLOCK`. Zorka returns this field as UNIX timestamp.
 * `EventName` is mapped from trace attribute named `MARKER`.
 * `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
@@ -230,6 +311,8 @@ Activity event mapped fields:
 value is retrieved from JMS message field `correlationId`.
 * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
 then this field is filled with trace data as string.
+* `TrackingId` is mapped from trace attribute named `TrackingID`. It represents unique identifier of activity event.
+* `ParentId` is mapped from trace attribute named `ParentID`. It represents unique identifier of parent trace activity.
 
 Additional fields can be mapped on user demand.
 
