@@ -115,8 +115,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
 	/**
-	 * Constructs an empty ZorkaConnector. Requires configuration settings to set
-	 * input stream source.
+	 * Constructs an empty ZorkaConnector. Requires configuration settings to
+	 * set input stream source.
 	 */
 	public ZorkaConnector() {
 		this(LOGGER);
