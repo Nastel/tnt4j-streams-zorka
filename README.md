@@ -330,11 +330,14 @@ Details on TNT4J-Streams related configuration can be found at
 
 * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
 * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
+* MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` means
+stream whole stack trace. (Optional)
 
     sample:
 ```xml
     <property name="Host" value="some.host.name"/>
     <property name="Port" value="8645"/>
+    <property name="MaxTraceEvents" value="32"/>
 ```
 
 How to Build TNT4J-Streams

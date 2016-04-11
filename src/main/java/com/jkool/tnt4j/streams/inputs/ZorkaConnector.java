@@ -62,6 +62,8 @@ import com.nastel.jkool.tnt4j.uuid.UUIDFactory;
  * </li>
  * <li>Port - port number of machine running Zico service to listen. (Optional)
  * </li>
+ * <li>MaxTraceEvents - maximum number of events to stream for single stack
+ * trace. (Optional)</li>
  * </ul>
  *
  * @version $Revision: 1 $
@@ -113,7 +115,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
 	/**
-	 * Construct empty ZorkaConnector. Requires configuration settings to set
+	 * Constructs an empty ZorkaConnector. Requires configuration settings to set
 	 * input stream source.
 	 */
 	public ZorkaConnector() {
@@ -130,9 +132,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		super(logger);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Object getProperty(String name) {
 		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
@@ -147,9 +146,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return super.getProperty(name);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setProperties(Collection<Map.Entry<String, String>> props) throws Exception {
 		if (props == null) {
@@ -170,9 +166,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initialize() throws Exception {
 		super.initialize();
@@ -381,9 +374,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return count;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected ActivityInfo applyParsers(Object data) throws IllegalStateException, ParseException {
@@ -400,17 +390,11 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		// operation not required and does nothing now.
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean isInputEnded() {
 		return inputEnd;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void cleanup() {
 		if (zicoService != null) {
@@ -420,9 +404,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		super.cleanup();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected long getActivityItemByteSize(Map<String, ?> itemMap) {
 		return 0; // TODO
