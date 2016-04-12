@@ -127,6 +127,9 @@
             </xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
+            <xs:enumeration value="Days"/>
+            <xs:enumeration value="Hours"/>
+            <xs:enumeration value="Minutes"/>
             <xs:enumeration value="Seconds"/>
             <xs:enumeration value="Milliseconds"/>
             <xs:enumeration value="Microseconds"/>
@@ -145,11 +148,11 @@
         <xs:union memberTypes="UnitsTypes xs:string"/>
     </xs:simpleType>
 
-    <!-- TNT4J Stream Activity Event Field Types -->
+    <!-- TNT4J-Streams Activity Event Field Types -->
     <xs:simpleType name="StreamFieldType">
         <xs:annotation>
             <xs:documentation>
-                Set of predefined TNT4J Stream event attributes.
+                Set of predefined TNT4J-Streams event attributes.
             </xs:documentation>
         </xs:annotation>
 
@@ -1119,6 +1122,157 @@
         </xs:attribute>
     </xs:complexType>
 
+    <!-- Stream parser definition -->
+    <xs:complexType name="ParserType">
+        <xs:sequence>
+            <xs:element name="property" type="ParserProperty" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Specifies a configuration property for the parser - property names are parser-specific.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="field" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Translates an item in an activity string to an activity field
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="field-locator" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Associates a field location from the activity string with an activity field.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="field-map" type="FieldMap" minOccurs="0"
+                                                maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                Maps a field value from the activity string to the required field value
+                                                for jKool Cloud Service.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attributeGroup ref="FieldLocatorAttributes"/>
+                            </xs:complexType>
+                        </xs:element>
+
+                        <xs:element name="field-map" type="FieldMap" minOccurs="0"
+                                    maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Maps a field value from the activity string to the required field value for jKool
+                                    Cloud Service.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+
+                        <xs:element name="parser-ref" type="ParserRef" minOccurs="0"
+                                    maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Associates field with defined parser to additionally process field value.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+
+                    <xs:attribute name="name" use="required" type="StreamFieldTypeAll">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Name of TNT4J-Streams field from defined list of fields.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+
+                    <xs:attribute name="separator" use="optional" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                String to insert between values when concatenating multiple activity values into field.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+
+                    <xs:attributeGroup ref="FieldLocatorAttributes"/>
+                </xs:complexType>
+            </xs:element>
+
+        </xs:sequence>
+
+        <xs:attributeGroup ref="EntityAttributeGroup">
+            <xs:annotation>
+                <xs:documentation>
+                    Defines name and implementing class for parser.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attributeGroup>
+
+        <xs:attribute name="tags" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Tags list (separated using ',') for a parser. Tags are used to map incoming parseable data package
+                    with parser instance dedicated to parse it.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Stream definition -->
+    <xs:complexType name="StreamType">
+        <xs:sequence>
+            <xs:element name="property" type="StreamProperty" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Specifies a configuration property for the stream - property names are stream-specific.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="parser-ref" type="ParserRef" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Associates a parser with this stream - if multiple parsers, they are applied in the order
+                        specified here until one successfully parses activity string.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="tnt4j-properties" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Defines set of specific TNT4J properties for this stream.
+                    </xs:documentation>
+                </xs:annotation>
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="property" type="Property" minOccurs="1" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Defines a TNT4J property.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attributeGroup ref="EntityAttributeGroup">
+            <xs:annotation>
+                <xs:documentation>
+                    Defines name and implementing class for stream.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attributeGroup>
+    </xs:complexType>
+
     <!-- Configuration root -->
     <xs:element name="tnt-data-source">
         <xs:annotation>
@@ -1128,172 +1282,29 @@
         </xs:annotation>
 
         <xs:complexType>
-            <xs:sequence>
+            <xs:annotation>
+                <xs:documentation>
+                    Defines TNT4J-Streams data source configuration.
+                </xs:documentation>
+            </xs:annotation>
 
+            <xs:sequence>
                 <!-- Parser definition -->
-                <xs:element name="parser" minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="parser" type="ParserType" minOccurs="1" maxOccurs="unbounded">
                     <xs:annotation>
                         <xs:documentation>
                             Defines a parser to extract activity elements from a string identifying an activity.
                         </xs:documentation>
                     </xs:annotation>
-
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="property" type="ParserProperty" minOccurs="0" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Specifies a configuration property for the parser - property names are
-                                        parser-specific.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-
-                            <xs:element name="field" minOccurs="1" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Translates an item in an activity string to an activity field
-                                    </xs:documentation>
-                                </xs:annotation>
-                                <xs:complexType>
-                                    <xs:choice>
-                                        <xs:element name="field-locator" minOccurs="0" maxOccurs="unbounded">
-                                            <xs:annotation>
-                                                <xs:documentation>
-                                                    Associates a field location from the activity string with an
-                                                    activity field.
-                                                </xs:documentation>
-                                            </xs:annotation>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="field-map" type="FieldMap" minOccurs="0"
-                                                                maxOccurs="unbounded">
-                                                        <xs:annotation>
-                                                            <xs:documentation>
-                                                                Maps a field value from the activity string to the
-                                                                required field value for jKool Cloud Service.
-                                                            </xs:documentation>
-                                                        </xs:annotation>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                                <xs:attributeGroup ref="FieldLocatorAttributes"/>
-                                            </xs:complexType>
-                                        </xs:element>
-
-                                        <xs:element name="field-map" type="FieldMap" minOccurs="0"
-                                                    maxOccurs="unbounded">
-                                            <xs:annotation>
-                                                <xs:documentation>
-                                                    Maps a field value from the activity string to the required field
-                                                    value for jKool Cloud Service.
-                                                </xs:documentation>
-                                            </xs:annotation>
-                                        </xs:element>
-
-                                        <xs:element name="parser-ref" type="ParserRef" minOccurs="0"
-                                                    maxOccurs="unbounded">
-                                            <xs:annotation>
-                                                <xs:documentation>
-                                                    Associates field with defined parser to additionally process field
-                                                    value.
-                                                </xs:documentation>
-                                            </xs:annotation>
-                                        </xs:element>
-                                    </xs:choice>
-
-                                    <xs:attribute name="name" use="required" type="StreamFieldTypeAll">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                Name of TNT4J Stream field from defined list of fields.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:attribute>
-
-                                    <xs:attribute name="separator" use="optional" type="xs:string">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                String to insert between values when concatenating multiple activity
-                                                values into field.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:attribute>
-
-                                    <xs:attributeGroup ref="FieldLocatorAttributes"/>
-                                </xs:complexType>
-                            </xs:element>
-
-                        </xs:sequence>
-
-                        <xs:attributeGroup ref="EntityAttributeGroup">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    Defines name and implementing class for parser.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:attributeGroup>
-
-                        <xs:attribute name="tags" use="optional" type="xs:string">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    Tags list (separated using ',') for a parser. Tags are used to map incoming
-                                    parseable data package with parser instance dedicated to parse it.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:attribute>
-                    </xs:complexType>
                 </xs:element>
 
                 <!-- Stream definition -->
-                <xs:element name="stream" minOccurs="1" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="property" type="StreamProperty" minOccurs="0" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Specifies a configuration property for the stream - property names are
-                                        stream-specific.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-
-                            <xs:element name="parser-ref" type="ParserRef" minOccurs="1" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Associates a parser with this stream - if multiple parsers, they are applied in
-                                        the order specified here until one successfully parses activity string.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-
-                            <xs:element name="tnt4j-properties" minOccurs="0" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        Defines set of specific TNT4J properties for this stream.
-                                    </xs:documentation>
-                                </xs:annotation>
-
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:element name="property" type="Property" minOccurs="1" maxOccurs="unbounded">
-                                            <xs:annotation>
-                                                <xs:documentation>
-                                                    Defines a TNT4J property.
-                                                </xs:documentation>
-                                            </xs:annotation>
-                                        </xs:element>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-
-                        <xs:attributeGroup ref="EntityAttributeGroup">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    Defines name and implementing class for stream.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:attributeGroup>
-                    </xs:complexType>
+                <xs:element name="stream" type="StreamType" minOccurs="1" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Defines a activity elements RAW data input stream.
+                        </xs:documentation>
+                    </xs:annotation>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
@@ -1304,6 +1315,12 @@
             <xs:field xpath="@name"/>
         </xs:key>
 
+        <!-- Make sure parser references are to valid parser names -->
+        <xs:keyref name="ValidFieldParserRef" refer="UniqueParserName">
+            <xs:selector xpath="parser/field/parser-ref"/>
+            <xs:field xpath="@name"/>
+        </xs:keyref>
+
         <!-- Make sure stream names are unique -->
         <xs:key name="UniqueStreamName">
             <xs:selector xpath="stream"/>
@@ -1311,7 +1328,7 @@
         </xs:key>
 
         <!-- Make sure parser references are to valid parser names -->
-        <xs:keyref name="ValidParserRef" refer="UniqueParserName">
+        <xs:keyref name="ValidStreamParserRef" refer="UniqueParserName">
             <xs:selector xpath="stream/parser-ref"/>
             <xs:field xpath="@name"/>
         </xs:keyref>
