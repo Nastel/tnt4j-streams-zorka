@@ -4,7 +4,7 @@
         xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -45,7 +45,7 @@
 
 
     <parser name="ZorkaSQL" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
@@ -79,7 +79,7 @@
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -102,7 +102,7 @@
 
     <parser name="ZorkaWebService" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -125,7 +125,7 @@
     </parser>
 
     <parser name="ZorkaJMS" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -151,7 +151,8 @@
     </parser>
 
     <parser name="ZorkaWebSocket" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <!--    <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/> -->
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
@@ -167,8 +168,8 @@
         <field name="ResourceName" value="WebSocket"/>
         <field name="EventName" value="WebSocket"/>
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
-        <!--field name="Correlator" locator="SESSION" locator-type="Label"/>
-        <field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
+        <field name="Correlator" locator="SESSION" locator-type="Label"/>
+        <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>

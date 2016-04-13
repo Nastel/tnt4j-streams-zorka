@@ -95,7 +95,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private static final String TNT4J_PROP_TRACKING_ID = "TrackingID"; // NON-NLS
 	private static final String TNT4J_PROP_PARENT_ID = "ParentID"; // NON-NLS
 	private static final String TNT4J_PROP_LEVEL = "Level"; // NON-NLS
-	private static final String TNT4J_PROP_EV_TYPE = "EvType"; // NON-NLS
+	private static final String TNT4J_PROP_EV_TYPE = "EVENT_TYPE"; // NON-NLS
 
 	private static final String TRACE_MARKER = "TRACE"; // NON-NLS
 
@@ -264,28 +264,32 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID,
 			int level) {
 
+		final Map<Integer, Object> attrs = parentRec.getAttrs();
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
 			final Map<String, Object> markerActivity = new HashMap<String, Object>();
-			final Map<String, Object> zorkaActivityRecord = translateSymbols(parentRec.getAttrs());
+			final Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
 			markerActivity.putAll(zorkaActivityRecord);
 
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
 
-			final String activityID;
-			if (markerActivity.get(TNT4J_PROP_TRACKING_ID) == null) {
-				activityID = uuidGenerator.newUUID();
-				markerActivity.put(TNT4J_PROP_TRACKING_ID, activityID);
-			} else {
-				activityID = markerActivity.get(TNT4J_PROP_TRACKING_ID).toString();
-			}
+			final String activityID = uuidGenerator.newUUID();
+			markerActivity.put(TNT4J_PROP_TRACKING_ID, activityID);
 			markerActivity.put(TNT4J_PROP_PARENT_ID, parentUUID);
 			markerActivity.put(TNT4J_PROP_EV_TYPE, TRACK_TYPE_ACTIVITY);
 			parentUUID = activityID;
 			addInputToBuffer(markerActivity);
 
 			final Map<String, Object> markerEvent = new HashMap<String, Object>(markerActivity);
-			final String eventID = uuidGenerator.newUUID();
+
+			final String eventID;
+			if (markerEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
+				eventID = uuidGenerator.newUUID();
+				markerEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
+			} else {
+				eventID = markerEvent.get(TNT4J_PROP_TRACKING_ID).toString();
+			}
+
 			markerEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
 			markerEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
 			markerEvent.put(TNT4J_PROP_EV_TYPE, TRACK_TYPE_EVENT);
@@ -295,7 +299,22 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		final Map<String, Object> translatedTrace = new HashMap<String, Object>();
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
-		translatedTrace.putAll(translateSymbols(parentRec.getAttrs()));
+		if (attrs != null) {
+			final Map<String, Object> attributeEvent = new HashMap<String, Object>();
+			attributeEvent.putAll(translateSymbols(attrs));
+			attributeEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
+			final String eventID;
+			if (attributeEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
+				eventID = uuidGenerator.newUUID();
+				attributeEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
+			} else {
+				eventID = attributeEvent.get(TNT4J_PROP_TRACKING_ID).toString();
+			}
+			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
+				addInputToBuffer(attributeEvent);
+			}
+		}
+
 		// ** FOR TRACE TREE ** ACTIVITIES NEEDED IN EUM
 		// String eventID = uuidGenerator.newUUID();
 		// translatedTrace.put(TNT4J_PROP_TRACKING_ID, eventID);

@@ -19,24 +19,33 @@
 __java_webSocket() {
 
     _SESSION = new ThreadLocal();
-    _TRACKING = new ThreadLocal();
+    _TRACKING_RECEIVE = new ThreadLocal();
+    _TRACKING_SEND = new ThreadLocal();
 	
     augment_message() {
         process(rec) {
             StringBuilder sb = new StringBuilder();
             sb.append("{");
-            sb.append("ZORKA: TRUE");
+            sb.append("\"ZORKA\": \"TRUE\"");
             sb.append(", ");
-            sb.append("TrackingID: ");
-            String tid = _TRACKING.get();
-            sb.append(tid);
-            sb.append(", ");
-            sb.append("SESSION_ID: ");
-            sb.append(_SESSION.get());
+            sb.append("\"ReceiveTrackingID\": \"");
+            String rtid = _TRACKING_RECEIVE.get();
+            sb.append(rtid);
+            sb.append("\", ");
+            sb.append("\"SendTrackingID\": \"");
+            String stid = _TRACKING_SEND.get();
+            sb.append(stid);
+            sb.append("\", ");
+            sb.append("\"SESSION_ID\": \"");
+            String sessionUUID = _SESSION.get();
+            sb.append(sessionUUID);
             endpoint = rec.get("ENDPOINT");
-            sb.append("}");
-            rec.put("TrackingID", tid);
+            sb.append("\"}");
+            rec.put("SendTrackingID", stid);
             endpoint.sendText(sb.toString(), true);
+            rec.put("ReceiveTrackingID", tid);
+            rec.put("SESSION", sessionUUID);
+
             return rec;
         }
 
@@ -63,10 +72,13 @@ __java_webSocket() {
             sessionUUID.append("-");
             sessionUUID.append(sessionID.substring(20,32));
 
-            tid = java.util.UUID.randomUUID().toString();
-            _TRACKING.set(tid.toString());
+            String rtid = java.util.UUID.randomUUID().toString();
+            String stid = java.util.UUID.randomUUID().toString();
+
+            _TRACKING_SEND.set(stid);
+            _TRACKING_RECEIVE.set(rtid);
             _SESSION.set(sessionUUID.toString());
-            rec.put("TrackingID", tid);
+            rec.put("ReceiveTrackingID", rtid);
             rec.put("SESSION", sessionUUID);
 
             return rec;
@@ -94,6 +106,10 @@ __java_webSocket() {
             spy.fetchArg("ENDPOINT", 0),
             augment_message(),
             spy.format("MSG", "${MSG}" ),
+            spy.put("EVENT_TYPE", "SEND"),
+            spy.put("MARKER", "WebSocket"),
+            tracer.attr("MARKER", "MARKER"),
+            tracer.attr("TrackingID", "SendTrackingID"),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
             tracer.attr("MSG", "MSG")
         )
@@ -108,15 +124,18 @@ __java_webSocket() {
             spy.fetchArg("MESSAGE_HANDLER", 0),
             augment_message_session(),
             // spy.format("SESSION", "${MESSAGE_HANDLER.session.getHttpSessionId()}" ),
-            spy.put("EVENT_TYPE", "RECEIVE"),
             tracer.begin("WebSocket"),
+            spy.put("EVENT_TYPE", "RECEIVE"),
+            spy.put("MARKER", "WebSocket"),
+            tracer.attr("MARKER", "MARKER"),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
-            tracer.attr("TrackingID", "TrackingID"),
+            tracer.attr("TrackingID", "ReceiveTrackingID"),
             tracer.attr("SESSION", "SESSION")
         )
-        .onReturn(
+        /* .onReturn(
             tracer.flags(tracer.SUBMIT_TRACE)
-        )
+         )
+		 */
         .include(spy.byInterface("javax.websocket.MessageHandler$Partial"),
             spy.byInterface("javax.websocket.MessageHandler$Whole")));
 
