@@ -36,7 +36,8 @@ __tnt4j_ldap() {
                 "javax.naming.directory.Attributes"),
             spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String",
                 "javax.naming.directory.SearchControls")
-        ));
+        )
+    );
 
     return this;
 }

@@ -52,14 +52,16 @@ __javax_jms() {
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
         .onError(spy.fetchError("ERR"), spy.strTime("TIME"), spy.markError())
         .onSubmit(spy.strTime("TIME"))
-        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageListener", "onMessage", "void", "javax.jms.Message")));
+        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageListener", "onMessage", "void", "javax.jms.Message"))
+    );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_PRODUCER1")
         .onEnter(spy.fetchArg("MSG", 1),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
             tnt4j._attributeTntCorrIds(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
-        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void", "javax.jms.Message")));
+        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void", "javax.jms.Message"))
+    );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_PRODUCER2")
         .onEnter(spy.fetchArg("MSG", 2),
@@ -67,14 +69,16 @@ __javax_jms() {
             tnt4j._attributeTntCorrIds(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void",
-            "javax.jms.Destination", "javax.jms.Message")));
+            "javax.jms.Destination", "javax.jms.Message"))
+    );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_CONSUMER")
         .onReturn(spy.fetchRetVal("MSG"),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
             tnt4j._attributeTntCorrIds(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
-        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageConsumer", "~receive.*", "javax.jms.Message")));
+        .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageConsumer", "~receive.*", "javax.jms.Message"))
+    );
 
     return this;
 }

@@ -39,7 +39,9 @@ __tnt4j_sql() {
 		        spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
 		        spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
 		        spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")));
+		        spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")
+		    )
+	);
 
     return this;
 }

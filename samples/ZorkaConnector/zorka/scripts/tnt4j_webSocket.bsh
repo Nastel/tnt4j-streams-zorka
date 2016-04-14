@@ -116,8 +116,12 @@ __java_webSocket() {
         .onReturn(
             tracer.flags(tracer.SUBMIT_TRACE)
         )
-        .include(spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic",
-            "sendText", "void", "java.lang.String", "boolean")));
+        .include(
+            spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String",
+                "boolean"),
+            spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String")
+        )
+    );
  
     spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
         .onEnter(
@@ -136,8 +140,11 @@ __java_webSocket() {
             tracer.flags(tracer.SUBMIT_TRACE)
          )
 		 */
-        .include(spy.byInterface("javax.websocket.MessageHandler$Partial"),
-            spy.byInterface("javax.websocket.MessageHandler$Whole")));
+        .include(
+            spy.byInterface("javax.websocket.MessageHandler$Partial"),
+            spy.byInterface("javax.websocket.MessageHandler$Whole")
+        )
+    );
 
     tracer.include("com.slabs.jsfManaged.**", "org.apache.tomcat.websocket.**");
 

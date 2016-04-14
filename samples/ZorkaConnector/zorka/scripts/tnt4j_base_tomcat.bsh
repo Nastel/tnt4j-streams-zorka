@@ -74,7 +74,8 @@ __tnt4j() {
             this._attributeTntCorrIds(),
             tracer.flags(tracer.SUBMIT_TRACE)
         )
-        .include(spy.byMethod("org.apache.catalina.core.StandardEngineValve", "invoke")));
+        .include(spy.byMethod("org.apache.catalina.core.StandardEngineValve", "invoke"))
+    );
 
     return this;
 }
