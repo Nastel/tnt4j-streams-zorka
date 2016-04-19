@@ -933,7 +933,7 @@
     <xs:attributeGroup name="EntityAttributeGroup">
         <xs:annotation>
             <xs:documentation>
-                Defines attributes common to all configuration entites.
+                Defines attributes common to all configuration entities.
             </xs:documentation>
         </xs:annotation>
 
@@ -1105,18 +1105,18 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Parser reference definition -->
-    <xs:complexType name="ParserRef">
+    <!-- Entity reference definition -->
+    <xs:complexType name="Reference">
         <xs:annotation>
             <xs:documentation>
-                Associates enclosing entity with defined parser reference.
+                Associates enclosing entity with other defined entity reference.
             </xs:documentation>
         </xs:annotation>
 
         <xs:attribute name="name" use="required" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
-                    Must be name of a defined parser.
+                    Must be name of a defined entity.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -1173,7 +1173,7 @@
                             </xs:annotation>
                         </xs:element>
 
-                        <xs:element name="parser-ref" type="ParserRef" minOccurs="0"
+                        <xs:element name="parser-ref" type="Reference" minOccurs="0"
                                     maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:documentation>
@@ -1234,11 +1234,20 @@
                 </xs:annotation>
             </xs:element>
 
-            <xs:element name="parser-ref" type="ParserRef" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="parser-ref" type="Reference" minOccurs="1" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
-                        Associates a parser with this stream - if multiple parsers, they are applied in the order
-                        specified here until one successfully parses activity string.
+                        Associates a parser with this stream. If multiple parsers associated, they are applied in
+                        configuration defined order until one successfully parses activity data.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="reference" type="Reference" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Associates a defined entity with this stream. It can be parser (covers "parser-ref"), other
+                        TNT4J stream, Java Input Stream, etc.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -1268,6 +1277,61 @@
             <xs:annotation>
                 <xs:documentation>
                     Defines name and implementing class for stream.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attributeGroup>
+    </xs:complexType>
+
+    <!-- Java object parameter definition -->
+    <xs:complexType name="ParamType">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a java object constructor parameter: argument value and type.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the parameter.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="value" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Argument value of the parameter.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="type" use="required" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Parameter type class name.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- Java object definition -->
+    <xs:complexType name="JavaObjectType">
+        <xs:sequence>
+            <xs:element name="param" type="ParamType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        Specifies a configuration parameter for referenced java object.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+
+        </xs:sequence>
+
+        <xs:attributeGroup ref="EntityAttributeGroup">
+            <xs:annotation>
+                <xs:documentation>
+                    Defines name and implementing class for Java object.
                 </xs:documentation>
             </xs:annotation>
         </xs:attributeGroup>
@@ -1306,6 +1370,15 @@
                         </xs:documentation>
                     </xs:annotation>
                 </xs:element>
+
+                <!-- Java object definition -->
+                <xs:element name="java-object" type="JavaObjectType" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Defines Java object parameters to reference.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
 
@@ -1330,6 +1403,30 @@
         <!-- Make sure parser references are to valid parser names -->
         <xs:keyref name="ValidStreamParserRef" refer="UniqueParserName">
             <xs:selector xpath="stream/parser-ref"/>
+            <xs:field xpath="@name"/>
+        </xs:keyref>
+
+        <!-- Make sure stream references are to valid parser names -->
+        <xs:keyref name="ValidStreamParserReference" refer="UniqueParserName">
+            <xs:selector xpath="stream/reference"/>
+            <xs:field xpath="@name"/>
+        </xs:keyref>
+
+        <!-- Make sure stream references are to valid stream names -->
+        <xs:keyref name="ValidStreamStreamReference" refer="UniqueStreamName">
+            <xs:selector xpath="stream/reference"/>
+            <xs:field xpath="@name"/>
+        </xs:keyref>
+
+        <!-- Make sure java-object names are unique -->
+        <xs:key name="UniqueJavaObjectName">
+            <xs:selector xpath="java-object"/>
+            <xs:field xpath="@name"/>
+        </xs:key>
+
+        <!-- Make sure stream references are to valid java-object names -->
+        <xs:keyref name="ValidStreamJavaObjectReference" refer="UniqueJavaObjectName">
+            <xs:selector xpath="stream/reference"/>
             <xs:field xpath="@name"/>
         </xs:keyref>
     </xs:element>
