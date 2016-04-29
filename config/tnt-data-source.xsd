@@ -858,7 +858,7 @@
             </xs:annotation>
         </xs:attribute>
 
-        <xs:attribute name="value" use="required" type="xs:string">
+        <xs:attribute name="value" use="optional" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     Value of the property.
