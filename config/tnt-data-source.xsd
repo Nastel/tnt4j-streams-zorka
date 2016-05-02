@@ -838,18 +838,6 @@
             </xs:documentation>
         </xs:annotation>
 
-        <!--xs:complexContent>
-            <xs:restriction base="Property">
-                <xs:attribute name="name" use="required" type="StreamPropertyTypes">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Name of the property from StreamProperties set or custom string.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-            </xs:restriction>
-        </xs:complexContent-->
-
         <xs:attribute name="name" use="required" type="StreamPropertyTypes">
             <xs:annotation>
                 <xs:documentation>
@@ -875,18 +863,6 @@
             </xs:documentation>
         </xs:annotation>
 
-        <!--xs:complexContent>
-            <xs:restriction base="Property">
-                <xs:attribute name="name" use="required" type="ParserPropertyTypes">
-                    <xs:annotation>
-                        <xs:documentation>
-                            Name of the property from ParserProperties set or custom string.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:attribute>
-            </xs:restriction>
-        </xs:complexContent-->
-
         <xs:attribute name="name" use="required" type="ParserPropertyTypes">
             <xs:annotation>
                 <xs:documentation>
@@ -895,7 +871,7 @@
             </xs:annotation>
         </xs:attribute>
 
-        <xs:attribute name="value" use="required" type="xs:string">
+        <xs:attribute name="value" use="optional" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     Value of the property.
@@ -920,7 +896,7 @@
             </xs:annotation>
         </xs:attribute>
 
-        <xs:attribute name="value" use="required" type="xs:string">
+        <xs:attribute name="value" use="optional" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     Value of the property.
