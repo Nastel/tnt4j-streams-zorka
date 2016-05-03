@@ -193,6 +193,35 @@
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
     </parser>
 
+    <parser name="JMXDataParser" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser">
+        <property name="LocPathDelim" value=""/>
+        <field name="EventType" value="SNAPSHOT"/>
+        <field name="HeapMemory">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Memory","HeapMemoryUsage","used"
+            </field-locator>
+        </field>
+        <field name="ThreadCount">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Threading","ThreadCount"
+            </field-locator>
+        </field>
+        <field name="GCTime">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime"
+            </field-locator>
+        </field>
+        <field name="ClassCount">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=ClassLoading","LoadedClassCount"
+            </field-locator>
+        </field>
+        <field name="ClassPath">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Runtime","ClassPath"
+            </field-locator>
+        </field>
+    </parser>
 
     <stream name="ZorkaStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
@@ -205,4 +234,21 @@
         <parser-ref name="ZorkaWebSocket"/>
         <parser-ref name="ZorkaTrace"/>
     </stream>
+
+    <stream name="ZabbixStream" class="com.jkool.tnt4j.streams.inputs.JMXZabbixDataPuller">
+        <property name="HaltIfNoParser" value="false"/>
+        <property name="CronSchedExpr" value="0/15 * * 1/1 * ? *"/>
+        <property name="JMXQuery">
+            <![CDATA[
+                "java","java.lang:type=Memory","HeapMemoryUsage","used"|
+                "java","java.lang:type=Threading","ThreadCount"|
+                "java","java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime"|
+                "java","java.lang:type=ClassLoading","LoadedClassCount"|
+                "java","java.lang:type=Runtime","ClassPath"
+            ]]>
+        </property>
+
+        <parser-ref name="JMXDataParser"/>
+    </stream>
+
 </tnt-data-source>

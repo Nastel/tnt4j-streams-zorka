@@ -58,12 +58,12 @@ import com.nastel.jkool.tnt4j.uuid.UUIDFactory;
  * <p>
  * This activity stream supports the following properties:
  * <ul>
- * <li>Host - host name of machine running Zico service to listen. (Optional)
- * </li>
- * <li>Port - port number of machine running Zico service to listen. (Optional)
- * </li>
+ * <li>Host - host name of machine running Zico service to listen. Default value
+ * - '0.0.0.0'. (Optional)</li>
+ * <li>Port - port number of machine running Zico service to listen. Default
+ * value - '8640'. (Optional)</li>
  * <li>MaxTraceEvents - maximum number of events to stream for single stack
- * trace. (Optional)</li>
+ * trace. Default value - '100'. Optional)</li>
  * </ul>
  *
  * @version $Revision: 1 $
@@ -133,20 +133,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	@Override
-	public Object getProperty(String name) {
-		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
-			return host;
-		}
-		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
-			return socketPort;
-		}
-		if (ZorkaConstants.MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
-			return maxTraceEvents;
-		}
-		return super.getProperty(name);
-	}
-
-	@Override
 	public void setProperties(Collection<Map.Entry<String, String>> props) throws Exception {
 		if (props == null) {
 			return;
@@ -160,10 +146,24 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.valueOf(value);
-			} else if (ZorkaConstants.MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+			} else if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
 				maxTraceEvents = Integer.valueOf(value);
 			}
 		}
+	}
+
+	@Override
+	public Object getProperty(String name) {
+		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
+			return host;
+		}
+		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
+			return socketPort;
+		}
+		if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+			return maxTraceEvents;
+		}
+		return super.getProperty(name);
 	}
 
 	@Override
@@ -300,8 +300,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
 		if (attrs != null) {
-			final Map<String, Object> attributeEvent = new HashMap<String, Object>();
-			attributeEvent.putAll(translateSymbols(attrs));
+			final Map<String, Object> attributeEvent = new HashMap<String, Object>(translateSymbols(attrs));
 			attributeEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
 			final String eventID;
 			if (attributeEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
@@ -361,7 +360,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return filteredRec;
 	}
 
-	private TraceRecord cloneTraceRecord(TraceRecord trToCopyFrom, Long wholeTraceTime, Float percentageOffset) {
+	private static TraceRecord cloneTraceRecord(TraceRecord trToCopyFrom, Long wholeTraceTime, Float percentageOffset) {
 		TraceRecord trReturn = trToCopyFrom.copy();
 		trReturn.setChildren(new ArrayList<TraceRecord>());
 		if (trToCopyFrom.getChildren() == null) {
@@ -378,7 +377,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return trReturn;
 	}
 
-	private long countTraceRecord(TraceRecord tr) {
+	private static long countTraceRecord(TraceRecord tr) {
 		long count = 0;
 		if (tr.getChildren() == null) {
 			return 1;

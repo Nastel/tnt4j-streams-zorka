@@ -205,7 +205,11 @@
             <artifactId>zico-util</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.2</version>
+        </dependency>
 
         <dependency>
             <groupId>com.jkool.tnt4j</groupId>
