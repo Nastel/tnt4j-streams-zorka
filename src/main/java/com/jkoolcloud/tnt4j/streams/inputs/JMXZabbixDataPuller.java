@@ -72,6 +72,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	private static final String DEFAULT_QUARTZ_EXPRESSION = "0/15 * * 1/1 * ? *"; // NON-NLS
 	private static final String DEFAULT_HOSTNAME = "localhost"; // NON-NLS
 	private static final Integer DEFAULT_PORT = 10056;
+	private static final int SOCKET_READ_TIMEOUT = 1350;
 
 	private Scheduler scheduler;
 	private Trigger trigger;
@@ -208,8 +209,6 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	 */
 	public static class ZabbixCallJob implements Job {
 
-		private static final int MAX_REQUEST_LENGTH = 1037;
-
 		/**
 		 * Constructs a new ZabbixCallJob.
 		 */
@@ -234,6 +233,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			for (String query : jmxQueries) {
 				try {
 					echoSocket = new Socket(host, socketPort);
+					echoSocket.setSoTimeout(SOCKET_READ_TIMEOUT);
 					out = new PrintWriter(echoSocket.getOutputStream(), true);
 					in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 					is = mkIS("ZBXD", 1, 0x0c, 0, 0, 0, 0, 0, 0, 0, "zorka.jmx[", query, "]", 0x0a); // NON-NLS

@@ -28,7 +28,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ZorkaConnectorTest.class })
+@SuiteClasses({ JMXZabbixDataPullerTest.class, ZorkaConnectorTest.class })
 public class AllInputsTests {
 
 }
