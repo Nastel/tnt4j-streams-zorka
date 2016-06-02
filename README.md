@@ -35,6 +35,9 @@ Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter
 * As API integrated into Your product
     * Write streams configuration file. See 'Streams configuration' chapter for more details
     * use `StreamsAgent.runFromAPI(configFileName)` in your code
+* As Java agent attached to running JVM
+    * use `bin/zorka-attach.bat` or `bin/zorka-attach.sh` to attach to running JVM and continue as standalone
+      application
 
 ## Samples:
 
@@ -65,7 +68,7 @@ Sample stream configuration:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
 
-    <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -106,7 +109,7 @@ Sample stream configuration:
     </parser>
 
 
-    <parser name="ZorkaSQL" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
+    <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -140,7 +143,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaLDAP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
+    <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -162,7 +165,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaWebService" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser"
+    <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -186,7 +189,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaJMS" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
+    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -212,7 +215,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaWebSocket" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
+    <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
         <field name="EventType" locator="EvType" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -238,7 +241,7 @@ Sample stream configuration:
     </parser>
 
 
-    <parser name="ZorkaTrace" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
+    <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
         <field name="EventType" value="EVENT"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -255,7 +258,7 @@ Sample stream configuration:
     </parser>
 
 
-    <stream name="ZorkaStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
+    <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
 
         <parser-ref name="ZorkaHTTP"/>
@@ -320,6 +323,12 @@ Custom fields values defined in parser fields mapping can be found as activity e
 
 NOTE: Stream stops only when critical runtime error/exception occurs or application gets terminated.
 
+##### Zorka Connector as Java agent
+
+To run Zorka Connector sample using Zorka as attached Java Agent use `run-attach.bat` or `run-attach.sh` depending on
+Your OS. To change Zorka home dir open `.bat` or `.sh` file and change first parameter of `zorka-attach` executable to
+actual path on Your system.
+
 Configuring TNT4J-Streams-Zorka
 ======================================
 
@@ -361,16 +370,19 @@ In this case we would recommend to download those dependencies manually into `li
 maven repository by running `mvn install` command. See `lib\mvn-install.bat` how to do this.
 
 So what to download manually:
-* TNT4J-Streams (also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Manually installed
-dependencies')
 * Zico-util
+* Zorka
 
 Download the above libraries and place into the `tnt4j-streams-zorka/lib directory` directory like this:
 ```
     lib
-     tnt4j-streams-core-[version].jar
-     zico-util.jar
+     |- zico-util.jar
+     |- zorka.jar
 ```
+(O) marked libraries are optional
+
+NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Manually installed dependencies'.
+
 
 ## Building
    * to build project run maven goals `clean package`

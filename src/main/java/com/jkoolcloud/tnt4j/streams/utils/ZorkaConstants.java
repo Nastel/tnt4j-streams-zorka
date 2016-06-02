@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams.utils;
+package com.jkoolcloud.tnt4j.streams.utils;
 
 /**
  * TNT4J-Streams "Zorka" module constants.
@@ -28,7 +28,7 @@ public final class ZorkaConstants {
 	/**
 	 * Resource bundle name constant for TNT4J-Streams "zorka" module.
 	 */
-	public static final String RESOURCE_BUNDLE_ZORKA = "tnt4j-streams-zorka"; // NON-NLS
+	public static final String RESOURCE_BUNDLE_NAME = "tnt4j-streams-zorka"; // NON-NLS
 
 	/**
 	 * Property name defining Zorka traces filtering to produce max number of

@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams.inputs;
+package com.jkoolcloud.tnt4j.streams.inputs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -37,9 +37,9 @@ import com.jitlogic.zorka.common.tracedata.TraceRecord;
 import com.jitlogic.zorka.common.util.ZorkaUtil;
 import com.jitlogic.zorka.common.zico.ZicoClientConnector;
 import com.jitlogic.zorka.common.zico.ZicoDataLoader;
-import com.jkool.tnt4j.streams.utils.StreamsResources;
-import com.jkool.tnt4j.streams.utils.Utils;
-import com.jkool.tnt4j.streams.utils.ZorkaConstants;
+import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
+import com.jkoolcloud.tnt4j.streams.utils.Utils;
+import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 
 /**
  * @author akausinis
@@ -141,13 +141,13 @@ public class ZorkaConnectorTest {
 		String keyModule = "ZorkaConnector.received.null.hello.packet";
 		String keyCore = "ActivityField.field.type.name.empty";
 
-		String rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, keyModule);
+		String rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyModule);
 		assertNotEquals("Zorka resource bundle entry not found", rbs1, keyModule);
-		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_CORE, keyModule);
+		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyModule);
 		assertEquals("Zorka resource bundle entry found in core", rbs1, keyModule);
-		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_CORE, keyCore);
+		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyCore);
 		assertNotEquals("Core resource bundle entry not found", rbs1, keyCore);
-		rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, keyCore);
+		rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyCore);
 		assertEquals("Core resource bundle entry found in zorka", rbs1, keyCore);
 	}
 

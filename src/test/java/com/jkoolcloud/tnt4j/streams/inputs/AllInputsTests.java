@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams.inputs;
+package com.jkoolcloud.tnt4j.streams.inputs;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

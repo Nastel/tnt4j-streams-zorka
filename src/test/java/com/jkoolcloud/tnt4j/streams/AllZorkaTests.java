@@ -17,13 +17,13 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams;
+package com.jkoolcloud.tnt4j.streams;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import com.jkool.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
-import com.jkool.tnt4j.streams.inputs.AllInputsTests;
+import com.jkoolcloud.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
+import com.jkoolcloud.tnt4j.streams.inputs.AllInputsTests;
 
 /**
  * @author akausinis

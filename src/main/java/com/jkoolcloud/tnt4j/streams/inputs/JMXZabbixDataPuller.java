@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams.inputs;
+package com.jkoolcloud.tnt4j.streams.inputs;
 
 import java.io.*;
 import java.net.Socket;
@@ -29,13 +29,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.jkool.tnt4j.streams.configure.StreamProperties;
-import com.jkool.tnt4j.streams.utils.StreamsResources;
-import com.jkool.tnt4j.streams.utils.Utils;
-import com.jkool.tnt4j.streams.utils.ZorkaConstants;
-import com.nastel.jkool.tnt4j.core.OpLevel;
-import com.nastel.jkool.tnt4j.sink.DefaultEventSinkFactory;
-import com.nastel.jkool.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
+import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
+import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
+import com.jkoolcloud.tnt4j.streams.utils.Utils;
+import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 
 /**
  * <p>
@@ -64,7 +64,7 @@ import com.nastel.jkool.tnt4j.sink.EventSink;
  *
  * @version $Revision: 1 $
  *
- * @see com.jkool.tnt4j.streams.parsers.ActivityParser#isDataClassSupported(Object)
+ * @see com.jkoolcloud.tnt4j.streams.parsers.ActivityParser#isDataClassSupported(Object)
  */
 public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, String>> {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(JMXZabbixDataPuller.class);
@@ -152,7 +152,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		super.initialize();
 
 		if (StringUtils.isEmpty(jmxQueryString)) {
-			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_CORE,
+			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_NAME,
 					"TNTInputStream.property.undefined", ZorkaConstants.PROP_JXM_QUERY));
 		}
 
@@ -183,7 +183,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			try {
 				scheduler.shutdown(true);
 			} catch (SchedulerException exc) {
-				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
+				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 						"JMXZabbixDataPuller.error.closing.scheduler"), exc);
 			}
 		}
@@ -217,6 +217,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 
@@ -243,11 +244,11 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 						inputData.put(query, response.substring(13));
 					}
 				} catch (IOException exc) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getStringFormatted(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
-							"JMXZabbixDataPuller.request.error", host, socketPort, query));
+					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+							"JMXZabbixDataPuller.request.error"), host, socketPort, query);
 				} finally {
-					Utils.close(out);
 					Utils.close(is);
+					Utils.close(out);
 					Utils.close(in);
 					Utils.close(echoSocket);
 				}

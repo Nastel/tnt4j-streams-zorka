@@ -201,7 +201,7 @@ interested to trace and add these correlators. You may look for Zorka example sc
 
 You need to setup your steams to use ZorkaConnector:
 ```xml
-    <stream name="FileStream" class="com.jkool.tnt4j.streams.inputs.ZorkaConnector">
+    <stream name="FileStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
 ```
 
 ZorkaConnector Stream opens port `8640` by default, to collect Zorka's traces.
@@ -212,7 +212,7 @@ ZorkaConnector Stream opens port `8640` by default, to collect Zorka's traces.
 ### Parsers
 
 Zorka traces are forwarded as `java.util.Map`. It is advisable to use
-`com.jkool.tnt4j.streams.parsers.ActivityMapParser` parser to parse your traces.
+`com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser` parser to parse your traces.
 
 TNT4J-Streams parser is used to transform Zorka Traces to TNT4J activity events.
 
@@ -223,7 +223,7 @@ In a single `tnt-data-source.xml` configuration file there are defined several p
 witch parser to use by **tags** property:
 
 ```xml
-    <parser name="ZorkaHTTP" class="com.jkool.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
 ```
 
 The **tags** is compared to Zorka's trace *MARKER* keys Value. Once it comply's, the defined parser is used.

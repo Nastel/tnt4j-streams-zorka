@@ -1,0 +1,1 @@
+..\..\bin\zorka-attach.bat c:\zorka catalina -f:tnt-data-source.xml

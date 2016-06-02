@@ -4,10 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.jkool.tnt4j</groupId>
+    <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-zorka</artifactId>
-    <!--<packaging>pom</packaging>-->
     <version>0.1-beta</version>
+    <packaging>jar</packaging>
+
+    <name>TNT4J-Streams-Zorka</name>
+    <description>TNT4J transaction and method tracing streams for Java</description>
 
     <prerequisites>
         <maven>3.0.0</maven>
@@ -24,18 +27,37 @@
         <name>jKool, LLC</name>
         <url>https://www.jkoolcloud.com/</url>
     </organization>
+    <developers>
+        <developer>
+            <name>Albert Mavashev</name>
+            <email>amavashev@jkoolcloud.com</email>
+            <organization>${project.organization.name}</organization>
+            <organizationUrl>${project.organization.url}</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/Nastel/tnt4j-streams-zorka</connection>
+        <developerConnection>scm:git:git//github.com/Nastel/tnt4j-streams-zorka</developerConnection>
+        <url>https://github.com/Nastel/tnt4j-streams-zorka</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.source.version>1.6</java.source.version>
         <java.target.version>1.6</java.target.version>
         <java.compiler.debuglevel>source,lines,vars</java.compiler.debuglevel>
+        <java.compiler.verbose>false</java.compiler.verbose>
         <product.vendor>${project.organization.name}</product.vendor>
         <product.name>TNT4J-Streams-zorka</product.name>
         <product.name.hr>TNT4J Streams Zorka Connector</product.name.hr>
         <product.copyright.html>
             <![CDATA[<font size="-1">Copyright &#169; 2015-2016 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
         <release.deploy.dir>../build/${project.name}</release.deploy.dir>
+        <sonar.scm.provider>svn</sonar.scm.provider>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/target/sonar/jacoco-overall.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <profiles>
@@ -46,6 +68,7 @@
             </activation>
             <properties>
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <javadoc.failOnError>false</javadoc.failOnError>
             </properties>
         </profile>
     </profiles>
@@ -85,6 +108,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
+                    <verbose>${java.compiler.verbose}</verbose>
                     <source>${java.source.version}</source>
                     <target>${java.target.version}</target>
                     <debuglevel>${java.compiler.debuglevel}</debuglevel>
@@ -104,6 +128,8 @@
                             <Implementation-Vendor>${product.vendor}</Implementation-Vendor>
                             <Implementation-Title>${product.name}</Implementation-Title>
                             <Implementation-Version>${project.version}</Implementation-Version>
+                            <Main-Class>com.jkoolcloud.tnt4j.streams.utils.ZorkaAttach</Main-Class>
+                            <Agent-Class>com.jkoolcloud.tnt4j.streams.utils.ZorkaAttach</Agent-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -149,8 +175,9 @@
                     <author>true</author>
                     <version>true</version>
                     <nodeprecatedlist>false</nodeprecatedlist>
-                    <nodeprecatedlist>false</nodeprecatedlist>
+                    <nodeprecated>false</nodeprecated>
                     <additionalparam>${javadoc.opts}</additionalparam>
+                    <failOnError>${javadoc.failOnError}</failOnError>
                 </configuration>
             </plugin>
             <plugin>
@@ -190,12 +217,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
         <dependency>
-            <groupId>com.jkool.tnt4j</groupId>
+            <groupId>com.jkoolcloud.tnt4j.streams</groupId>
             <artifactId>tnt4j-streams-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -210,9 +251,21 @@
             <artifactId>quartz</artifactId>
             <version>2.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>zorka</groupId>
+            <artifactId>zorka</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.4.2</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
 
         <dependency>
-            <groupId>com.jkool.tnt4j</groupId>
+            <groupId>com.jkoolcloud.tnt4j.streams</groupId>
             <artifactId>tnt4j-streams-core</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>

@@ -2,6 +2,7 @@
 
 echo installing libraries required by Zorka...
 mvn install:install-file -Dfile="${BASH_SOURCE%/*}/zico-util.jar" -DgroupId=zorka -DartifactId=zico-util -Dversion=1.0.0 -Dpackaging=jar
+mvn install:install-file -Dfile=zorka.jar -DgroupId=zorka -DartifactId=zorka -Dversion=1.0.0 -Dpackaging=jar
 
 echo DONE!
 

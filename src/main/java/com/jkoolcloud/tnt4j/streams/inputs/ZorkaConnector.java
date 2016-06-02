@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkool.tnt4j.streams.inputs;
+package com.jkoolcloud.tnt4j.streams.inputs;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -35,15 +35,16 @@ import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
 import com.jitlogic.zorka.common.zico.ZicoPacket;
-import com.jkool.tnt4j.streams.configure.StreamProperties;
-import com.jkool.tnt4j.streams.fields.ActivityInfo;
-import com.jkool.tnt4j.streams.utils.StreamsResources;
-import com.jkool.tnt4j.streams.utils.ZorkaConstants;
-import com.nastel.jkool.tnt4j.core.OpLevel;
-import com.nastel.jkool.tnt4j.sink.DefaultEventSinkFactory;
-import com.nastel.jkool.tnt4j.sink.EventSink;
-import com.nastel.jkool.tnt4j.uuid.JUGFactoryImpl;
-import com.nastel.jkool.tnt4j.uuid.UUIDFactory;
+import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
+import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
+import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
+import com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser;
+import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
+import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
+import com.jkoolcloud.tnt4j.uuid.JUGFactoryImpl;
+import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
 
 /**
  * <p>
@@ -68,8 +69,8 @@ import com.nastel.jkool.tnt4j.uuid.UUIDFactory;
  *
  * @version $Revision: 1 $
  *
- * @see com.jkool.tnt4j.streams.parsers.ActivityParser#isDataClassSupported(Object)
- * @see com.jkool.tnt4j.streams.parsers.ActivityMapParser
+ * @see com.jkoolcloud.tnt4j.streams.parsers.ActivityParser#isDataClassSupported(Object)
+ * @see ActivityMapParser
  * @see com.jitlogic.zorka.common.zico.ZicoDataProcessor
  * @see com.jitlogic.zico.core.ZicoService
  */
@@ -188,21 +189,21 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			@Override
 			public ZicoDataProcessor get(Socket socket, HelloRequest hello) throws IOException {
 				if (hello == null) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
+					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 							"ZorkaConnector.received.null.hello.packet"));
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
-							.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, "ZorkaConnector.null.hello.packet"));
+							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hello.packet"));
 				}
 				if (hello.getHostname() == null) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA,
+					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 							"ZorkaConnector.received.null.hostname"));
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
-							.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, "ZorkaConnector.null.hostname"));
+							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hostname"));
 				}
 
 				if (ZORKA_REPLY_BAD.equals(hello.getAuth())) {
 					throw new ZicoException(ZicoPacket.ZICO_AUTH_ERROR, StreamsResources
-							.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, "ZorkaConnector.login.failed"));
+							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.login.failed"));
 				}
 				return ZorkaConnector.this;
 			}
@@ -355,7 +356,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		final long reducedTrCount = countTraceRecord(filteredRec);
 		LOGGER.log(OpLevel.INFO,
-				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_ZORKA, "ZorkaConnector.reduced.trace"),
+				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.reduced.trace"),
 				recCount, reducedTrCount, maxTraceEvents);
 		return filteredRec;
 	}
