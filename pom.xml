@@ -22,6 +22,14 @@
             <url>http://www.gnu.org/licenses/lgpl-3.0</url>
         </license>
     </licenses>
+    
+  <distributionManagement>
+	 <repository>
+      	<id>bintray-amavashev2-jkoolcloud</id>
+      	<name>amavashev2-jkoolcloud</name>
+      	<url>https://api.bintray.com/maven/amavashev2/jkoolcloud/streams-zorka/;publish=1;override=1</url>
+  	 </repository>
+  </distributionManagement>
 
     <organization>
         <name>jKool, LLC</name>
@@ -290,6 +298,15 @@
             <groupId>zorka</groupId>
             <artifactId>zorka</artifactId>
             <version>1.0.0</version>
+            <scope>system</scope>
+	    	<systemPath>${project.basedir}/src/main/resources/zorka.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>zorka</groupId>
+            <artifactId>zico-util</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+	    	<systemPath>${project.basedir}/src/main/resources/zico-util-1.0.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sun</groupId>
