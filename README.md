@@ -365,9 +365,10 @@ online mode it should download these defined dependencies automatically.
 NOTE: If you have build and installed TNT4J-Streams into Your local maven repository, you dont need to install
 it manually.
 
-Some of required and optional dependencies may be not available in public Maven Repository (http://mvnrepository.com/).
-In this case we would recommend to download those dependencies manually into `lib` directory and install into local
-maven repository by running `mvn install` command. See `lib\mvn-install.bat` how to do this.
+Some of required and optional dependencies may be not available in public Maven Repository
+(http://repo.maven.apache.org/maven2/). In this case we would recommend to download those dependencies manually into
+`lib` directory and install into local maven repository by running `mvn install` command. For example see
+`lib\mvn-install.bat` how to do this.
 
 So what to download manually:
 * Zico-util
@@ -387,6 +388,10 @@ NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) c
 ## Building
    * to build project run maven goals `clean package`
    * to make release assembly run maven goals `clean package javadoc:aggregate install`
+
+NOTE: to skip test phase from build using Eclipse it is recommended to set JRE VM argument `-Dmaven.test.skip=true`
+instead of using UI checkbox 'Skip Tests'. Turns out that those two are not quite same and Maven fails on modules test
+scope dependencies checking if UI checkbox 'Skip Tests' is used.
 
 Release assembly is built to `../build/tnt4j-streams-zorka` directory.
 
