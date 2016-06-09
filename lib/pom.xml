@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jkoolcloud.tnt4j.streams</groupId>
+    <artifactId>tnt4j-streams-zorka-dep-install</artifactId>
+    <version>0.1-beta</version>
+    <packaging>pom</packaging>
+
+    <name>TNT4J-Streams-Zorka-dep-install</name>
+    <description>Installs TNT4J-Streams-Zorka 3rd party dependencies</description>
+
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>install-zico-util</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.jitlogic.zico</groupId>
+                            <artifactId>zico-util</artifactId>
+                            <version>1.0.15</version>
+                            <packaging>jar</packaging>
+                            <file>zico-util.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-zorka</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.jitlogic.zorka</groupId>
+                            <artifactId>zorka</artifactId>
+                            <version>1.0.15</version>
+                            <packaging>jar</packaging>
+                            <file>zorka.jar</file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
