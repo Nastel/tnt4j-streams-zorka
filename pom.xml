@@ -22,14 +22,14 @@
             <url>http://www.gnu.org/licenses/lgpl-3.0</url>
         </license>
     </licenses>
-    
-  <distributionManagement>
-	 <repository>
-      	<id>bintray-amavashev2-jkoolcloud</id>
-      	<name>amavashev2-jkoolcloud</name>
-      	<url>https://api.bintray.com/maven/amavashev2/jkoolcloud/streams-zorka/;publish=1;override=1</url>
-  	 </repository>
-  </distributionManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-amavashev2-jkoolcloud</id>
+            <name>amavashev2-jkoolcloud</name>
+            <url>https://api.bintray.com/maven/amavashev2/jkoolcloud/streams-zorka/;publish=1;override=1</url>
+        </repository>
+    </distributionManagement>
 
     <organization>
         <name>jKool, LLC</name>
@@ -37,8 +37,8 @@
     </organization>
     <developers>
         <developer>
-            <name>Albert Mavashev</name>
-            <email>amavashev@jkoolcloud.com</email>
+            <name>jKool Team</name>
+            <email>support@jkoolcloud.com</email>
             <organization>${project.organization.name}</organization>
             <organizationUrl>${project.organization.url}</organizationUrl>
         </developer>
@@ -110,6 +110,27 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>2.0.0</version>
+                <configuration>
+                    <pom>lib/pom.xml</pom>
+                    <failIfNoProjects>false</failIfNoProjects>
+                    <ignoreFailures>true</ignoreFailures>
+                    <!--<noLog>true</noLog>-->
+                    <streamLogs>true</streamLogs>
+                    <goals>validate</goals>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-dep</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -225,6 +246,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-gpg-plugin</artifactId>-->
+            <!--<version>1.5</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>sign-artifacts</id>-->
+            <!--<phase>verify</phase>-->
+            <!--<goals>-->
+            <!--<goal>sign</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -260,22 +296,17 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-gpg-plugin</artifactId>-->
-            <!--<version>1.5</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>sign-artifacts</id>-->
-            <!--<phase>verify</phase>-->
-            <!--<goals>-->
-            <!--<goal>sign</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
+
+    <!-- NOTE: this repo not working -->
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<id>zorka-repo</id>-->
+    <!--<name>Artifacts for Zorka agent</name>-->
+    <!--<url>http://zorka.io/repo</url>-->
+    <!--</repository>-->
+    <!--</repositories>-->
 
     <dependencies>
         <dependency>
@@ -285,9 +316,9 @@
         </dependency>
 
         <dependency>
-            <groupId>zorka</groupId>
+            <groupId>com.jitlogic.zico</groupId>
             <artifactId>zico-util</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.15</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -295,18 +326,9 @@
             <version>2.2.2</version>
         </dependency>
         <dependency>
-            <groupId>zorka</groupId>
+            <groupId>com.jitlogic.zorka</groupId>
             <artifactId>zorka</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-	    	<systemPath>${project.basedir}/src/main/resources/zorka.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>zorka</groupId>
-            <artifactId>zico-util</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-	    	<systemPath>${project.basedir}/src/main/resources/zico-util-1.0.0.jar</systemPath>
+            <version>1.0.15</version>
         </dependency>
         <dependency>
             <groupId>com.sun</groupId>
