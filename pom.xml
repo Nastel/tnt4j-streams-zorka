@@ -37,8 +37,8 @@
     </organization>
     <developers>
         <developer>
-            <name>Albert Mavashev</name>
-            <email>amavashev@jkoolcloud.com</email>
+            <name>jKool Team</name>
+            <email>support@jkoolcloud.com</email>
             <organization>${project.organization.name}</organization>
             <organizationUrl>${project.organization.url}</organizationUrl>
         </developer>
