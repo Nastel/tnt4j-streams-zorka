@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.jkoolcloud.tnt4j.streams.PropertiesTestBase;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
@@ -40,7 +41,7 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
  * @author akausinis
  * @version 1.0
  */
-public class JMXZabbixDataPullerTest extends InputTestBase {
+public class JMXZabbixDataPullerTest extends PropertiesTestBase {
 
 	private static final Integer TEST_PORT = 10057;
 	private JMXZabbixDataPuller stream;
