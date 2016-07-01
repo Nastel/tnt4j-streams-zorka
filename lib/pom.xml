@@ -25,7 +25,7 @@
                 <executions>
                     <execution>
                         <id>install-zico-util</id>
-                        <phase>validate</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
@@ -40,7 +40,7 @@
                     </execution>
                     <execution>
                         <id>install-zorka</id>
-                        <phase>validate</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>

@@ -14,7 +14,7 @@
         <dependencySet>
             <useProjectArtifact>false</useProjectArtifact>
             <useTransitiveDependencies>true</useTransitiveDependencies>
-            <outputDirectory>lib_dep</outputDirectory>
+            <outputDirectory>libs</outputDirectory>
             <unpack>false</unpack>
         </dependencySet>
     </dependencySets>
@@ -26,7 +26,7 @@
             <includes>
                 <include>${project.build.finalName}.jar</include>
             </includes>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>jars</outputDirectory>
         </fileSet>
 
         <!-- static content -->
@@ -57,7 +57,7 @@
         <fileSet>
             <directory>${project.build.directory}</directory>
             <includes>
-                <include>*.zip</include>
+                <include>${javadoc.package.name}.*</include>
             </includes>
             <outputDirectory>docs</outputDirectory>
         </fileSet>

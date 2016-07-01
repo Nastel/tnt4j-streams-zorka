@@ -61,6 +61,8 @@
         <product.copyright.html>
             <![CDATA[<font size="-1">Copyright &#169; 2015-2016 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
         <release.deploy.dir>../build/${project.name}</release.deploy.dir>
+        <gpg.skip.sign>true</gpg.skip.sign>
+        <javadoc.package.name>${project.build.finalName}-javadoc</javadoc.package.name>
     </properties>
 
     <profiles>
@@ -109,29 +111,6 @@
                         </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>2.0.0</version>
-                <configuration>
-                    <pom>lib/pom.xml</pom>
-                    <failIfNoProjects>false</failIfNoProjects>
-                    <ignoreFailures>true</ignoreFailures>
-                    <!--<noLog>true</noLog>-->
-                    <streamLogs>true</streamLogs>
-                    <goals>
-                        <goal>validate</goal>
-                    </goals>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-dep</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -209,6 +188,15 @@
                     <additionalparam>${javadoc.opts}</additionalparam>
                     <failOnError>${javadoc.failOnError}</failOnError>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>build-javadocs</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -227,7 +215,8 @@
                             <descriptors>
                                 <descriptor>src/assemblies/docAssembly.xml</descriptor>
                             </descriptors>
-                            <finalName>${project.build.finalName}-docs</finalName>
+                            <finalName>${javadoc.package.name}</finalName>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                     <execution>
@@ -243,6 +232,7 @@
                                 <descriptor>src/assemblies/deployAssembly.xml</descriptor>
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
+                            <attach>true</attach>
                         </configuration>
                     </execution>
                 </executions>
@@ -258,13 +248,16 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                        <configuration>
+                            <skip>${gpg.skip.sign}</skip>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 
-    <!-- NOTE: this repo not working -->
+    <!-- NOTE: this repo not working-->
     <!--<repositories>-->
     <!--<repository>-->
     <!--<id>zorka-repo</id>-->

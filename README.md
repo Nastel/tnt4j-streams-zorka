@@ -367,8 +367,7 @@ it manually.
 
 Some of required and optional dependencies may be not available in public Maven Repository
 (http://repo.maven.apache.org/maven2/). In this case we would recommend to download those dependencies manually into
-`lib` directory and install into local maven repository by running `mvn install` command. For example see
-`lib\mvn-install.bat` how to do this.
+`lib` directory and install into local maven repository by running maven script `lib/pom.xml` with `package` goal.
 
 So what to download manually:
 * Zico-util
@@ -387,7 +386,7 @@ NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) c
 
 ## Building
    * to build project run maven goals `clean package`
-   * to make release assembly run maven goals `clean package javadoc:aggregate install`
+   * to make release assembly run maven goals `clean install`
 
 NOTE: to skip test phase from build using Eclipse it is recommended to set JRE VM argument `-Dmaven.test.skip=true`
 instead of using UI checkbox 'Skip Tests'. Turns out that those two are not quite same and Maven fails on modules test
