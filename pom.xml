@@ -61,7 +61,7 @@
         <product.copyright.html>
             <![CDATA[<font size="-1">Copyright &#169; 2015-2016 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
         <release.deploy.dir>../build/${project.name}</release.deploy.dir>
-        <gpg.skip.sign>true</gpg.skip.sign>
+        <gpg.skip.sign>false</gpg.skip.sign>
         <javadoc.package.name>${project.build.finalName}-javadoc</javadoc.package.name>
     </properties>
 
