@@ -1,6 +1,6 @@
 #! /bin/bash
 RUNDIR=`pwd`
-CLASSPATH="$RUNDIR/../jars/*:$RUNDIR/../libs/*"
+CLASSPATH="$RUNDIR/../*:$RUNDIR/../libs/*"
 TNT4JOPTS=-Dtnt4j.config="$RUNDIR/../config/tnt4j.properties"
 LOG4JOPTS=-Dlog4j.configuration="file:%RUNDIR%/../config/log4j.properties"
 #LOGBACKOPTS=-Dlogback.configurationFile="file:%RUNDIR%/../config/logback.xml"

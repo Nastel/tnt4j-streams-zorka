@@ -24,9 +24,9 @@
         <fileSet>
             <directory>${project.build.directory}</directory>
             <includes>
-                <include>${project.build.finalName}.jar</include>
+                <include>${project.build.finalName}*.jar</include>
             </includes>
-            <outputDirectory>jars</outputDirectory>
+            <outputDirectory></outputDirectory>
         </fileSet>
 
         <!-- static content -->
@@ -47,8 +47,9 @@
         <fileSet>
             <directory></directory>
             <includes>
-                <include>LICENSE</include>
-                <include>README.md</include>
+                <include>README*</include>
+                <include>LICENSE*</include>
+                <include>NOTICE*</include>
             </includes>
             <outputDirectory></outputDirectory>
         </fileSet>
