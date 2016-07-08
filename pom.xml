@@ -54,16 +54,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.source.version>1.6</java.source.version>
         <java.target.version>1.6</java.target.version>
+        <java.compiler.version>1.6</java.compiler.version>
         <java.compiler.debuglevel>source,lines,vars</java.compiler.debuglevel>
         <java.compiler.verbose>false</java.compiler.verbose>
         <product.vendor>${project.organization.name}</product.vendor>
-        <product.name>TNT4J-Streams-zorka</product.name>
+        <product.name>${project.name}</product.name>
         <product.name.hr>TNT4J Streams Zorka Connector</product.name.hr>
         <product.copyright.html>
             <![CDATA[<font size="-1">Copyright &#169; 2015-2016 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
-        <release.deploy.dir>../build/${project.name}</release.deploy.dir>
-        <gpg.skip.sign>false</gpg.skip.sign>
-        <javadoc.package.name>${project.build.finalName}-javadoc</javadoc.package.name>
+        <release.deploy.name>${project.artifactId}</release.deploy.name>
+        <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
+        <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
+        <gpg.skip.sign>true</gpg.skip.sign>
     </properties>
 
     <profiles>
@@ -101,14 +103,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.0.0</version>
-                <!--<inherited>false</inherited>-->
                 <configuration>
                     <filesets>
                         <fileset>
                             <directory>${release.deploy.dir}</directory>
                             <includes>
-                                <include>${project.build.finalName}/</include>
-                                <include>${project.build.finalName}.*</include>
+                                <include>${release.deploy.finalName}/</include>
+                                <include>${release.deploy.finalName}.*</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -128,6 +129,7 @@
                 <version>3.3</version>
                 <configuration>
                     <verbose>${java.compiler.verbose}</verbose>
+                    <compilerVersion>${java.compiler.version}</compilerVersion>
                     <source>${java.source.version}</source>
                     <target>${java.target.version}</target>
                     <debuglevel>${java.compiler.debuglevel}</debuglevel>
@@ -178,7 +180,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.6</version>
-                <!--<inherited>false</inherited>-->
                 <configuration>
                     <aggregate>true</aggregate>
                     <doctitle>${product.name.hr}</doctitle>
@@ -200,11 +201,10 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>build-javadocs</id>
+                        <id>build-javadocs-module</id>
                         <goals>
-                            <goal>aggregate</goal>
+                            <goal>jar</goal>
                         </goals>
-                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -214,25 +214,8 @@
                 <version>2.6</version>
                 <executions>
                     <execution>
-                        <id>docs-assembly</id>
-                        <phase>verify</phase>
-                        <!--<inherited>false</inherited>-->
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>src/assemblies/docAssembly.xml</descriptor>
-                            </descriptors>
-                            <finalName>${javadoc.package.name}</finalName>
-                            <attach>false</attach>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-assembly</id>
-                        <phase>verify</phase>
-                        <!--<inherited>false</inherited>-->
+                        <id>make-deploy-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -243,6 +226,7 @@
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
                             <attach>true</attach>
+                            <finalName>${release.deploy.finalName}</finalName>
                         </configuration>
                     </execution>
                 </executions>
