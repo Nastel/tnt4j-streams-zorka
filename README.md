@@ -385,8 +385,8 @@ NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) c
 
 
 ## Building
-   * to build project run maven goals `clean package`
-   * to make release assembly run maven goals `clean install`
+   * to build project and make release assembly run maven goals `clean package`
+   * to build project, make release assembly and install to local repo run maven goals `clean install`
 
 NOTE: to skip test phase from build using Eclipse it is recommended to set JRE VM argument `-Dmaven.test.skip=true`
 instead of using UI checkbox 'Skip Tests'. Turns out that those two are not quite same and Maven fails on modules test
