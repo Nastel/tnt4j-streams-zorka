@@ -42,7 +42,7 @@ Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter
 ## Samples:
 
 ### Running samples
-When release assembly is built samples are located in `samples` directory i.e.
+When release assemblies are built, samples are located in `samples` directory i.e.
 `../build/tnt4j-streams-zorka/tnt4j-streams-zorka-1.0.0/samples`.
 To run desired sample:
 * go to sample directory
@@ -385,14 +385,14 @@ NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) c
 
 
 ## Building
-   * to build project and make release assembly run maven goals `clean package`
-   * to build project, make release assembly and install to local repo run maven goals `clean install`
+   * to build project and make release assemblies run maven goals `clean package`
+   * to build project, make release assemblies and install to local repo run maven goals `clean install`
 
 NOTE: to skip test phase from build using Eclipse it is recommended to set JRE VM argument `-Dmaven.test.skip=true`
 instead of using UI checkbox 'Skip Tests'. Turns out that those two are not quite same and Maven fails on modules test
 scope dependencies checking if UI checkbox 'Skip Tests' is used.
 
-Release assembly is built to `../build/tnt4j-streams-zorka` directory.
+Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 
 NOTE: sometimes maven fails to correctly handle dependencies. If dependency configuration looks
 fine, but maven still complains about missing dependencies try to delete local maven repository
