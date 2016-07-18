@@ -388,10 +388,6 @@ NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) c
    * to build project and make release assemblies run maven goals `clean package`
    * to build project, make release assemblies and install to local repo run maven goals `clean install`
 
-NOTE: to skip test phase from build using Eclipse it is recommended to set JRE VM argument `-Dmaven.test.skip=true`
-instead of using UI checkbox 'Skip Tests'. Turns out that those two are not quite same and Maven fails on modules test
-scope dependencies checking if UI checkbox 'Skip Tests' is used.
-
 Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 
 NOTE: sometimes maven fails to correctly handle dependencies. If dependency configuration looks
@@ -410,8 +406,8 @@ Testing of TNT4J-Streams-Zorka
 * Mockito (http://mockito.org/)
 
 ## Testing using maven
-Maven runs tests automatically while building project. To skip test phase add Maven parameter `-Dmaven.test.skip=true`
-or select 'Skip tests' UI element in your IDE  'Maven Run' configuration.
+Maven tests run is disabled by default. To enable Maven to run tests set Maven command line argument 
+`-DskipTests=false`.
 
 ## Running manually from IDE
 * in `zorka` module run JUnit test suite named `AllZorkaTests`

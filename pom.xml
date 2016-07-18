@@ -65,6 +65,7 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
+        <skipTests>true</skipTests>
     </properties>
 
     <profiles>
@@ -262,6 +263,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
+                    <skipTests>${skipTests}</skipTests>
                     <systemProperties>
                         <property>
                             <name>tnt4j.config</name>
