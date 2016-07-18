@@ -65,7 +65,6 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
-        <gpg.skip.sign>true</gpg.skip.sign>
     </properties>
 
     <profiles>
@@ -78,6 +77,33 @@
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
                 <javadoc.failOnError>false</javadoc.failOnError>
             </properties>
+        </profile>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -227,23 +253,6 @@
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
                             <attach>true</attach>
                             <finalName>${release.deploy.finalName}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${gpg.skip.sign}</skip>
                         </configuration>
                     </execution>
                 </executions>
