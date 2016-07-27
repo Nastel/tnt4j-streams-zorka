@@ -349,7 +349,7 @@ stream whole stack trace. (Optional)
     <property name="MaxTraceEvents" value="32"/>
 ```
 
-How to Build TNT4J-Streams
+How to Build TNT4J-Streams-Zorka
 =========================================
 
 ## Requirements
@@ -362,7 +362,7 @@ online mode it should download these defined dependencies automatically.
 
 ### Manually installed dependencies
 
-NOTE: If you have build and installed TNT4J-Streams into Your local maven repository, you dont need to install
+NOTE: If you have build and installed TNT4J-Streams into Your local maven repository, you don't need to install
 it manually.
 
 Some of required and optional dependencies may be not available in public Maven Repository
@@ -373,7 +373,7 @@ So what to download manually:
 * Zico-util
 * Zorka
 
-Download the above libraries and place into the `tnt4j-streams-zorka/lib directory` directory like this:
+Download the above libraries and place into the `tnt4j-streams-zorka/lib` directory like this:
 ```
     lib
      |- zico-util.jar
@@ -393,6 +393,12 @@ Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 NOTE: sometimes maven fails to correctly handle dependencies. If dependency configuration looks
 fine, but maven still complains about missing dependencies try to delete local maven repository
 by hand: i.e. delete contents of `c:\Users\[username]\.m2\repository` directory.
+
+So resuming build process quick "how to build" steps would be like this:
+1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib` directory.
+2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn package`.
+3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a `pom.xml` file located in `tnt4j-streams` directory. 
+4. now you can build `tnt4j-streams-zorka`: run `mvn clean install` for a `pom.xml` file located in `tnt4j-streams-zorka` directory.     
 
 ## Running samples
 
