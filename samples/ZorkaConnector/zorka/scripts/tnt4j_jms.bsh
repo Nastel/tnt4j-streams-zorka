@@ -23,22 +23,24 @@ zorka.require("tnt4j_base_tomcat.bsh", "javax/jms.bsh");
 
 __javax_jms() {
 
-    _fetchMapTNTProcessor() {
-        process(rec) {
-            names = rec.get("MAP_NAMES");
-            msg = rec.get("MSG");
-            if (names != null && msg != null) {
-                text = "";
-                while (names.hasMoreElements()) {
-                    name = names.nextElement();
-                    text = text + name + "=" + msg.getObject(name) + ", ";
-                }
-		        tracer.newAttr("TEXT", text);
-            }
-            return rec;
+	_fetchMapTNTProcessor() {
+      process(rec) {
+        names = rec.get("MAP_NAMES");
+        msg = rec.get("MSG");
+        if (names != null && msg != null) {
+		  text = "";
+          while (names.hasMoreElements()) {
+            name = names.nextElement();
+			text = text + name + "=" + msg.getObject(name) + ", "; 
+          }
+
+          tracer.newAttr("TEXT", text);
         }
 
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+        return rec;
+      }
+
+      return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
     }
 
     _fetchMapTNT = zorka.boolCfg("jms.fetch.map")
@@ -47,36 +49,67 @@ __javax_jms() {
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_LISTENER")
         .onEnter(spy.fetchArg("MSG", 1),
+            spy.fetchArg("THIS", 0),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
             tnt4j._attributeTntCorrIds(),
-            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
-        .onError(spy.fetchError("ERR"), spy.strTime("TIME"), spy.markError())
-        .onSubmit(spy.strTime("TIME"))
+            //spy.zorkaLog("DEBUG", "JMS", "########################onMessage####################"),
+            spy.call("RES", "THIS", "getDestination"),
+            spy.format("DESTINATION", "${RES:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"),
+            spy.format("RECEIVE", "RECEIVE"),
+            tracer.attr("EVENT_NAME", "RECEIVE"),
+            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps//,
+            //tracer.flags(tracer.SUBMIT_TRACE))
+        .onError(spy.fetchError("ERR"), spy.markError())
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageListener", "onMessage", "void", "javax.jms.Message"))
     );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_PRODUCER1")
         .onEnter(spy.fetchArg("MSG", 1),
+            spy.fetchArg("THIS", 0),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
+            spy.call("RES", "THIS", "getDestination"),
+            spy.format("DESTINATION", "${RES:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"),
+            spy.format("SEND", "SEND"),
+            tracer.attr("EVENT_NAME", "SEND"),
+            //spy.zorkaLog("DEBUG", "JMS", "#######################send####################"),
             tnt4j._attributeTntCorrIds(),
-            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
+            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps//,
+            //tracer.flags(tracer.SUBMIT_TRACE))
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void", "javax.jms.Message"))
     );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_PRODUCER2")
         .onEnter(spy.fetchArg("MSG", 2),
+            spy.fetchArg("THIS", 0),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
+            spy.call("RES", "THIS", "getDestination"),
+            spy.format("DESTINATION", "${RES:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"),
+            //spy.zorkaLog("DEBUG", "JMS", "#######################send2####################"),
+            spy.format("SEND", "SEND"),
+            tracer.attr("EVENT_NAME", "SEND"),
             tnt4j._attributeTntCorrIds(),
-            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
+            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps//,
+            //tracer.flags(tracer.SUBMIT_TRACE))
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void",
             "javax.jms.Destination", "javax.jms.Message"))
     );
 
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_CONSUMER")
-        .onReturn(spy.fetchRetVal("MSG"),
+        .onEnter(spy.fetchArg("THIS", 0),
             tracer.begin("JMS_TNT4J_STREAMS_TRACKER"),
+            spy.call("RES", "THIS", "getDestination"),
+            spy.format("DESTINATION", "${RES:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"))
+        .onReturn(spy.fetchRetVal("MSG"),
+            //spy.zorkaLog("DEBUG", "JMS", "#######################receive####################"),
+            spy.format("RECEIVE", "RECEIVE"),
+            tracer.attr("EVENT_NAME", "RECEIVE"),
             tnt4j._attributeTntCorrIds(),
-            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps)
+            javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps//,
+            //tracer.flags(tracer.SUBMIT_TRACE))
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageConsumer", "~receive.*", "javax.jms.Message"))
     );
 

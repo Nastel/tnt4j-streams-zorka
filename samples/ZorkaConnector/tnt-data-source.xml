@@ -10,7 +10,7 @@
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- method value-->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -60,7 +60,7 @@
 
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- function value-->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
@@ -84,7 +84,7 @@
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/> <!-- method name value-->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -107,7 +107,7 @@
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="SOAP_METHOD" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -116,7 +116,7 @@
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
-        <field name="ResourceName" locator="SOAP_METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="MARKER" locator-type="Label"/>  <!-- resource name value-->
 
         <field name="Message" separator=",">
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
@@ -131,8 +131,8 @@
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="ResourceName" value="JMS"/>
-        <field name="EventName" value="JMS"/>
+        <field name="ResourceName" locator="DESTINATION" locator-type="Label"/> <!-- queue/topic name -->
+        <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -166,8 +166,8 @@
         </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="ResourceName" value="WebSocket"/>
-        <field name="EventName" value="WebSocket"/>
+        <field name="ResourceName" value="WebSocket"/>  <!-- dynamic value-->
+        <field name="EventName" value="WebSocket"/>  <!-- method name value-->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
         <field name="Correlator" locator="SESSION" locator-type="Label"/>
         <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
