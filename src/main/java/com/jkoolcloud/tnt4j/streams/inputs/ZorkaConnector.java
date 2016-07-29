@@ -48,23 +48,18 @@ import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
 
 /**
  * <p>
- * Implements a Zorka traces data processor as activity stream, where each trace
- * data package is assumed to represent a single activity or event which should
- * be recorded. Zico service (Zorka traces producer) to listen is defined using
+ * Implements a Zorka traces data processor as activity stream, where each trace data package is assumed to represent a
+ * single activity or event which should be recorded. Zico service (Zorka traces producer) to listen is defined using
  * "Host" and "Port" properties in stream configuration.
  * <p>
- * This activity stream requires parsers that can support {@link Map} data. On
- * trace data package reception, trace fields are packed into {@link Map} data
- * structure.
+ * This activity stream requires parsers that can support {@link Map} data. On trace data package reception, trace
+ * fields are packed into {@link Map} data structure.
  * <p>
  * This activity stream supports the following properties:
  * <ul>
- * <li>Host - host name of machine running Zico service to listen. Default value
- * - '0.0.0.0'. (Optional)</li>
- * <li>Port - port number of machine running Zico service to listen. Default
- * value - '8640'. (Optional)</li>
- * <li>MaxTraceEvents - maximum number of events to stream for single stack
- * trace. Default value - '100'. Optional)</li>
+ * <li>Host - host name of machine running Zico service to listen. Default value - '0.0.0.0'. (Optional)</li>
+ * <li>Port - port number of machine running Zico service to listen. Default value - '8640'. (Optional)</li>
+ * <li>MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - '100'. Optional)</li>
  * </ul>
  *
  * @version $Revision: 1 $
@@ -116,8 +111,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
 	/**
-	 * Constructs an empty ZorkaConnector. Requires configuration settings to
-	 * set input stream source.
+	 * Constructs an empty ZorkaConnector. Requires configuration settings to set input stream source.
 	 */
 	public ZorkaConnector() {
 		this(LOGGER);
@@ -214,10 +208,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	/**
-	 * Performs processing of received trace data object. If received object is
-	 * {@link Symbol}, it gets registered in symbols registry. If received
-	 * object is {@link TraceRecord}, data gets transformed to {@link Map}
-	 * structure and added to buffer.
+	 * Performs processing of received trace data object. If received object is {@link Symbol}, it gets registered in
+	 * symbols registry. If received object is {@link TraceRecord}, data gets transformed to {@link Map} structure and
+	 * added to buffer.
 	 *
 	 * @param obj
 	 *            trace data object
@@ -347,7 +340,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	private TraceRecord filterOversizeTrace(TraceRecord rec) {
 		final long recCount = countTraceRecord(rec);
-		if (maxTraceEvents == 0 && recCount <= maxTraceEvents) {
+		if (maxTraceEvents == 0 || recCount <= maxTraceEvents) {
 			return rec;
 		}
 		final Long wholeTraceTime = rec.getTime();

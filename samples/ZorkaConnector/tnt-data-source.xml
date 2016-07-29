@@ -60,7 +60,7 @@
 
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- function value-->
+        <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- insert, delete .. -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
@@ -166,8 +166,8 @@
         </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="ResourceName" value="WebSocket"/>  <!-- dynamic value-->
-        <field name="EventName" value="WebSocket"/>  <!-- method name value-->
+        <field name="ResourceName" value="WebSocket"/> <!-- dynamic value-->
+        <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- method name value -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
         <field name="Correlator" locator="SESSION" locator-type="Label"/>
         <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
@@ -226,6 +226,7 @@
 
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
+        <property name="MaxTraceEvents" value="100"/>
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>

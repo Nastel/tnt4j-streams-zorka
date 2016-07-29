@@ -17,22 +17,24 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
   
-zorka.require("tnt4j_base_tomcat.bsh");
+ 
+// This script gets TNT4J Correlation IDs
+  
+__my_bussines() {
 
-__java_webs() {
-
-    spy.add(spy.instrument("WS_TNT4J_STREAMS_INVOKER_TUBE")
-        .onReturn(spy.fetchArg("PACKAGE", 1), spy.fetchArg("METHOD", 2), spy.fetchArg("ARGS", 3),
-            spy.format("METHOD", "${METHOD.name}" ),
-            spy.format("SOAP_ACTION", "${PACKAGE.soapAction}" ),
-            tracer.begin("WS_TNT4J_STREAMS_TRACKER"),
-            tracer.attr("SOAP_METHOD", "METHOD"),
-            tracer.attr("SOAP_ACTION", "SOAP_ACTION"),
-            tnt4j._attributeTntCorrIds()
+    spy.add(spy.instrument("BUSSINES_METHODS")
+        .onEnter(
+            tracer.flags(tracer.ALL_METHODS)
         )
-        .include(spy.byMethod(0, "com.sun.xml.ws.server.**", "invoke", "Object", null)));
+        .include(
+            spy.byClass("com.slabs.**")
+        )
+    );
+
+    tracer.include("com.slabs.**");
+    tracer.exclude("java.**", "com.sun.faces.**", "net.**", "org.apache.**", "javax**", "sun.net", "org.primefaces.**" );
 
     return this;
 }
-
-java_webs = __java_webs();
+			
+my_bussines = __my_bussines();
