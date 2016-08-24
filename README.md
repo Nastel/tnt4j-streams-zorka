@@ -7,8 +7,7 @@ JKoolCloud.
 TNT4J-Streams-Zorka is under LGPLv3 license as Zorka itself.
 
 This document covers just information specific to TNT4J-Streams-Zorka project.
-Detailed information on TNT4J-Streams can be found at
-(https://github.com/Nastel/tnt4j-streams/blob/master/README.md).
+Detailed information on `TNT4J-Streams` can be found in [README document](https://github.com/Nastel/tnt4j-streams/blob/master/README.md).
 
 Importing TNT4J-Streams-Zorka project into IDE
 ======================================
@@ -25,7 +24,7 @@ TNT4J-Streams project
 Running TNT4J-Streams-Zorka
 ======================================
 
-Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Running TNT4J-Streams'.
+Also see `TNT4J-Streams` README document chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#running-tnt4j-streams).
 
 ## TNT4J-Streams-Zorka can be run
 * As standalone application
@@ -332,8 +331,7 @@ actual path on Your system.
 Configuring TNT4J-Streams-Zorka
 ======================================
 
-Details on TNT4J-Streams related configuration can be found at
-(https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Configuring TNT4J-Streams'.
+Details on TNT4J-Streams related configuration can be found in `TNT4J-Streams` README document chapter ['Configuring TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#configuring-tnt4j-streams).
 
 #### Zorka connector parameters:
 
