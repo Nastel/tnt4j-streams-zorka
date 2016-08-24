@@ -68,13 +68,13 @@ Sample stream configuration:
         xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- method value-->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -109,7 +109,7 @@ Sample stream configuration:
 
 
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
@@ -124,7 +124,7 @@ Sample stream configuration:
 
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- insert, delete .. -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
@@ -143,12 +143,12 @@ Sample stream configuration:
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="MARKER" locator-type="Label"/> <!-- method name value-->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -166,12 +166,12 @@ Sample stream configuration:
 
     <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="EventName" locator="MARKER" locator-type="Label"/>
+        <field name="EventName" locator="SOAP_METHOD" locator-type="Label"/>
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -180,7 +180,7 @@ Sample stream configuration:
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
-        <field name="ResourceName" locator="SOAP_METHOD" locator-type="Label"/>
+        <field name="ResourceName" locator="MARKER" locator-type="Label"/>  <!-- resource name value-->
 
         <field name="Message" separator=",">
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
@@ -188,14 +188,15 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
+            tags="JMS_TNT4J_STREAMS_TRACKER">
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="ResourceName" value="JMS"/>
-        <field name="EventName" value="JMS"/>
+        <field name="ResourceName" locator="DESTINATION" locator-type="Label"/> <!-- queue/topic name -->
+        <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
 
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
@@ -215,7 +216,8 @@ Sample stream configuration:
     </parser>
 
     <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
-        <field name="EventType" locator="EvType" locator-type="Label"/>
+        <!--    <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/> -->
+        <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
@@ -228,11 +230,11 @@ Sample stream configuration:
         </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
-        <field name="ResourceName" value="WebSocket"/>
-        <field name="EventName" value="WebSocket"/>
+        <field name="ResourceName" value="WebSocket"/> <!-- dynamic value-->
+        <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- method name value -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
-        <!--field name="Correlator" locator="SESSION" locator-type="Label"/>
-        <field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
+        <field name="Correlator" locator="SESSION" locator-type="Label"/>
+        <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>
@@ -259,6 +261,7 @@ Sample stream configuration:
 
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
+        <property name="MaxTraceEvents" value="100"/>
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>
@@ -267,7 +270,7 @@ Sample stream configuration:
         <parser-ref name="ZorkaJMS"/>
         <parser-ref name="ZorkaWebSocket"/>
         <parser-ref name="ZorkaTrace"/>
-    </stream>
+    </stream>   
 </tnt-data-source>
 ```
 
