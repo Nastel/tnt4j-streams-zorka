@@ -27,19 +27,19 @@ Running TNT4J-Streams-Zorka
 
 Also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Running TNT4J-Streams'.
 
-## TNT4J-Streams-Zorka can be run:
+## TNT4J-Streams-Zorka can be run
 * As standalone application
-    * write streams configuration file. See 'Streams configuration' chapter for more details
+    * write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
     * configure Your loggers
     * use `bin/tnt4j-streams.bat` or `bin/tnt4j-streams.sh` to run standalone application
 * As API integrated into Your product
-    * Write streams configuration file. See 'Streams configuration' chapter for more details
+    * Write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
     * use `StreamsAgent.runFromAPI(configFileName)` in your code
 * As Java agent attached to running JVM
     * use `bin/zorka-attach.bat` or `bin/zorka-attach.sh` to attach to running JVM and continue as standalone
       application
 
-## Samples:
+## Samples
 
 ### Running samples
 When release assemblies are built, samples are located in `samples` directory i.e.
@@ -48,7 +48,7 @@ To run desired sample:
 * go to sample directory
 * run `run.bat` or `run.sh` depending on Your OS
 
-For more detailed explanation of streams and parsers configuration and usage see chapter 'Configuring TNT4J-Streams-Zorka'
+For more detailed explanation of streams and parsers configuration and usage see chapter ['Configuring TNT4J-Streams-Zorka'](#configuring-tnt4j-streams-zorka)
 and JavaDocs.
 
 #### Zorka Connector
@@ -59,7 +59,7 @@ Most basic way to use sample is to send Http request to Zorka monitored Tomcat s
 
 Sample files can be found in `samples/ZorkaConnector` directory.
 
-How to use and configure Zorka, see `samples/ZorkaConnector/readme.md`.
+How to use and configure Zorka, see [`samples/ZorkaConnector/readme.md`](samples/ZorkaConnector/readme.md).
 
 Sample stream configuration:
 ```xml
@@ -381,7 +381,7 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 ```
 (O) marked libraries are optional
 
-NOTE: also see (https://github.com/Nastel/tnt4j-streams/blob/master/README.md) chapter 'Manually installed dependencies'.
+NOTE: also see `TNT4J-Streams` README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
 
 ## Building
@@ -402,7 +402,7 @@ So resuming build process quick "how to build" steps would be like this:
 
 ## Running samples
 
-See 'Running TNT4J-Streams-Zorka' chapter section 'Samples'.
+See 'Running TNT4J-Streams-Zorka' chapter section ['Samples'](#samples).
 
 Testing of TNT4J-Streams-Zorka
 =========================================
