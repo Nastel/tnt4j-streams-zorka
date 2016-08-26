@@ -355,8 +355,8 @@ How to Build TNT4J-Streams-Zorka
 
 ## Requirements
 * JDK 1.6+
-* Apache Maven 3 (https://maven.apache.org/)
-* TNT4J-Streams (https://github.com/Nastel/tnt4j-streams) `core` module in particular
+* [Apache Maven 3](https://maven.apache.org/)
+* [TNT4J-Streams](https://github.com/Nastel/tnt4j-streams) `core` module in particular
 
 All other required dependencies are defined in project modules `pom.xml` files. If maven is running
 online mode it should download these defined dependencies automatically.
@@ -366,9 +366,9 @@ online mode it should download these defined dependencies automatically.
 NOTE: If you have build and installed TNT4J-Streams into Your local maven repository, you don't need to install
 it manually.
 
-Some of required and optional dependencies may be not available in public Maven Repository
-(http://repo.maven.apache.org/maven2/). In this case we would recommend to download those dependencies manually into
-`lib` directory and install into local maven repository by running maven script `lib/pom.xml` with `package` goal.
+Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
+case we would recommend to download those dependencies manually into `lib` directory and install into local maven repository by running 
+maven script `lib/pom.xml` with `package` goal.
 
 So what to download manually:
 * Zico-util
@@ -409,8 +409,8 @@ Testing of TNT4J-Streams-Zorka
 =========================================
 
 ## Requirements
-* JUnit 4 (http://junit.org/)
-* Mockito (http://mockito.org/)
+* [JUnit 4](http://junit.org/)
+* [Mockito](http://mockito.org/)
 
 ## Testing using maven
 Maven tests run is disabled by default. To enable Maven to run tests set Maven command line argument 

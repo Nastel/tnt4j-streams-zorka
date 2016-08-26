@@ -1,7 +1,7 @@
 Zorka
 =====
 
-citation from (http://zorka.io/features.html)
+citation from [Zorka page](http://zorka.io/features.html):
 
     "Zorka is a flexible java monitoring agent with programmable bytecode instrumentation engine. <..>
     Zorka Spy is an advanced bytecode instrumentation engine using Agent Supplied Aspects technique. It is
@@ -121,7 +121,7 @@ And configure script behavior itself.
 
 As for `sql.trace.time` it's your choice to include traces with minimum time specified.
 
-More information about zorka's configuration can be found on (http://zorka.io/install/sql.html)
+More information about zorka's configuration can be found on [Zorka guide](http://zorka.io/install/sql.html).
 
 ### Zorka LDAP configuration
 
