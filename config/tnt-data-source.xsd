@@ -1013,6 +1013,22 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+
+        <xs:attribute name="required" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Indicates whether field availability is required.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="id" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Field locator identifier.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
 
     <xs:complexType name="FieldMap">
@@ -1171,6 +1187,32 @@
                         <xs:annotation>
                             <xs:documentation>
                                 String to insert between values when concatenating multiple activity values into field.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+
+                    <xs:attribute name="transparent" use="optional" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies whether resolved field value should be added to produced activity data. If some stacked parser is
+                                used for a field it may be desired not to add such field raw data value to produced activity data.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+
+                    <xs:attribute name="value-type" use="optional" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Defines field resolved user defined value type i.e. size, age, speed.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+
+                    <xs:attribute name="split" use="optional" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Specifies whether resolved array or collection type field value should be split into separate produced
+                                activity fields.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
