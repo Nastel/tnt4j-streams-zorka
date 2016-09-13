@@ -43,7 +43,6 @@
         </field>
     </parser>
 
-
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -177,7 +176,6 @@
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
     </parser>
 
-
     <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
         <field name="EventType" value="EVENT"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -189,7 +187,7 @@
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="Level" locator="Level" locator-type="Label"/>
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
     </parser>
