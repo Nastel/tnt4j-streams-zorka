@@ -38,28 +38,21 @@ import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 
 /**
+ * Implements a Zabbix queries data processor as activity stream, where each query data package is assumed to represent
+ * a single activity or event which should be recorded. Zabbix service to query is defined using "Host" and "Port"
+ * properties in stream configuration. "JMXQuery" property defines desired to stream JMX beans and attributes.
+ * "CronSchedExpr" property defines Cron scheduler expression to invoke Zabbix queries.
  * <p>
- * Implements a Zabbix queries data processor as activity stream, where each
- * query data package is assumed to represent a single activity or event which
- * should be recorded. Zabbix service to query is defined using "Host" and
- * "Port" properties in stream configuration. "JMXQuery" property defines
- * desired to stream JMX beans and attributes. "CronSchedExpr" property defines
- * Cron scheduler expression to invoke Zabbix queries.
- * <p>
- * This activity stream requires parsers that can support {@link Map} data. On
- * trace data package reception, trace fields are packed into {@link Map} data
- * structure.
+ * This activity stream requires parsers that can support {@link Map} data. On trace data package reception, trace
+ * fields are packed into {@link Map} data structure.
  * <p>
  * This activity stream supports the following properties:
  * <ul>
- * <li>Host - host name of machine running Zico service to listen. Default value
- * - 'localhost'. (Optional)</li>
- * <li>Port - port number of machine running Zico service to listen. Default
- * value - '10056'. (Optional)</li>
- * <li>JMXQuery - Zabbix JMX query expression to get desired JMX beans
- * attributes. (Required)</li>
- * <li>CronSchedExpr - Cron expression to define Zabbix queries invocation
- * scheduler. Default value - 'every 15sec'. (Optional)</li>
+ * <li>Host - host name of machine running Zico service to listen. Default value - 'localhost'. (Optional)</li>
+ * <li>Port - port number of machine running Zico service to listen. Default value - '10056'. (Optional)</li>
+ * <li>JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)</li>
+ * <li>CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - 'every 15sec'.
+ * (Optional)</li>
  * </ul>
  *
  * @version $Revision: 1 $
@@ -92,8 +85,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	private static final String JMX_QUERIES_DELIMITER = "|"; // NON-NLS
 
 	/**
-	 * Constructs an empty JMXZabbixDataPuller. Requires configuration settings
-	 * to set filter of JMX beans and attributes for streaming.
+	 * Constructs an empty JMXZabbixDataPuller. Requires configuration settings to set filter of JMX beans and
+	 * attributes for streaming.
 	 */
 	public JMXZabbixDataPuller() {
 		super(LOGGER);
@@ -144,9 +137,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * Starts scheduler and schedules Cron expression defined job to invoke
-	 * Zabbix queries.
+	 * <p>
+	 * Starts scheduler and schedules Cron expression defined job to invoke Zabbix queries.
 	 */
 	@Override
 	protected void initialize() throws Exception {

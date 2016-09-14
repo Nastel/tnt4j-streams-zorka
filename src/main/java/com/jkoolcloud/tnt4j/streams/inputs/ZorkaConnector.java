@@ -47,7 +47,6 @@ import com.jkoolcloud.tnt4j.uuid.JUGFactoryImpl;
 import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
 
 /**
- * <p>
  * Implements a Zorka traces data processor as activity stream, where each trace data package is assumed to represent a
  * single activity or event which should be recorded. Zico service (Zorka traces producer) to listen is defined using
  * "Host" and "Port" properties in stream configuration.

@@ -31,8 +31,7 @@ public final class ZorkaConstants {
 	public static final String RESOURCE_BUNDLE_NAME = "tnt4j-streams-zorka"; // NON-NLS
 
 	/**
-	 * Property name defining Zorka traces filtering to produce max number of
-	 * events for method stack trace.
+	 * Property name defining Zorka traces filtering to produce max number of events for method stack trace.
 	 */
 	public static final String PROP_MAX_TRACE_EVENTS = "MaxTraceEvents"; // NON-NLS
 

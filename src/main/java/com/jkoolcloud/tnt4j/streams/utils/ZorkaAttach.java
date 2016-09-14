@@ -36,9 +36,8 @@ import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
 /**
- * Wrapper for Zorka main class to automatically attach to running Java VM's. As
- * Zorka doesn't come with agentmain feature having class it could't be loaded
- * by VirtualMachine.loadAgent(). This class appends required libraries to
+ * Wrapper for Zorka main class to automatically attach to running Java VM's. As Zorka doesn't come with agentmain
+ * feature having class it could't be loaded by VirtualMachine.loadAgent(). This class appends required libraries to
  * attaching JVM classpath and loads Zorka as Java agent.
  * 
  * @version $Revision: 1 $
@@ -148,8 +147,7 @@ public final class ZorkaAttach {
 	 * @param classPathEntriesURL
 	 *            classpath entries URLs to attach to JVM
 	 * @throws Exception
-	 *             if exception occurs while extending system class loader's
-	 *             classpath
+	 *             if exception occurs while extending system class loader's classpath
 	 */
 	private static void extendClasspath(URL... classPathEntriesURL) throws Exception {
 		URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
