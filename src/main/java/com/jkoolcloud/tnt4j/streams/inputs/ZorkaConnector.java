@@ -113,17 +113,12 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	 * Constructs an empty ZorkaConnector. Requires configuration settings to set input stream source.
 	 */
 	public ZorkaConnector() {
-		this(LOGGER);
+		super();
 	}
 
-	/**
-	 * Constructs a new ZorkaConnector.
-	 *
-	 * @param logger
-	 *            logger used by activity stream
-	 */
-	protected ZorkaConnector(EventSink logger) {
-		super(logger);
+	@Override
+	protected EventSink logger() {
+		return LOGGER;
 	}
 
 	@Override
@@ -163,6 +158,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	@Override
 	protected void initialize() throws Exception {
 		super.initialize();
+
 		symbolRegistry = new SymbolRegistry();
 		ZicoDataProcessorFactory zdf = new ZicoDataProcessorFactory() {
 
@@ -182,13 +178,13 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			@Override
 			public ZicoDataProcessor get(Socket socket, HelloRequest hello) throws IOException {
 				if (hello == null) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+					logger().log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 							"ZorkaConnector.received.null.hello.packet"));
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
 							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hello.packet"));
 				}
 				if (hello.getHostname() == null) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+					logger().log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 							"ZorkaConnector.received.null.hostname"));
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
 							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hostname"));
@@ -203,7 +199,17 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		};
 
 		zicoService = new ZicoService(zdf, host, socketPort, MAX_THREADS, CONNECTION_TIMEOUT);
+	}
+
+	@Override
+	protected void start() throws Exception {
+		super.start();
+
 		zicoService.start();
+
+		logger().log(OpLevel.DEBUG,
+				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
+				getClass().getSimpleName(), getName());
 	}
 
 	/**
@@ -295,12 +301,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		if (attrs != null) {
 			final Map<String, Object> attributeEvent = new HashMap<String, Object>(translateSymbols(attrs));
 			attributeEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
-			final String eventID;
 			if (attributeEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
-				eventID = uuidGenerator.newUUID();
-				attributeEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
-			} else {
-				eventID = attributeEvent.get(TNT4J_PROP_TRACKING_ID).toString();
+				attributeEvent.put(TNT4J_PROP_TRACKING_ID, uuidGenerator.newUUID());
 			}
 			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
 				addInputToBuffer(attributeEvent);
@@ -347,7 +349,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
 
 		final long reducedTrCount = countTraceRecord(filteredRec);
-		LOGGER.log(OpLevel.INFO,
+		logger().log(OpLevel.INFO,
 				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.reduced.trace"),
 				recCount, reducedTrCount, maxTraceEvents);
 		return filteredRec;

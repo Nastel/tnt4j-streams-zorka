@@ -19,20 +19,19 @@
 
 package com.jkoolcloud.tnt4j.streams.inputs;
 
+import static com.jkoolcloud.tnt4j.streams.TestUtils.testPropertyList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jkoolcloud.tnt4j.streams.PropertiesTestBase;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
@@ -41,7 +40,7 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
  * @author akausinis
  * @version 1.0
  */
-public class JMXZabbixDataPullerTest extends PropertiesTestBase {
+public class JMXZabbixDataPullerTest {
 
 	private static final Integer TEST_PORT = 10057;
 	private JMXZabbixDataPuller stream;
@@ -56,19 +55,20 @@ public class JMXZabbixDataPullerTest extends PropertiesTestBase {
 
 	@Test
 	public void testProperties() throws Exception {
-		Collection<Entry<String, String>> properties = getPropertyList().add(StreamProperties.PROP_HOST, "localhost")
-				.add(StreamProperties.PROP_PORT, TEST_PORT.toString())
-				.add(ZorkaConstants.PROP_JXM_QUERY, "\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\"")
-				.add(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *").build();
-		stream.setProperties(properties);
-		testPropertyList(stream, properties);
-
+		Map<String, String> properties = new HashMap<String, String>(4);
+		properties.put(StreamProperties.PROP_HOST, "localhost");
+		properties.put(StreamProperties.PROP_PORT, TEST_PORT.toString());
+		properties.put(ZorkaConstants.PROP_JXM_QUERY,
+				"\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\"");
+		properties.put(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *");
+		stream.setProperties(properties.entrySet());
+		testPropertyList(stream, properties.entrySet());
 	}
 
 	@Test
 	public void testInitialize() throws Exception {
 		testProperties();
-		stream.initialize();
+		stream.startStream();
 		Thread.sleep(2000);
 		stream.cleanup();
 	}
@@ -103,7 +103,7 @@ public class JMXZabbixDataPullerTest extends PropertiesTestBase {
 		}).start();
 
 		testProperties();
-		stream.initialize();
+		stream.startStream();
 
 		Thread.sleep(500);
 		final Map<String, String> nextItem = stream.getNextItem();

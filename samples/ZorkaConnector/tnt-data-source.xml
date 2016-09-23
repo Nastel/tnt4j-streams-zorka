@@ -6,15 +6,21 @@
     <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="Tag" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" separator=",">
+            <field-locator locator="MARKER" locator-type="Label"/>
+            <field-locator locator="HdrIn__cookie" locator-type="Label"/>
+            <field-locator locator="HdrIn__user-agent" locator-type="Label"/>
+        </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- method value-->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
@@ -36,11 +42,6 @@
             <field-map source="500:511" target="ERROR" type="Range"/>
         </field>
         <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
-
-        <field name="Tag" separator=",">
-            <field-locator locator="HdrIn__cookie" locator-type="Label"/>
-            <field-locator locator="HdrIn__user-agent" locator-type="Label"/>
-        </field>
     </parser>
 
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
@@ -62,9 +63,11 @@
         <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- insert, delete .. -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
@@ -85,9 +88,11 @@
                locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/> <!-- method name value-->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
@@ -108,9 +113,11 @@
                locator-type="Label"/>
         <field name="EventName" locator="SOAP_METHOD" locator-type="Label"/>
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
@@ -133,10 +140,12 @@
         <field name="ResourceName" locator="DESTINATION" locator-type="Label"/> <!-- queue/topic name -->
         <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <field-locator locator="CORRELATION" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
         <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
@@ -168,8 +177,10 @@
         <field name="ResourceName" value="WebSocket"/> <!-- dynamic value-->
         <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- method name value -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
-        <field name="Correlator" locator="SESSION" locator-type="Label"/>
-        <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="SESSION" locator-type="Label"/>
+            <!--<field-locator locator="MESSAGE_ID" locator-type="Label"/>-->
+        </field>
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
         <field name="ParentId" locator="ParentID" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>

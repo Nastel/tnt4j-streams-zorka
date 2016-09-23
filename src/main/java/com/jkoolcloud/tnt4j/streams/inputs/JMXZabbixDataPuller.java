@@ -89,7 +89,12 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	 * attributes for streaming.
 	 */
 	public JMXZabbixDataPuller() {
-		super(LOGGER);
+		super();
+	}
+
+	@Override
+	protected EventSink logger() {
+		return LOGGER;
 	}
 
 	@Override
@@ -176,7 +181,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			try {
 				scheduler.shutdown(true);
 			} catch (SchedulerException exc) {
-				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+				logger().log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 						"JMXZabbixDataPuller.error.closing.scheduler"), exc);
 			}
 		}
