@@ -7,7 +7,7 @@ JKoolCloud.
 TNT4J-Streams-Zorka is under LGPLv3 license as Zorka itself.
 
 This document covers just information specific to TNT4J-Streams-Zorka project.
-Detailed information on TNT4J-Streams can be found in [README document](https://github.com/Nastel/tnt4j-streams/blob/master/README.md).
+Detailed information on TNT4J-Streams can be found in [README document](https://github.com/Nastel/tnt4j-streams/README.md).
 
 Importing TNT4J-Streams-Zorka project into IDE
 ======================================
@@ -24,15 +24,15 @@ TNT4J-Streams project
 Running TNT4J-Streams-Zorka
 ======================================
 
-Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#running-tnt4j-streams).
+Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/README.md#running-tnt4j-streams).
 
 ## TNT4J-Streams-Zorka can be run
 * As standalone application
-    * write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
+    * write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/README.md#streams-configuration) chapter for more details
     * configure Your loggers
     * use `bin/tnt4j-streams.bat` or `bin/tnt4j-streams.sh` to run standalone application
 * As API integrated into Your product
-    * Write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
+    * Write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/README.md#streams-configuration) chapter for more details
     * use `StreamsAgent.runFromAPI(configFileName)` in your code
 * As Java agent attached to running JVM
     * use `bin/zorka-attach.bat` or `bin/zorka-attach.sh` to attach to running JVM and continue as standalone
@@ -382,7 +382,7 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 ```
 (O) marked libraries are optional
 
-NOTE: also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
+NOTE: also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/README.md#manually-installed-dependencies).
 
 
 ## Building
