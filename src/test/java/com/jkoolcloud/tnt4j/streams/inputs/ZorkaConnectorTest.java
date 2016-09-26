@@ -71,8 +71,8 @@ public class ZorkaConnectorTest {
 			long recsps = 1000L * loader.getRecords() / t;
 			long bytesps = 1000L * loader.getBytes() / t;
 
-			System.out.println("File " + dir + "/" + file + " finished: t=" + t + " records=" + loader.getRecords()
-					+ " (" + recsps + " recs/s)" + " bytes=" + loader.getBytes() + "(" + bytesps + " bytes/s).");
+			System.out.println("File " + dir + '/' + file + " finished: t=" + t + " records=" + loader.getRecords()
+					+ " (" + recsps + " recs/s)" + " bytes=" + loader.getBytes() + '(' + bytesps + " bytes/s).");
 
 		} catch (Exception e) {
 			errors.incrementAndGet();
@@ -89,7 +89,8 @@ public class ZorkaConnectorTest {
 
 	private Set<String> VERBOTEN = ZorkaUtil.set(".", "src/main");
 
-	// @Test @Ignore
+	@Test
+	@Ignore
 	public void testLoadMultipleDataFiles() throws Exception {
 		File rootdir = new File("/tmp/traces");
 		for (final String d : rootdir.list()) {
@@ -119,8 +120,8 @@ public class ZorkaConnectorTest {
 		long bytesps = 1000L * bytes.get() / t;
 
 		System.out.println("Overall execution time: " + t + "ms");
-		System.out.println("Overall Records processed: " + records.get() + "(" + recsps + " recs/s)");
-		System.out.println("Overall Bytes processed: " + bytes.get() + "(" + bytesps + " bytes/s");
+		System.out.println("Overall Records processed: " + records.get() + '(' + recsps + " recs/s)");
+		System.out.println("Overall Bytes processed: " + bytes.get() + '(' + bytesps + " bytes/s");
 	}
 
 	@Test(timeout = 1000)
@@ -142,13 +143,13 @@ public class ZorkaConnectorTest {
 		String keyCore = "ActivityField.field.type.name.empty";
 
 		String rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyModule);
-		assertNotEquals("Zorka resource bundle entry not found", rbs1, keyModule);
+		assertNotEquals("Zorka resource bundle entry not found", keyModule, rbs1);
 		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyModule);
-		assertEquals("Zorka resource bundle entry found in core", rbs1, keyModule);
+		assertEquals("Zorka resource bundle entry found in core", keyModule, rbs1);
 		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyCore);
-		assertNotEquals("Core resource bundle entry not found", rbs1, keyCore);
+		assertNotEquals("Core resource bundle entry not found", keyCore, rbs1);
 		rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyCore);
-		assertEquals("Core resource bundle entry found in zorka", rbs1, keyCore);
+		assertEquals("Core resource bundle entry found in zorka", keyCore, rbs1);
 	}
 
 }
