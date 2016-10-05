@@ -48,9 +48,9 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
  * <p>
  * This activity stream supports the following properties:
  * <ul>
+ * <li>JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)</li>
  * <li>Host - host name of machine running Zico service to listen. Default value - 'localhost'. (Optional)</li>
  * <li>Port - port number of machine running Zico service to listen. Default value - '10056'. (Optional)</li>
- * <li>JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)</li>
  * <li>CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - 'every 15sec'.
  * (Optional)</li>
  * </ul>

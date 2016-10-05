@@ -110,7 +110,7 @@ __java_webSocket() {
             spy.put("MARKER", "WebSocket"),
             tracer.attr("MARKER", "MARKER"),
             tracer.attr("METHOD", "EVENT_TYPE"),
-            tracer.attr("TrackingID", "SendTrackingID"),
+            tracer.attr("TrackingId", "SendTrackingID"),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
             tracer.attr("MSG", "MSG")
         )
@@ -135,7 +135,7 @@ __java_webSocket() {
             tracer.attr("MARKER", "MARKER"),
             tracer.attr("METHOD", "EVENT_TYPE"),
             tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
-            tracer.attr("TrackingID", "ReceiveTrackingID"),
+            tracer.attr("TrackingId", "ReceiveTrackingID"),
             tracer.attr("SESSION", "SESSION")
         )
         /* .onReturn(

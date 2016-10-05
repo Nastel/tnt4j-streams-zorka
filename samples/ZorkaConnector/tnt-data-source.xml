@@ -21,8 +21,8 @@
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="SESSIONID" locator="JSESSIONID" locator-type="Label"/>
         <field name="Location" separator="">
@@ -68,8 +68,8 @@
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="DB" locator-type="Label"/>
@@ -93,8 +93,8 @@
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" separator=",">
@@ -118,8 +118,8 @@
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="MARKER" locator-type="Label"/>  <!-- resource name value-->
@@ -146,8 +146,8 @@
             <field-locator locator="CORRELATION" locator-type="Label"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
@@ -182,9 +182,9 @@
             <!--<field-locator locator="MESSAGE_ID" locator-type="Label"/>-->
         </field>
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
@@ -194,10 +194,15 @@
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="Severity" locator="METHOD_FLAGS" locator-type="Label">
+            <field-map source="0:127" target="INFO" type="Range"/>
+            <field-map source="128:" target="WARNING" type="Range"/>
+        </field>
+        <!-- <field name="Method_Flags" locator="METHOD_FLAGS" locator-type="Label"/> -->
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="Level" locator="Level" locator-type="Label"/>
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
@@ -235,7 +240,14 @@
 
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
+
+        <!-- If trace records filtering leaving defined maximum number of entries required. `0` streams whole trace. -->
         <property name="MaxTraceEvents" value="100"/>
+
+        <!-- If trace records filtering by methods execution time using Bollinger Bands is required -->
+        <!--<property name="Bollinger_K_times" value="3"/> -->
+        <!--<property name="Bollinger_N_period" value="20"/> -->
+        <!--<property name="BollingerRecalculationPeriod" value="3000"/> -->
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>

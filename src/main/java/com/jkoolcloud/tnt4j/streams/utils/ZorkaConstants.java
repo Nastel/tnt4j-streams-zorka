@@ -45,6 +45,75 @@ public final class ZorkaConstants {
 	 */
 	public static final String PROP_SCHEDULER_EXPR = "CronSchedExpr"; // NON-NLS
 
+	/**
+	 * Constant for property filtering Zorka trace by method time
+	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger K times an N-period standard deviation
+	 * above the EMA(nPeriod).
+	 */
+	public static final String PROP_BB_K_TIMES = "Bollinger_K_times"; // NON-NLS
+
+	/**
+	 * Constant for property filtering Zorka trace by method time
+	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger nPeriod an N-period moving average (EMA).
+	 */
+	public static final String PROP_BB_N_PERIOD = "Bollinger_N_period"; // NON-NLS
+
+	/**
+	 * Constant for property filtering Zorka trace by method time
+	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger bands recalculation time.
+	 */
+	public static final String PROP_BB_RECALCULATION_TIME = "BollingerRecalculationPeriod"; // NON-NLS
+
+	// Zorka mappings
+	/**
+	 * The constant for bad reply.
+	 */
+	public static final String ZORKA_REPLY_BAD = "BAD";// NON-NLS
+	/**
+	 * The constant ZORKA_PROP_CLOCK. Value to set to clock field of trace record.
+	 */
+	public static final String ZORKA_PROP_CLOCK = "CLOCK"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_MARKER. Value to set to marker field of trace record.
+	 */
+	public static final String ZORKA_PROP_MARKER = "MARKER"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_SIGNATURE. Value to set to signature field of trace record.
+	 */
+	public static final String ZORKA_PROP_SIGNATURE = "SIGNATURE"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_METHOD. Value to set to method field of trace record.
+	 */
+	public static final String ZORKA_PROP_METHOD = "METHOD"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_CLASS. Value to set to class field of trace record.
+	 */
+	public static final String ZORKA_PROP_CLASS = "CLASS"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_CALLS. Value to set to calls field of trace record.
+	 */
+	public static final String ZORKA_PROP_CALLS = "CALLS"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_METHOD_TIME. Value to set to method time field of trace record.
+	 */
+	public static final String ZORKA_PROP_METHOD_TIME = "METHOD_TIME"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_METHOD_FLAGS. Value to set to flags field of trace record.
+	 */
+	public static final String ZORKA_PROP_METHOD_FLAGS = "METHOD_FLAGS"; // NON-NLS
+	/**
+	 * The constant TNT4J_PROP_LEVEL. Level of method trace trace. Where 0 is parent n+1 - child.
+	 */
+	public static final String TNT4J_PROP_LEVEL = "Level"; // NON-NLS
+	/**
+	 * The constant TNT4J_PROP_EV_TYPE. Event type field see {@link com.jkoolcloud.tnt4j.core.OpType}.
+	 */
+	public static final String TNT4J_PROP_EV_TYPE = "EVENT_TYPE"; // NON-NLS
+	/**
+	 * The constant TRACE_MARKER. Marker to set for {@link com.jitlogic.zorka.common.tracedata.TraceRecord} entities.
+	 */
+	public static final String TRACE_MARKER = "TRACE"; // NON-NLS
+
 	private ZorkaConstants() {
 
 	}

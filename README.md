@@ -70,17 +70,23 @@ Sample stream configuration:
     <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
-        <field name="Tag" locator="MARKER" locator-type="Label"/>
+        <field name="Tag" separator=",">
+            <field-locator locator="MARKER" locator-type="Label"/>
+            <field-locator locator="HdrIn__cookie" locator-type="Label"/>
+            <field-locator locator="HdrIn__user-agent" locator-type="Label"/>
+        </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="URI" locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/>    <!-- method value-->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="SESSIONID" locator="JSESSIONID" locator-type="Label"/>
         <field name="Location" separator="">
@@ -100,13 +106,7 @@ Sample stream configuration:
             <field-map source="500:511" target="ERROR" type="Range"/>
         </field>
         <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
-
-        <field name="Tag" separator=",">
-            <field-locator locator="HdrIn__cookie" locator-type="Label"/>
-            <field-locator locator="HdrIn__user-agent" locator-type="Label"/>
-        </field>
     </parser>
-
 
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
@@ -127,11 +127,13 @@ Sample stream configuration:
         <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- insert, delete .. -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="DB" locator-type="Label"/>
@@ -150,11 +152,13 @@ Sample stream configuration:
                locator-type="Label"/>
         <field name="EventName" locator="MARKER" locator-type="Label"/> <!-- method name value-->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" separator=",">
@@ -173,11 +177,13 @@ Sample stream configuration:
                locator-type="Label"/>
         <field name="EventName" locator="SOAP_METHOD" locator-type="Label"/>
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="MARKER" locator-type="Label"/>  <!-- resource name value-->
@@ -198,12 +204,14 @@ Sample stream configuration:
         <field name="ResourceName" locator="DESTINATION" locator-type="Label"/> <!-- queue/topic name -->
         <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
 
-        <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
-        <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
-        <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
-        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="Correlator" separator=",">
+            <field-locator locator="JK_CORR_RID" locator-type="Label"/>
+            <field-locator locator="JK_CORR_SID" locator-type="Label"/>
+            <field-locator locator="CORRELATION" locator-type="Label"/>
+            <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        </field>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
@@ -233,14 +241,15 @@ Sample stream configuration:
         <field name="ResourceName" value="WebSocket"/> <!-- dynamic value-->
         <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- method name value -->
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
-        <field name="Correlator" locator="SESSION" locator-type="Label"/>
-        <!--<field name="Correlator" locator="MESSAGE_ID" locator-type="Label"/-->
+        <field name="Correlator" separator=",">
+            <field-locator locator="SESSION" locator-type="Label"/>
+            <!--<field-locator locator="MESSAGE_ID" locator-type="Label"/>-->
+        </field>
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
     </parser>
-
 
     <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
         <field name="EventType" value="EVENT"/>
@@ -249,19 +258,60 @@ Sample stream configuration:
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
         <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <field name="Severity" locator="METHOD_FLAGS" locator-type="Label">
+            <field-map source="0:127" target="INFO" type="Range"/>
+            <field-map source="128:" target="WARNING" type="Range"/>
+        </field>
+        <!-- <field name="Method_Flags" locator="METHOD_FLAGS" locator-type="Label"/> -->
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
-        <field name="TrackingId" locator="TrackingID" locator-type="Label"/>
-        <field name="ParentId" locator="ParentID" locator-type="Label"/>
-        <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
+        <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="Level" locator="Level" locator-type="Label"/>
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
     </parser>
 
+    <parser name="JMXDataParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
+        <property name="LocPathDelim" value=""/>
+        <field name="EventType" value="SNAPSHOT"/>
+        <field name="HeapMemory">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Memory","HeapMemoryUsage","used"
+            </field-locator>
+        </field>
+        <field name="ThreadCount">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Threading","ThreadCount"
+            </field-locator>
+        </field>
+        <field name="GCTime">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime"
+            </field-locator>
+        </field>
+        <field name="ClassCount">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=ClassLoading","LoadedClassCount"
+            </field-locator>
+        </field>
+        <field name="ClassPath">
+            <field-locator locator-type="Label">
+                "java","java.lang:type=Runtime","ClassPath"
+            </field-locator>
+        </field>
+    </parser>
 
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
+
+        <!-- If trace records filtering leaving defined maximum number of entries required. `0` streams whole trace. -->
         <property name="MaxTraceEvents" value="100"/>
+
+        <!-- If trace records filtering by methods execution time using Bollinger Bands is required -->
+        <!--<property name="Bollinger_K_times" value="3"/> -->
+        <!--<property name="Bollinger_N_period" value="20"/> -->
+        <!--<property name="BollingerRecalculationPeriod" value="3000"/> -->
 
         <parser-ref name="ZorkaHTTP"/>
         <parser-ref name="ZorkaSQL"/>
@@ -270,7 +320,23 @@ Sample stream configuration:
         <parser-ref name="ZorkaJMS"/>
         <parser-ref name="ZorkaWebSocket"/>
         <parser-ref name="ZorkaTrace"/>
-    </stream>   
+    </stream>
+
+    <stream name="ZabbixStream" class="com.jkoolcloud.tnt4j.streams.inputs.JMXZabbixDataPuller">
+        <property name="HaltIfNoParser" value="false"/>
+        <property name="CronSchedExpr" value="0/15 * * 1/1 * ? *"/>
+        <property name="JMXQuery">
+            <![CDATA[
+                "java","java.lang:type=Memory","HeapMemoryUsage","used"|
+                "java","java.lang:type=Threading","ThreadCount"|
+                "java","java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime"|
+                "java","java.lang:type=ClassLoading","LoadedClassCount"|
+                "java","java.lang:type=Runtime","ClassPath"
+            ]]>
+        </property>
+
+        <parser-ref name="JMXDataParser"/>
+    </stream>
 </tnt-data-source>
 ```
 
@@ -316,8 +382,8 @@ Activity event mapped fields:
 value is retrieved from JMS message field `correlationId`.
 * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
 then this field is filled with trace data as string.
-* `TrackingId` is mapped from trace attribute named `TrackingID`. It represents unique identifier of activity event.
-* `ParentId` is mapped from trace attribute named `ParentID`. It represents unique identifier of parent trace activity.
+* `TrackingId` is mapped from trace attribute named `TrackingId`. It represents unique identifier of activity event.
+* `ParentId` is mapped from trace attribute named `ParentId`. It represents unique identifier of parent trace activity.
 
 Additional fields can be mapped on user demand.
 
@@ -340,15 +406,54 @@ Details on TNT4J-Streams related configuration can be found in TNT4J-Streams REA
 
 * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
 * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
-* MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` means
+* MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means
 stream whole stack trace. (Optional)
+* Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times values to use for averages 
+calculation. Setting `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
+Default value - `0`. (Optional)
+    * Bollinger_K_times - Bollinger Bands K times an N-period standard deviation above the exponentially moving average(nPeriod). It means 
+    how many times average value has to change to change bands width. Default value - `3`. (Optional, actual only if `Bollinger_N_period` 
+    is set)
+    * BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - `3000`. (Optional, actual only 
+    if `Bollinger_N_period` is set)
 
     sample:
 ```xml
     <property name="Host" value="some.host.name"/>
     <property name="Port" value="8645"/>
     <property name="MaxTraceEvents" value="32"/>
+    
+    <property name="Bollinger_N_period" value="25"/>
+    <property name="Bollinger_K_times" value="3"/>
+    <property name="BollingerRecalculationPeriod" value="2000"/>
 ```
+
+Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#generic-streams-parameters) and ['Buffered streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#buffered-streams-parameters).
+
+#### JMX Zabix data puller parameters:
+
+* JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)
+* Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
+* Port - port number of machine running Zico service to listen. Default value - `10056`. (Optional)
+* CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - `every 15sec`. (Optional)
+
+    sample:
+```xml
+    <property name="Host" value="some.host.name"/>
+    <property name="Host" value="9953"/>
+    <property name="CronSchedExpr" value="0/15 * * 1/1 * ? *"/>
+    <property name="JMXQuery">
+        <![CDATA[
+            "java","java.lang:type=Memory","HeapMemoryUsage","used"|
+            "java","java.lang:type=Threading","ThreadCount"|
+            "java","java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime"|
+            "java","java.lang:type=ClassLoading","LoadedClassCount"|
+            "java","java.lang:type=Runtime","ClassPath"
+        ]]>
+    </property>
+```
+
+Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#generic-streams-parameters) and ['Buffered streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#buffered-streams-parameters).
 
 How to Build TNT4J-Streams-Zorka
 =========================================

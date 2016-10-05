@@ -16,21 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jkoolcloud.tnt4j.streams.filters;
 
-package com.jkoolcloud.tnt4j.streams;
+import static org.junit.Assert.assertNotNull;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.Test;
 
-import com.jkoolcloud.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
-import com.jkoolcloud.tnt4j.streams.filters.AllFiltersTests;
-import com.jkoolcloud.tnt4j.streams.inputs.AllInputsTests;
+import com.jitlogic.zorka.common.tracedata.SymbolRegistry;
+import com.jitlogic.zorka.common.tracedata.TraceRecord;
 
 /**
  * @author akausinis
  * @version 1.0
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ ConfigParserHandlerTest.class, AllFiltersTests.class, AllInputsTests.class })
-public class AllZorkaTests {
+public class TRDynamicFilterTest {
+
+	private static final int TR_COUNT = 20;
+
+	@Test
+	public void testStatePersisting() {
+		SymbolRegistry symbolRegistry = new SymbolRegistry();
+		TRDynamicFilter filter = new TRDynamicFilter(TR_COUNT, 3, 3000, symbolRegistry);
+
+		for (int i = 0; i <= TR_COUNT; i++) {
+			TraceRecord tr = MarkedTraceRecordTest.makeTestTraceRecord(symbolRegistry);
+			filter.filter(tr);
+		}
+
+		filter.persistMethodRegistry();
+		filter.restoreMethodRegistry();
+
+		assertNotNull(filter);
+	}
 }

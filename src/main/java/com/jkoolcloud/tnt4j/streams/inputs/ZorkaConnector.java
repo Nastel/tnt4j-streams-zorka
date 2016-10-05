@@ -19,12 +19,15 @@
 
 package com.jkoolcloud.tnt4j.streams.inputs;
 
+import static com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants.*;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.text.ParseException;
-import java.util.*;
-
-import org.apache.commons.collections4.MapUtils;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.jitlogic.zico.core.ZicoService;
 import com.jitlogic.zorka.common.tracedata.HelloRequest;
@@ -36,13 +39,19 @@ import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
 import com.jitlogic.zorka.common.zico.ZicoPacket;
 import com.jkoolcloud.tnt4j.core.OpLevel;
+import com.jkoolcloud.tnt4j.core.OpType;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
+import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
+import com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter;
+import com.jkoolcloud.tnt4j.streams.filters.TRSizeFilter;
+import com.jkoolcloud.tnt4j.streams.filters.TraceRecordFilter;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
+import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
 import com.jkoolcloud.tnt4j.uuid.JUGFactoryImpl;
 import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
 
@@ -58,7 +67,16 @@ import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
  * <ul>
  * <li>Host - host name of machine running Zico service to listen. Default value - '0.0.0.0'. (Optional)</li>
  * <li>Port - port number of machine running Zico service to listen. Default value - '8640'. (Optional)</li>
- * <li>MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - '100'. Optional)</li>
+ * <li>MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - '100'.
+ * (Optional)</li>
+ * <li>Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times
+ * values to use for averages calculation. Setting '0' or negative value means dynamic methods execution time filtering
+ * using Bollinger Bands is disabled. Default value - '0'. (Optional)</li>
+ * <li>Bollinger_K_times - Bollinger Bands K times an N-period standard deviation above the exponentially moving
+ * average(nPeriod). It means how many times average value has to change to change bands width. Default value - '3'.
+ * (Optional, actual only if {@code Bollinger_N_period} is set)</li>
+ * <li>BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - '3000'.
+ * (Optional, actual only if {@code Bollinger_N_period} is set)</li>
  * </ul>
  *
  * @version $Revision: 1 $
@@ -75,39 +93,32 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private static final int MAX_THREADS = 5;
 	private static final int DEFAULT_PORT = 8640;
 	private static final String DEFAULT_HOSTNAME = "0.0.0.0"; // NON-NLS
-	private static final int MAX_TRACE_EVENTS = 100;
 
-	private static final String ZORKA_REPLY_BAD = "BAD";// NON-NLS
+	private static final int DEFAULT_MAX_TRACE_EVENTS = 100;
 
-	private static final String ZORKA_PROP_CLOCK = "CLOCK"; // NON-NLS
-	private static final String ZORKA_PROP_MARKER = "MARKER"; // NON-NLS
-	private static final String ZORKA_PROP_SIGNATURE = "SIGNATURE"; // NON-NLS
-	private static final String ZORKA_PROP_METHOD = "METHOD"; // NON-NLS
-	private static final String ZORKA_PROP_CLASS = "CLASS"; // NON-NLS
-	private static final String ZORKA_PROP_CALLS = "CALLS"; // NON-NLS
-	private static final String ZORKA_PROP_METHOD_TIME = "METHOD_TIME"; // NON-NLS
+	private static final int DEFAULT_BB_K_TIMES = 3;
+	private static final int DEFAULT_BB_RECALCULATE = 3000;
 
-	private static final String TNT4J_PROP_TRACKING_ID = "TrackingID"; // NON-NLS
-	private static final String TNT4J_PROP_PARENT_ID = "ParentID"; // NON-NLS
-	private static final String TNT4J_PROP_LEVEL = "Level"; // NON-NLS
-	private static final String TNT4J_PROP_EV_TYPE = "EVENT_TYPE"; // NON-NLS
-
-	private static final String TRACE_MARKER = "TRACE"; // NON-NLS
-
-	private static final String TRACK_TYPE_ACTIVITY = "ACTIVITY"; // NON-NLS
-	private static final String TRACK_TYPE_EVENT = "EVENT"; // NON-NLS
-
-	// for persisting symbols inf ile System use PersistentSymbolRegistry
+	// for persisting symbols in file System use PersistentSymbolRegistry
 	private SymbolRegistry symbolRegistry = null;
 
 	private String host = DEFAULT_HOSTNAME;
-	private Integer socketPort = DEFAULT_PORT;
-	private Integer maxTraceEvents = MAX_TRACE_EVENTS;
+	private int socketPort = DEFAULT_PORT;
+	private int maxTraceEvents = DEFAULT_MAX_TRACE_EVENTS;
+
+	private TraceRecordFilter methodTimeFilter;
+	private TraceRecordFilter sizeFilter;
+
+	private int kTimes = DEFAULT_BB_K_TIMES;
+	private int nPeriod = 0;
+	private long bbRecalculateTime = DEFAULT_BB_RECALCULATE;
 
 	private ZicoService zicoService = null;
 	private boolean inputEnd = false;
 
 	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
+
+	private final Object filterConstructorLock = new Object();
 
 	/**
 	 * Constructs an empty ZorkaConnector. Requires configuration settings to set input stream source.
@@ -134,9 +145,15 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
-				socketPort = Integer.valueOf(value);
+				socketPort = Integer.parseInt(value);
 			} else if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
-				maxTraceEvents = Integer.valueOf(value);
+				maxTraceEvents = Integer.parseInt(value);
+			} else if (ZorkaConstants.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
+				kTimes = Integer.parseInt(value);
+			} else if (ZorkaConstants.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
+				nPeriod = Integer.parseInt(value);
+			} else if (ZorkaConstants.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
+				bbRecalculateTime = Integer.parseInt(value);
 			}
 		}
 	}
@@ -151,6 +168,15 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		}
 		if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
 			return maxTraceEvents;
+		}
+		if (ZorkaConstants.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
+			return kTimes;
+		}
+		if (ZorkaConstants.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
+			return nPeriod;
+		}
+		if (ZorkaConstants.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
+			return bbRecalculateTime;
 		}
 		return super.getProperty(name);
 	}
@@ -169,7 +195,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			 *            Zico service socket
 			 * @param hello
 			 *            hello request data packet
-			 * 
 			 * @return Zico data processor to be used by Zico service
 			 *
 			 * @throws IOException
@@ -244,7 +269,14 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private void processTrace(TraceRecord rec) {
+		long recCount = ZorkaUtils.countTraceRecord(rec);
+		rec = filterByMethodTimes(rec);
 		rec = filterOversizeTrace(rec);
+
+		long reducedTrCount = ZorkaUtils.countTraceRecord(rec);
+		LOGGER.log(OpLevel.INFO,
+				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.reduced.trace"),
+				recCount, reducedTrCount, maxTraceEvents);
 		processTraceRecursive(rec, rec.getChildren(), null, 1);
 	}
 
@@ -273,25 +305,25 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
 
 			final String activityID = uuidGenerator.newUUID();
-			markerActivity.put(TNT4J_PROP_TRACKING_ID, activityID);
-			markerActivity.put(TNT4J_PROP_PARENT_ID, parentUUID);
-			markerActivity.put(TNT4J_PROP_EV_TYPE, TRACK_TYPE_ACTIVITY);
+			markerActivity.put(StreamFieldType.TrackingId.name(), activityID);
+			markerActivity.put(StreamFieldType.ParentId.name(), parentUUID);
+			markerActivity.put(TNT4J_PROP_EV_TYPE, OpType.ACTIVITY.name());
 			parentUUID = activityID;
 			addInputToBuffer(markerActivity);
 
 			final Map<String, Object> markerEvent = new HashMap<String, Object>(markerActivity);
 
 			final String eventID;
-			if (markerEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
+			if (markerEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				eventID = uuidGenerator.newUUID();
-				markerEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
+				markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
 			} else {
-				eventID = markerEvent.get(TNT4J_PROP_TRACKING_ID).toString();
+				eventID = String.valueOf(markerEvent.get(StreamFieldType.TrackingId.name()));
 			}
 
-			markerEvent.put(TNT4J_PROP_TRACKING_ID, eventID);
-			markerEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
-			markerEvent.put(TNT4J_PROP_EV_TYPE, TRACK_TYPE_EVENT);
+			markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
+			markerEvent.put(StreamFieldType.ParentId.name(), parentUUID);
+			markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
 			addInputToBuffer(markerEvent);
 		}
 
@@ -300,9 +332,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		if (attrs != null) {
 			final Map<String, Object> attributeEvent = new HashMap<String, Object>(translateSymbols(attrs));
-			attributeEvent.put(TNT4J_PROP_PARENT_ID, parentUUID);
-			if (attributeEvent.get(TNT4J_PROP_TRACKING_ID) == null) {
-				attributeEvent.put(TNT4J_PROP_TRACKING_ID, uuidGenerator.newUUID());
+			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
+			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
+				attributeEvent.put(StreamFieldType.TrackingId.name(), uuidGenerator.newUUID());
 			}
 			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
 				addInputToBuffer(attributeEvent);
@@ -311,8 +343,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		// ** FOR TRACE TREE ** ACTIVITIES NEEDED IN EUM
 		// String eventID = uuidGenerator.newUUID();
-		// translatedTrace.put(TNT4J_PROP_TRACKING_ID, eventID);
-		translatedTrace.put(TNT4J_PROP_PARENT_ID, parentUUID);
+		// translatedTrace.put(StreamFieldType.TrackingId.name (), eventID);
+		translatedTrace.put(StreamFieldType.ParentId.name(), parentUUID);
 		translatedTrace.put(TNT4J_PROP_LEVEL, level);
 
 		addInputToBuffer(translatedTrace);
@@ -331,6 +363,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		translatedTrace.put(ZORKA_PROP_CLOCK, clock <= 0 ? System.currentTimeMillis() : clock);
 		translatedTrace.put(ZORKA_PROP_METHOD_TIME, masterRecord.getTime());
 		translatedTrace.put(ZORKA_PROP_CALLS, masterRecord.getCalls());
+		translatedTrace.put(ZORKA_PROP_METHOD_FLAGS, masterRecord.getFlags());
 		translatedTrace.put(ZORKA_PROP_CLASS, symbolRegistry.symbolName(masterRecord.getClassId()));
 		translatedTrace.put(ZORKA_PROP_METHOD, symbolRegistry.symbolName(masterRecord.getMethodId()));
 		translatedTrace.put(ZORKA_PROP_SIGNATURE, symbolRegistry.symbolName(masterRecord.getSignatureId()));
@@ -340,51 +373,33 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private TraceRecord filterOversizeTrace(TraceRecord rec) {
-		final long recCount = countTraceRecord(rec);
-		if (maxTraceEvents == 0 || recCount <= maxTraceEvents) {
-			return rec;
+		if (maxTraceEvents <= 0) {
+			return rec; // DO NOT create FILTER if maxTraceEvents not set;
 		}
-		final Long wholeTraceTime = rec.getTime();
-		final Float percentageOffset = (float) ((double) this.maxTraceEvents / (double) recCount);
-		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
 
-		final long reducedTrCount = countTraceRecord(filteredRec);
-		logger().log(OpLevel.INFO,
-				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.reduced.trace"),
-				recCount, reducedTrCount, maxTraceEvents);
-		return filteredRec;
-	}
-
-	private static TraceRecord cloneTraceRecord(TraceRecord trToCopyFrom, Long wholeTraceTime, Float percentageOffset) {
-		TraceRecord trReturn = trToCopyFrom.copy();
-		trReturn.setChildren(new ArrayList<TraceRecord>());
-		if (trToCopyFrom.getChildren() == null) {
-			return trReturn;
-		}
-		for (TraceRecord children : trToCopyFrom.getChildren()) {
-			Long methodTime = children.getTime();
-			Float percentageMethod = (float) ((double) methodTime / (double) wholeTraceTime);
-			if (percentageMethod >= percentageOffset || MapUtils.isNotEmpty(children.getAttrs())
-					|| children.getMarker() != null) {
-				trReturn.addChild(cloneTraceRecord(children, wholeTraceTime, percentageOffset));
-			}
-		}
-		return trReturn;
-	}
-
-	private static long countTraceRecord(TraceRecord tr) {
-		long count = 0;
-		if (tr.getChildren() == null) {
-			return 1;
-		}
-		for (TraceRecord traceRecord : tr.getChildren()) {
-			if (traceRecord != null) {
-				count += countTraceRecord(traceRecord);
+		synchronized (filterConstructorLock) {
+			if (sizeFilter == null) {
+				sizeFilter = new TRSizeFilter(maxTraceEvents);
+				filterConstructorLock.notify();
 			}
 		}
 
-		count++;
-		return count;
+		return sizeFilter.filter(rec);
+	}
+
+	private TraceRecord filterByMethodTimes(TraceRecord rec) {
+		if (nPeriod <= 0) {
+			return rec; // DO NOT create FILTER if nPeriod not set;
+		}
+
+		synchronized (filterConstructorLock) {
+			if (methodTimeFilter == null) {
+				methodTimeFilter = new TRDynamicFilter(nPeriod, kTimes, bbRecalculateTime, symbolRegistry);
+				filterConstructorLock.notify();
+			}
+		}
+
+		return methodTimeFilter.filter(rec);
 	}
 
 	@Override

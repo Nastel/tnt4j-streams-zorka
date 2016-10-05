@@ -308,7 +308,7 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>2.2.2</version>
+            <version>2.2.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -319,7 +319,7 @@
         <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
-            <version>1.4.2</version>
+            <version>1.6.0</version>
             <scope>system</scope>
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>

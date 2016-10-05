@@ -16,21 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jkoolcloud.tnt4j.streams.filters;
 
-package com.jkoolcloud.tnt4j.streams;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-import com.jkoolcloud.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
-import com.jkoolcloud.tnt4j.streams.filters.AllFiltersTests;
-import com.jkoolcloud.tnt4j.streams.inputs.AllInputsTests;
+import com.jitlogic.zorka.common.tracedata.TraceRecord;
 
 /**
- * @author akausinis
- * @version 1.0
+ * Interface for {@link TraceRecord} filters.
+ *
+ * @version $Revision: 1 $
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ ConfigParserHandlerTest.class, AllFiltersTests.class, AllInputsTests.class })
-public class AllZorkaTests {
+public interface TraceRecordFilter {
+	/**
+	 * Filter given trace record.
+	 *
+	 * @param traceRecord
+	 *            the trace record to filter
+	 * @return the filtered trace record
+	 */
+	public TraceRecord filter(TraceRecord traceRecord);
 }

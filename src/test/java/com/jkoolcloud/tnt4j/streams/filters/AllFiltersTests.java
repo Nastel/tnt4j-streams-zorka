@@ -17,20 +17,16 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jkoolcloud.tnt4j.streams;
+package com.jkoolcloud.tnt4j.streams.filters;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
-import com.jkoolcloud.tnt4j.streams.configure.sax.ConfigParserHandlerTest;
-import com.jkoolcloud.tnt4j.streams.filters.AllFiltersTests;
-import com.jkoolcloud.tnt4j.streams.inputs.AllInputsTests;
 
 /**
  * @author akausinis
  * @version 1.0
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ConfigParserHandlerTest.class, AllFiltersTests.class, AllInputsTests.class })
-public class AllZorkaTests {
+@Suite.SuiteClasses({ MarkedTraceRecordTest.class, TRDynamicFilterTest.class })
+public class AllFiltersTests {
 }

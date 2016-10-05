@@ -50,7 +50,7 @@ public final class ZorkaAttach {
 
 	/**
 	 * Main entry point for attaching Zorka agent to running JVM.
-	 * 
+	 *
 	 * @param args
 	 *            command-line arguments. Supported arguments:
 	 *            <table summary="TNT4J-Streams agent command line arguments">
@@ -113,7 +113,7 @@ public final class ZorkaAttach {
 
 	/**
 	 * Entry point for loading Zorka as java agent.
-	 * 
+	 *
 	 * @param zorkaHomePath
 	 *            Zorka home dir path
 	 * @param inst
