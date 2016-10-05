@@ -58,10 +58,10 @@ public class ZorkaConnectorTest {
 	private Executor executor = Executors.newFixedThreadPool(12);
 
 	private void load(File dir, String file, String hostname) {
-		System.out.println("Starting: " + new File(dir, file));
+		System.out.println("Starting: " + new File(dir, file)); // NON-NLS
 		long t1 = System.nanoTime();
 		try {
-			ZicoDataLoader loader = new ZicoDataLoader("127.0.0.1", 8640, hostname, "");
+			ZicoDataLoader loader = new ZicoDataLoader("127.0.0.1", 8640, hostname, ""); // NON-NLS
 			loader.load(new File(dir, file).getPath());
 
 			records.addAndGet(loader.getRecords());
@@ -71,8 +71,8 @@ public class ZorkaConnectorTest {
 			long recsps = 1000L * loader.getRecords() / t;
 			long bytesps = 1000L * loader.getBytes() / t;
 
-			System.out.println("File " + dir + '/' + file + " finished: t=" + t + " records=" + loader.getRecords()
-					+ " (" + recsps + " recs/s)" + " bytes=" + loader.getBytes() + '(' + bytesps + " bytes/s).");
+			System.out.println("File " + dir + '/' + file + " finished: t=" + t + " records=" + loader.getRecords() // NON-NLS
+					+ " (" + recsps + " recs/s)" + " bytes=" + loader.getBytes() + '(' + bytesps + " bytes/s)."); // NON-NLS
 
 		} catch (Exception e) {
 			errors.incrementAndGet();
@@ -82,23 +82,23 @@ public class ZorkaConnectorTest {
 
 	@Test
 	public void testLoadDataFile() throws Exception {
-		ZicoDataLoader loader = new ZicoDataLoader("127.0.0.1", 8640, System.getProperty("load.host", "test"), "");
-		loader.load(System.getProperty("load.file", "./test/trace.ztr"));
+		ZicoDataLoader loader = new ZicoDataLoader("127.0.0.1", 8640, System.getProperty("load.host", "test"), "");// NON-NLS
+		loader.load(System.getProperty("load.file", "./test/trace.ztr")); // NON-NLS
 		Thread.sleep(10000000);
 	}
 
-	private Set<String> VERBOTEN = ZorkaUtil.set(".", "src/main");
+	private Set<String> VERBOTEN = ZorkaUtil.set(".", "src/main"); // NON-NLS
 
 	@Test
 	@Ignore
 	public void testLoadMultipleDataFiles() throws Exception {
-		File rootdir = new File("/tmp/traces");
+		File rootdir = new File("/tmp/traces"); // NON-NLS
 		for (final String d : rootdir.list()) {
 			final File dir = new File(rootdir, d);
 			if (!VERBOTEN.contains(d) && dir.isDirectory()) {
 				for (final String f : dir.list()) {
 					if (f.matches("^trace.ztr.*")) {
-						System.out.println("Submitting: " + new File(dir, f));
+						System.out.println("Submitting: " + new File(dir, f)); // NON-NLS
 						submissions++;
 						executor.execute(new Runnable() {
 							@Override
@@ -119,20 +119,20 @@ public class ZorkaConnectorTest {
 		long recsps = 1000L * records.get() / t;
 		long bytesps = 1000L * bytes.get() / t;
 
-		System.out.println("Overall execution time: " + t + "ms");
-		System.out.println("Overall Records processed: " + records.get() + '(' + recsps + " recs/s)");
-		System.out.println("Overall Bytes processed: " + bytes.get() + '(' + bytesps + " bytes/s");
+		System.out.println("Overall execution time: " + t + "ms"); // NON-NLS
+		System.out.println("Overall Records processed: " + records.get() + '(' + recsps + " recs/s)"); // NON-NLS
+		System.out.println("Overall Bytes processed: " + bytes.get() + '(' + bytesps + " bytes/s"); // NON-NLS
 	}
 
 	@Test(timeout = 1000)
 	public void testSendSimpleSymbolMessage() throws Exception {
 
-		ZicoClientConnector conn = new ZicoClientConnector("127.0.0.1", 8640);
+		ZicoClientConnector conn = new ZicoClientConnector("127.0.0.1", 8640); // NON-NLS
 		conn.connect();
 
-		conn.hello("test", "aaa");
+		conn.hello("test", "aaa"); // NON-NLS
 		final TraceRecord traceRecord = new TraceRecord();
-		conn.submit(new Symbol(1, "test"));
+		conn.submit(new Symbol(1, "test")); // NON-NLS
 		Thread.sleep(10000000);
 		Utils.close(conn);
 	}

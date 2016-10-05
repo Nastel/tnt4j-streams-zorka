@@ -49,18 +49,18 @@ public class JMXZabbixDataPullerTest {
 	public void prepareStream() {
 		stream = new JMXZabbixDataPuller();
 		StreamThread st = mock(StreamThread.class);
-		st.setName("FileLineStreamTestThreadName");
+		st.setName("FileLineStreamTestThreadName"); // NON-NLS
 		stream.setOwnerThread(st);
 	}
 
 	@Test
 	public void testProperties() throws Exception {
 		Map<String, String> properties = new HashMap<String, String>(4);
-		properties.put(StreamProperties.PROP_HOST, "localhost");
-		properties.put(StreamProperties.PROP_PORT, TEST_PORT.toString());
+		properties.put(StreamProperties.PROP_HOST, "localhost"); // NON-NLS
+		properties.put(StreamProperties.PROP_PORT, String.valueOf(TEST_PORT));
 		properties.put(ZorkaConstants.PROP_JXM_QUERY,
-				"\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\"");
-		properties.put(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *");
+				"\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\""); // NON-NLS
+		properties.put(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *"); // NON-NLS
 		stream.setProperties(properties.entrySet());
 		testPropertyList(stream, properties.entrySet());
 	}
@@ -88,7 +88,7 @@ public class JMXZabbixDataPullerTest {
 					socket = sc.accept();
 					Utils.close(sc);
 					output = new PrintWriter(socket.getOutputStream());
-					output.println("1234567890123TEST_MEMORY_USED");
+					output.println("1234567890123TEST_MEMORY_USED"); // NON-NLS
 					output.flush();
 
 					Thread.sleep(800);
@@ -108,8 +108,8 @@ public class JMXZabbixDataPullerTest {
 		Thread.sleep(500);
 		final Map<String, String> nextItem = stream.getNextItem();
 		stream.cleanup();
-		assertFalse("JMX response is empty!", nextItem.isEmpty());
-		assertEquals("Unexpected JMX bean value", "TEST_MEMORY_USED", nextItem.entrySet().iterator().next().getValue());
+		assertFalse("JMX response is empty!", nextItem.isEmpty()); // NON-NLS
+		assertEquals("Unexpected JMX bean value", "TEST_MEMORY_USED", nextItem.entrySet().iterator().next().getValue());// NON-NLS
 	}
 
 }

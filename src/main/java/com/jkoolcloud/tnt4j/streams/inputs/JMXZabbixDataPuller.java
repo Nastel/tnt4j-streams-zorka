@@ -234,7 +234,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 					out = new PrintWriter(echoSocket.getOutputStream(), true);
 					in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 					is = mkIS("ZBXD", 1, 0x0c, 0, 0, 0, 0, 0, 0, 0, "zorka.jmx[", query, "]", 0x0a); // NON-NLS
-					IOUtils.copy(is, out);
+					IOUtils.copy(is, out, Utils.UTF8);
 					out.flush();
 					final String response = in.readLine();
 					if (response != null) {
