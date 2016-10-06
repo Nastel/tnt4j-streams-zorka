@@ -46,7 +46,8 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
  * This activity stream requires parsers that can support {@link Map} data. On trace data package reception, trace
  * fields are packed into {@link Map} data structure.
  * <p>
- * This activity stream supports the following properties:
+ * This activity stream supports the following properties (in addition to those supported by
+ * {@link AbstractBufferedStream}):
  * <ul>
  * <li>JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)</li>
  * <li>Host - host name of machine running Zico service to listen. Default value - 'localhost'. (Optional)</li>

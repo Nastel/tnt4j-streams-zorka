@@ -63,7 +63,8 @@ import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
  * This activity stream requires parsers that can support {@link Map} data. On trace data package reception, trace
  * fields are packed into {@link Map} data structure.
  * <p>
- * This activity stream supports the following properties:
+ * This activity stream supports the following properties (in addition to those supported by
+ * {@link AbstractBufferedStream}):
  * <ul>
  * <li>Host - host name of machine running Zico service to listen. Default value - '0.0.0.0'. (Optional)</li>
  * <li>Port - port number of machine running Zico service to listen. Default value - '8640'. (Optional)</li>
