@@ -475,7 +475,10 @@ Some of required and optional dependencies may be not available in public [Maven
 case we would recommend to download those dependencies manually into `lib` directory and install into local maven repository by running 
 maven script `lib/pom.xml` with `package` goal.
 
-So what to download manually:
+NOTE: `TNT4J-Streams-Zorka` project will be ready to build only when manually downloaded libraries will be installed to local maven 
+repository.
+
+What to download manually:
 * Zico-util
 * Zorka
 
