@@ -65,7 +65,7 @@ Sample stream configuration:
 <?xml version="1.0" encoding="utf-8"?>
 <tnt-data-source
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../config/tnt-data-source.xsd">
+        xsi:noNamespaceSchemaLocation="tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
