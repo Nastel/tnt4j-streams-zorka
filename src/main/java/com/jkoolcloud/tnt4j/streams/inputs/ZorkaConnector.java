@@ -247,7 +247,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	 *            trace data object
 	 *
 	 * @throws IOException
-	 *             if error occurs while processing received trace data object
+	 *             if I/O exception occurs while processing received trace data object
 	 */
 	@Override
 	public void process(Object obj) throws IOException {
