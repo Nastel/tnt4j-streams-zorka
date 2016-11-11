@@ -104,14 +104,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
-
-            <xs:enumeration value="bytes">
-                <xs:annotation>
-                    <xs:documentation>
-                        Data is a bytes array
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:enumeration>
         </xs:restriction>
     </xs:simpleType>
 
