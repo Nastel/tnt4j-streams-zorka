@@ -1031,6 +1031,7 @@
         </xs:attribute>
     </xs:attributeGroup>
 
+    <!-- Field map element type definition -->
     <xs:complexType name="FieldMap">
         <xs:annotation>
             <xs:documentation>
@@ -1097,6 +1098,74 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- Field transform element type definition -->
+    <xs:complexType name="FieldTransform">
+        <xs:annotation>
+            <xs:documentation>
+                Transforms locator resolved field value by applying transformation bean defined rules.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Transformation name.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="beanRef" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Transformation implementing bean reference.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <xs:attribute name="lang" use="optional" type="ScriptLang" default="javascript">
+            <xs:annotation>
+                <xs:documentation>
+                    Transformation script/expression language.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+
+        <!--<xs:assert test="(@bean and not(@lang)) or (not(@bean) and @lang)"/>-->
+    </xs:complexType>
+
+    <!-- Script languages enumeration -->
+    <xs:simpleType name="ScriptLang">
+        <xs:annotation>
+            <xs:documentation>
+                Supported scripting languages.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="javascript">
+                <xs:annotation>
+                    <xs:documentation>
+                        JavaScript language used to script.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="groovy">
+                <xs:annotation>
+                    <xs:documentation>
+                        Groovy language used to script.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="xpath">
+                <xs:annotation>
+                    <xs:documentation>
+                        XPath syntax and functions used to script.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
     <!-- Entity reference definition -->
     <xs:complexType name="Reference">
         <xs:annotation>
@@ -1150,6 +1219,13 @@
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:element>
+                                    <xs:element name="field-transform" type="FieldTransform" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                Transforms locator resolved field value by applying transformation bean defined rules.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
                                 </xs:sequence>
                                 <xs:attributeGroup ref="FieldLocatorAttributes"/>
                             </xs:complexType>
@@ -1164,7 +1240,13 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
-
+                        <xs:element name="field-transform" type="FieldTransform" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Transforms locator resolved field value by applying transformation bean defined rules.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
                         <xs:element name="parser-ref" type="Reference" minOccurs="0"
                                     maxOccurs="unbounded">
                             <xs:annotation>
