@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jkoolcloud.tnt4j.streams.filters;
 
 import com.jitlogic.zorka.common.tracedata.TraceRecord;
