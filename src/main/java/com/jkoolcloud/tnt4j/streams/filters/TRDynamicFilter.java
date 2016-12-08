@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jkoolcloud.tnt4j.streams.filters;
 
 import java.io.File;
@@ -108,10 +109,7 @@ public class TRDynamicFilter implements TraceRecordFilter {
 						persistLoop--;
 					}
 
-					try {
-						Thread.sleep(bbThreadRecalcTime);
-					} catch (InterruptedException e) {
-					}
+					Utils.sleep(bbThreadRecalcTime);
 				}
 			}
 		});
