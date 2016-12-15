@@ -38,7 +38,7 @@ public final class ZorkaConstants {
 	/**
 	 * Constant for name of built-in Zorka connector {@value} property.
 	 */
-	public static final String PROP_JXM_QUERY = "JMXQuery"; // NON-NLS
+	public static final String PROP_JMX_QUERY = "JMXQuery"; // NON-NLS
 
 	/**
 	 * Constant for name of built-in Zorka connector {@value} property.

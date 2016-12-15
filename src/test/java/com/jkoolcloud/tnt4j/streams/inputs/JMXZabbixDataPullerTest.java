@@ -58,7 +58,7 @@ public class JMXZabbixDataPullerTest {
 		Map<String, String> properties = new HashMap<String, String>(4);
 		properties.put(StreamProperties.PROP_HOST, "localhost"); // NON-NLS
 		properties.put(StreamProperties.PROP_PORT, String.valueOf(TEST_PORT));
-		properties.put(ZorkaConstants.PROP_JXM_QUERY,
+		properties.put(ZorkaConstants.PROP_JMX_QUERY,
 				"\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\""); // NON-NLS
 		properties.put(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *"); // NON-NLS
 		stream.setProperties(properties.entrySet());

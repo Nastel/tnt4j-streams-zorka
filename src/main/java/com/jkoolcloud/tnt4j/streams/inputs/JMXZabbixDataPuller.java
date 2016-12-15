@@ -114,7 +114,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.valueOf(value);
-			} else if (ZorkaConstants.PROP_JXM_QUERY.equalsIgnoreCase(name)) {
+			} else if (ZorkaConstants.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
 				jmxQueryString = value;
 			} else if (ZorkaConstants.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
 				jmxSchedulerExpression = value;
@@ -131,7 +131,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 			return socketPort;
 		}
-		if (ZorkaConstants.PROP_JXM_QUERY.equalsIgnoreCase(name)) {
+		if (ZorkaConstants.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
 			return jmxQueryString;
 		}
 		if (ZorkaConstants.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
@@ -152,7 +152,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 
 		if (StringUtils.isEmpty(jmxQueryString)) {
 			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_NAME,
-					"TNTInputStream.property.undefined", ZorkaConstants.PROP_JXM_QUERY));
+					"TNTInputStream.property.undefined", ZorkaConstants.PROP_JMX_QUERY));
 		}
 
 		this.scheduler = StdSchedulerFactory.getDefaultScheduler();
