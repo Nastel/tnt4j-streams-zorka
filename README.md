@@ -371,19 +371,19 @@ marker is `TRACE`.
 
 Activity event mapped fields:
 
-* `EventType` is mapped from trace attribute named `EvType`. Some parsers sets static value `EVENT`.
-* `StartTime` is mapped from trace attribute named `CLOCK`. Zorka returns this field as UNIX timestamp.
-* `EventName` is mapped from trace attribute named `MARKER`.
-* `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
-* `Class` is mapped from trace attribute named `CLASS`. It represents class name of object trace was taken from.
-* `Method` is mapped from trace attribute named `METHOD`. It represents method name trace was taken from.
-* `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and
-`JK_CORR_SID` values are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION`
-value is retrieved from JMS message field `correlationId`.
-* `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
-then this field is filled with trace data as string.
-* `TrackingId` is mapped from trace attribute named `TrackingId`. It represents unique identifier of activity event.
-* `ParentId` is mapped from trace attribute named `ParentId`. It represents unique identifier of parent trace activity.
+ * `EventType` is mapped from trace attribute named `EvType`. Some parsers sets static value `EVENT`.
+ * `StartTime` is mapped from trace attribute named `CLOCK`. Zorka returns this field as UNIX timestamp.
+ * `EventName` is mapped from trace attribute named `MARKER`.
+ * `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
+ * `Class` is mapped from trace attribute named `CLASS`. It represents class name of object trace was taken from.
+ * `Method` is mapped from trace attribute named `METHOD`. It represents method name trace was taken from.
+ * `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and
+ `JK_CORR_SID` values are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION`
+ value is retrieved from JMS message field `correlationId`.
+ * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
+ then this field is filled with trace data as string.
+ * `TrackingId` is mapped from trace attribute named `TrackingId`. It represents unique identifier of activity event.
+ * `ParentId` is mapped from trace attribute named `ParentId`. It represents unique identifier of parent trace activity.
 
 Additional fields can be mapped on user demand.
 
@@ -402,20 +402,22 @@ Configuring TNT4J-Streams-Zorka
 
 Details on TNT4J-Streams related configuration can be found in TNT4J-Streams README document chapter ['Configuring TNT4J-Streams'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#configuring-tnt4j-streams).
 
-#### Zorka connector parameters:
+### Streams configuration
 
-* Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
-* Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
-* MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means
-stream whole stack trace. (Optional)
-* Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times values to use for averages 
-calculation. Setting `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
-Default value - `0`. (Optional)
-    * Bollinger_K_times - Bollinger Bands K times an N-period standard deviation above the exponentially moving average(nPeriod). It means 
-    how many times average value has to change to change bands width. Default value - `3`. (Optional, actual only if `Bollinger_N_period` 
-    is set)
-    * BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - `3000`. (Optional, actual only 
-    if `Bollinger_N_period` is set)
+#### Zorka connector parameters
+
+ * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
+ * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
+ * MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means
+ stream whole stack trace. (Optional)
+ * Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times values to use for averages 
+ calculation. Setting `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
+ Default value - `0`. (Optional)
+     * Bollinger_K_times - Bollinger Bands K times an N-period standard deviation above the exponentially moving average(nPeriod). It means 
+     how many times average value has to change to change bands width. Default value - `3`. (Optional, actual only if `Bollinger_N_period` 
+     is set)
+     * BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - `3000`. (Optional, actual only 
+     if `Bollinger_N_period` is set)
 
     sample:
 ```xml
@@ -430,12 +432,12 @@ Default value - `0`. (Optional)
 
 Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#generic-streams-parameters) and ['Buffered streams parameters'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#buffered-streams-parameters).
 
-#### JMX Zabix data puller parameters:
+#### JMX Zabix data puller parameters
 
-* JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)
-* Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
-* Port - port number of machine running Zico service to listen. Default value - `10056`. (Optional)
-* CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - `every 15sec`. (Optional)
+ * JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)
+ * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
+ * Port - port number of machine running Zico service to listen. Default value - `10056`. (Optional)
+ * CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - `every 15sec`. (Optional)
 
     sample:
 ```xml
