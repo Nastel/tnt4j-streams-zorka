@@ -4,7 +4,7 @@ TNT4J transaction &amp; method tracing streams for Java.
 TNT4J-Streams-Zorka is extension of TNT4J-Streams to give ability of streaming Zorka traces as activity events to
 JKoolCloud.
 
-TNT4J-Streams-Zorka is under LGPLv3 license as Zorka itself.
+TNT4J-Streams-Zorka is under GPLv3 license as Zorka itself.
 
 This document covers just information specific to TNT4J-Streams-Zorka project.
 Detailed information on TNT4J-Streams can be found in [README document](https://github.com/Nastel/tnt4j-streams/blob/master/README.md).
