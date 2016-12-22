@@ -389,7 +389,7 @@ Additional fields can be mapped on user demand.
 
 Custom fields values defined in parser fields mapping can be found as activity event properties.
 
-NOTE: Stream stops only when critical runtime error/exception occurs or application gets terminated.
+**NOTE:** Stream stops only when critical runtime error/exception occurs or application gets terminated.
 
 ##### Zorka Connector as Java agent
 
@@ -470,14 +470,14 @@ online mode it should download these defined dependencies automatically.
 
 ### Manually installed dependencies
 
-NOTE: If you have build and installed TNT4J-Streams into Your local maven repository, you don't need to install
+**NOTE:** If you have build and installed TNT4J-Streams into Your local maven repository, you don't need to install
 it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
 case we would recommend to download those dependencies manually into `lib` directory and install into local maven repository by running 
 maven script `lib/pom.xml` with `package` goal.
 
-NOTE: `TNT4J-Streams-Zorka` project will be ready to build only when manually downloaded libraries will be installed to local maven 
+**NOTE:** `TNT4J-Streams-Zorka` project will be ready to build only when manually downloaded libraries will be installed to local maven 
 repository.
 
 What to download manually:
@@ -492,7 +492,7 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 ```
 (O) marked libraries are optional
 
-NOTE: also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
+**NOTE:** also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
 
 ## Building
@@ -501,7 +501,7 @@ NOTE: also see TNT4J-Streams README document chapter ['Manually installed depend
 
 Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 
-NOTE: sometimes maven fails to correctly handle dependencies. If dependency configuration looks
+**NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks
 fine, but maven still complains about missing dependencies try to delete local maven repository
 by hand: i.e. delete contents of `c:\Users\[username]\.m2\repository` directory.
 
