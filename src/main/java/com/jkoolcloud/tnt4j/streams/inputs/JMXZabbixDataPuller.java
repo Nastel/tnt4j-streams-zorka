@@ -22,7 +22,6 @@ package com.jkoolcloud.tnt4j.streams.inputs;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -99,7 +98,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	}
 
 	@Override
-	public void setProperties(Collection<Entry<String, String>> props) throws Exception {
+	public void setProperties(Collection<Map.Entry<String, String>> props) throws Exception {
 		if (props == null) {
 			return;
 		}

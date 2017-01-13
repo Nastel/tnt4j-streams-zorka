@@ -20,7 +20,6 @@
 package com.jkoolcloud.tnt4j.streams.filters;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,7 +61,7 @@ public class MethodRegistryMap {
 	 *
 	 * @return the set
 	 */
-	public synchronized Set<Entry<Integer, MethodRegistry>> entrySet() {
+	public synchronized Set<Map.Entry<Integer, MethodRegistry>> entrySet() {
 		return methodRegistryMap.entrySet();
 	}
 
@@ -89,7 +88,7 @@ public class MethodRegistryMap {
 	 * @return the method registry
 	 */
 	public MethodRegistry lookup(String symbolToLookFor, String signatureToLookFor) {
-		for (Entry<Integer, MethodRegistry> entry : methodRegistryMap.entrySet()) {
+		for (Map.Entry<Integer, MethodRegistry> entry : methodRegistryMap.entrySet()) {
 			MethodRegistry value = entry.getValue();
 			if (value != null) {
 				String symbolName = value.getSymbolName();
