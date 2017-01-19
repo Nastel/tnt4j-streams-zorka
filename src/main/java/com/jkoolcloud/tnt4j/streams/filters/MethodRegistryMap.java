@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MethodRegistryMap {
 
-	private Map<Integer, MethodRegistry> methodRegistryMap = new ConcurrentHashMap<Integer, MethodRegistry>();
+	private Map<Integer, MethodRegistry> methodRegistryMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Constructs a new MethodRegistryMap.

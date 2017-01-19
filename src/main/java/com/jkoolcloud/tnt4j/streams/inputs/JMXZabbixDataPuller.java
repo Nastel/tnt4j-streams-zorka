@@ -76,7 +76,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	private Integer socketPort = DEFAULT_PORT;
 	private String jmxQueryString;
 	private String jmxSchedulerExpression = DEFAULT_QUARTZ_EXPRESSION;
-	private List<String> jmxQueries = new ArrayList<String>();
+	private List<String> jmxQueries = new ArrayList<>();
 
 	private static final String JOB_PROP_STREAM_KEY = "streamObj"; // NON-NLS
 	private static final String JOB_PROP_HOST_KEY = "jmx_host"; // NON-NLS
@@ -222,7 +222,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			Integer socketPort = dataMap.getInt(JOB_PROP_PORT_KEY);
 			List<String> jmxQueries = (List<String>) dataMap.get(JOB_PROP_JMX_QUERIES_KEY);
 
-			final Map<String, String> inputData = new HashMap<String, String>();
+			final Map<String, String> inputData = new HashMap<>();
 			Socket echoSocket = null;
 			PrintWriter out = null;
 			BufferedReader in = null;

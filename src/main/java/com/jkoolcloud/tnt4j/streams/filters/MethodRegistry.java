@@ -74,7 +74,7 @@ public class MethodRegistry implements Serializable {
 		this.symbolName = symbolName;
 		this.symbol = symbolNr;
 		MethodRegistry.arraySize = nPeriod * ARRAY_SIZE_FACTOR;
-		this.times = new ArrayList<Number>(arraySize);
+		this.times = new ArrayList<>(arraySize);
 	}
 
 	/**

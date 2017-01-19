@@ -282,7 +282,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	private Map<String, Object> translateSymbols(Map<Integer, Object> attributeMap) {
-		Map<String, Object> translation = new HashMap<String, Object>();
+		Map<String, Object> translation = new HashMap<>();
 		if (attributeMap != null) {
 			for (Map.Entry<Integer, Object> attrEntry : attributeMap.entrySet()) {
 				final String symbolName = symbolRegistry.symbolName(attrEntry.getKey());
@@ -298,7 +298,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		final Map<Integer, Object> attrs = parentRec.getAttrs();
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
-			final Map<String, Object> markerActivity = new HashMap<String, Object>();
+			final Map<String, Object> markerActivity = new HashMap<>();
 			final Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
 			markerActivity.putAll(zorkaActivityRecord);
 
@@ -312,7 +312,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			parentUUID = activityID;
 			addInputToBuffer(markerActivity);
 
-			final Map<String, Object> markerEvent = new HashMap<String, Object>(markerActivity);
+			final Map<String, Object> markerEvent = new HashMap<>(markerActivity);
 
 			final String eventID;
 			if (markerEvent.get(StreamFieldType.TrackingId.name()) == null) {
@@ -328,11 +328,11 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			addInputToBuffer(markerEvent);
 		}
 
-		final Map<String, Object> translatedTrace = new HashMap<String, Object>();
+		final Map<String, Object> translatedTrace = new HashMap<>();
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
 		if (attrs != null) {
-			final Map<String, Object> attributeEvent = new HashMap<String, Object>(translateSymbols(attrs));
+			final Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
 			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				attributeEvent.put(StreamFieldType.TrackingId.name(), uuidGenerator.newUUID());
