@@ -461,7 +461,7 @@ How to Build TNT4J-Streams-Zorka
 =========================================
 
 ## Requirements
-* JDK 1.6+
+* JDK 1.7+
 * [Apache Maven 3](https://maven.apache.org/)
 * [TNT4J-Streams](https://github.com/Nastel/tnt4j-streams) `core` module in particular
 
