@@ -9,7 +9,7 @@ set STREAMSOPTS=%STREAMSOPTS% %LOG4JOPTS% %TNT4JOPTS%
 if "%MAINCLASS%" == "" goto set_default_main
 goto run_stream
 
-:set_default
+:set_default_main
 set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
 
 :run_stream
