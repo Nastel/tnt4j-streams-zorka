@@ -99,7 +99,7 @@ public final class ZorkaAttach {
 
 		if (!found) {
 			System.out.println(StreamsResources.getStringFormatted(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-					"ZorkaAttach.no.jvm", args[0]));
+					"ZorkaAttach.no.jvm", args[1]));
 			System.out.println(
 					StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.available.jvms"));
 			System.out
@@ -123,7 +123,7 @@ public final class ZorkaAttach {
 	 *
 	 * @see AgentMain#premain(String, Instrumentation)
 	 */
-	public static void agentmain(final String zorkaHomePath, final Instrumentation inst) throws Exception {
+	public static void agentmain(String zorkaHomePath, Instrumentation inst) throws Exception {
 		final String zorkaDirPath = new File(zorkaHomePath).getAbsolutePath();
 		System.setProperty("zorka.home.dir", zorkaDirPath);
 		LOGGER.log(OpLevel.DEBUG,
