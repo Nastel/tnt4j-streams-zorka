@@ -210,6 +210,7 @@
 
     <parser name="JMXDataParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <property name="LocPathDelim" value=""/>
+
         <field name="EventType" value="SNAPSHOT"/>
         <field name="HeapMemory">
             <field-locator locator-type="Label">
