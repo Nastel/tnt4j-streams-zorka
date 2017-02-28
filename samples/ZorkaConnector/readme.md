@@ -40,7 +40,7 @@ General architecture in short
                    (Activity events)
                            |
                            v
-                       JKoolCloud
+                      JKool Cloud
 ```
 
 Zorka works as *java agent* in JMV by transforming and instrumenting your application classes the way you have
@@ -48,7 +48,7 @@ defined in Zorka scripts and Zorka configuration file `zorka.properties`.
 
 Zorka preparing Traces, and transporting these traces by means of binding socket to TNT4J-Streams Zorka connector.
 TNT4J-Streams is parsing these traces the way you have defined your tnt-data-source.xml configuration file.
-Once parsed TNT4J streams activity events are generated and send over the network to JKoolCloud account store.
+Once parsed TNT4J streams activity events are generated and send over the network to JKool Cloud account store.
 You define your Token in `tnt4j.properties` file.
 
 Zorka Setup
@@ -102,7 +102,7 @@ Trace attributes contains human readable useful process information.
 SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query 
 application performing, database and other valuable information. Trace is retrieved attributes map.
 
-To add SQL traces to your JKoolCloud you need to configure zorka.properties to send SQL traces.
+To add SQL traces to your JKool Cloud you need to configure zorka.properties to send SQL traces.
 First of all you need to add `tnt4j_sql.bsh` script to your's configuration. 
 
 ```properties
@@ -125,7 +125,7 @@ More information about zorka's configuration can be found on [Zorka guide](http:
 
 ### Zorka LDAP configuration
 
-In order you need LDAP traces in your JKoolCloud, you:
+In order you need LDAP traces in your JKool Cloud, you:
 * Add `tnt4j_ldap.bsh` to *scripts* in zorka.properties file
 * Configure LDAP trace:
 
@@ -161,7 +161,7 @@ In order you need LDAP traces in your JKoolCloud, you:
     jms.fetch.attrs = yes			;  <-- Fetch JMS message atributes as "ID", "TSTAMP", "CORRELATION",
                                     ;	"PERSIST", "REDELIVERY", "JMSTYPE", "PRIORITY", "EXPIRATION"
                                     ; CORRELATION is particularly important and gives extra correlator available
-                                    ; on JKoolClooud
+                                    ; on JKool Cloud
     jms.fetch.map = yes				;  <-- Fetches JMS MAP message content to JKoolsCloud message field
     jms.fetch.text = yes			;  <-- Fetches JMS Text message to JKoolsCloud message field
 ```
@@ -176,7 +176,7 @@ NOTE: in default Zorka configuration message's text hidden.
 Correlators
 -----------
 
-All TNT4J streams comes with example Zorka script to collect and share JKoolCloud correlation ID's in Tomcat server with 
+All TNT4J streams comes with example Zorka script to collect and share JKool Cloud correlation ID's in Tomcat server with 
 MySQL database. You may need expand this script to share correlators with other services. 
 
 Basically you will need get these Id from application server, from request's session data, where they are stored. And
