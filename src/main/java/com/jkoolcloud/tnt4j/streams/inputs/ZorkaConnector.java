@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.jitlogic.zico.core.ZicoService;
 import com.jitlogic.zorka.common.tracedata.HelloRequest;
@@ -90,7 +91,7 @@ import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
 public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> implements ZicoDataProcessor {
 	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(ZorkaConnector.class);
 
-	private static final int CONNECTION_TIMEOUT = 10 * 1000;
+	private static final int CONNECTION_TIMEOUT = (int) TimeUnit.SECONDS.toMillis(10);
 	private static final int MAX_THREADS = 5;
 	private static final int DEFAULT_PORT = 8640;
 	private static final String DEFAULT_HOSTNAME = "0.0.0.0"; // NON-NLS
