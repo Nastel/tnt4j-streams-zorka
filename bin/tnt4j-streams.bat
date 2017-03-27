@@ -1,4 +1,6 @@
 @echo off
+setlocal
+
 set RUNDIR=%~p0
 set CLASSPATH=%CLASSPATH%";"%RUNDIR%..\*";"%RUNDIR%..\lib\*
 set TNT4JOPTS=-Dtnt4j.config="%RUNDIR%..\config\tnt4j.properties"
@@ -13,4 +15,5 @@ goto run_stream
 set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
 
 :run_stream
+@echo on
 java %STREAMSOPTS% -classpath %CLASSPATH% %MAINCLASS% %*

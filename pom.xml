@@ -62,7 +62,7 @@
         <product.name>${project.name}</product.name>
         <product.name.hr>TNT4J Streams Zorka Connector</product.name.hr>
         <product.copyright.html>
-            <![CDATA[<font size="-1">Copyright &#169; 2015-2016 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
+            <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
