@@ -97,7 +97,7 @@ public class ZorkaConnectorTest {
 			final File dir = new File(rootdir, d);
 			if (!VERBOTEN.contains(d) && dir.isDirectory()) {
 				for (final String f : dir.list()) {
-					if (f.matches("^trace.ztr.*")) {
+					if (f.matches("^trace.ztr.*")) { // NON-NLS
 						System.out.println("Submitting: " + new File(dir, f)); // NON-NLS
 						submissions++;
 						executor.execute(new Runnable() {
