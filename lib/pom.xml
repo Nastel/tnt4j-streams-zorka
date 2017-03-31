@@ -6,7 +6,7 @@
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-zorka-dep-install</artifactId>
-    <version>0.1-beta</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>TNT4J-Streams-Zorka-dep-install</name>
