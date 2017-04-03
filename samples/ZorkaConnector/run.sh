@@ -1,2 +1,2 @@
 #! /bin/bash
-../../bin/tnt4j-streams -f:tnt-data-source.xml
+../../bin/tnt4j-streams.sh -f:tnt-data-source.xml
