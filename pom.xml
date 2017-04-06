@@ -9,28 +9,18 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>TNT4J-Streams-Zorka</name>
-    <description>TNT4J transaction and method tracing streams for Java</description>
-
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
 
+    <name>tnt4j-streams-zorka</name>
+    <description>TNT4J transaction and method tracing streams for Java</description>
     <licenses>
         <license>
             <name>GNU General Public License, version 3.0</name>
             <url>http://www.gnu.org/licenses/gpl-3.0</url>
         </license>
     </licenses>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-amavashev2-jkoolcloud</id>
-            <name>amavashev2-jkoolcloud</name>
-            <url>https://api.bintray.com/maven/amavashev2/jkoolcloud/streams-zorka/;publish=1;override=1</url>
-        </repository>
-    </distributionManagement>
-
     <organization>
         <name>jKool, LLC</name>
         <url>https://www.jkoolcloud.com/</url>
@@ -48,25 +38,38 @@
         <developerConnection>scm:git:git//github.com/Nastel/tnt4j-streams-zorka</developerConnection>
         <url>https://github.com/Nastel/tnt4j-streams-zorka</url>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>bintray-amavashev2-jkoolcloud</id>
+            <name>amavashev2-jkoolcloud</name>
+            <url>https://api.bintray.com/maven/amavashev2/jkoolcloud/tnt4j-streams-zorka/;publish=1;override=1</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.resources.encoding>UTF-8</project.resources.encoding>
-        <java.source.version>1.7</java.source.version>
-        <java.target.version>1.7</java.target.version>
-        <java.compiler.version>1.7</java.compiler.version>
-        <java.compiler.debuglevel>source,lines,vars</java.compiler.debuglevel>
-        <java.compiler.verbose>false</java.compiler.verbose>
         <product.vendor>${project.organization.name}</product.vendor>
         <product.name>${project.name}</product.name>
         <product.name.hr>TNT4J Streams Zorka Connector</product.name.hr>
         <product.copyright.html>
             <![CDATA[<font size="-1">Copyright &#169; 2015-2017 ${project.organization.name}. All Rights Reserved.</font>]]></product.copyright.html>
+
+        <project.java.version>1.7</project.java.version>
+        <java.source.version>${project.java.version}</java.source.version>
+        <java.target.version>${project.java.version}</java.target.version>
+        <java.compiler.version>${project.java.version}</java.compiler.version>
+        <java.compiler.debuglevel>source,lines,vars</java.compiler.debuglevel>
+        <java.compiler.verbose>false</java.compiler.verbose>
+
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
+
         <skipTests>true</skipTests>
+        <gpg.skip.sign>true</gpg.skip.sign>
+        <build.assemblies.phase>package</build.assemblies.phase>
     </properties>
 
     <profiles>
@@ -79,33 +82,6 @@
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
                 <javadoc.failOnError>false</javadoc.failOnError>
             </properties>
-        </profile>
-        <profile>
-            <id>release-sign-artifacts</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -145,16 +121,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <encoding>${project.resources.encoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.1</version>
                 <configuration>
                     <verbose>${java.compiler.verbose}</verbose>
                     <compilerVersion>${java.compiler.version}</compilerVersion>
@@ -165,8 +133,16 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.resources.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <!--<index>true</index>-->
@@ -207,9 +183,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.6</version>
+                <version>2.10.2</version>
                 <configuration>
-                    <aggregate>true</aggregate>
+                    <!--<aggregate>true</aggregate>-->
                     <doctitle>${product.name.hr}</doctitle>
                     <windowtitle>${product.name.hr}</windowtitle>
                     <header>Version ${project.version}</header>
@@ -243,7 +219,7 @@
                 <executions>
                     <execution>
                         <id>make-deploy-assembly</id>
-                        <phase>package</phase>
+                        <phase>${build.assemblies.phase}</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -276,6 +252,28 @@
                         </property>
                     </systemProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${gpg.skip.sign}</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
             </plugin>
         </plugins>
     </build>
@@ -342,7 +340,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.6.3</version>
+            <version>2.6.9</version>
             <scope>test</scope>
         </dependency>
         <!-- may be used instead of mockito -->
@@ -359,5 +357,4 @@
         <!--<scope>test</scope>-->
         <!--</dependency>-->
     </dependencies>
-
 </project>

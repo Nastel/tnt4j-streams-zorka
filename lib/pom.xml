@@ -9,7 +9,7 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>TNT4J-Streams-Zorka-dep-install</name>
+    <name>tnt4j-streams-zorka-dep-install</name>
     <description>Installs TNT4J-Streams-Zorka 3rd party dependencies</description>
 
     <prerequisites>
