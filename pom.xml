@@ -6,7 +6,7 @@
 
     <groupId>com.jkoolcloud.tnt4j.streams</groupId>
     <artifactId>tnt4j-streams-zorka</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <prerequisites>
@@ -67,6 +67,7 @@
         <release.deploy.name>${project.artifactId}</release.deploy.name>
         <release.deploy.dir>../build/${release.deploy.name}</release.deploy.dir>
         <release.deploy.finalName>${release.deploy.name}-${project.version}</release.deploy.finalName>
+        <release.deploy.assembly>src/assemblies/deployAssembly.xml</release.deploy.assembly>
 
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
@@ -227,7 +228,7 @@
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
-                                <descriptor>src/assemblies/deployAssembly.xml</descriptor>
+                                <descriptor>${release.deploy.assembly}</descriptor>
                             </descriptors>
                             <outputDirectory>${release.deploy.dir}</outputDirectory>
                             <attach>true</attach>
