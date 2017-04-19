@@ -61,35 +61,45 @@ public final class ZorkaAttach {
 	 *            </tr>
 	 *            <tr>
 	 *            <td>&nbsp;&nbsp;</td>
-	 *            <td>&nbsp;VMNameToAttachTo</td>
-	 *            <td>(required) Java VM name to attach to</td>
+	 *            <td>&nbsp;VMDescriptor</td>
+	 *            <td>(required) Java VM name fragment/pid to attach to</td>
 	 *            </tr>
 	 *            </table>
 	 */
 	public static void main(String... args) {
 		LOGGER.log(OpLevel.DEBUG,
 				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.starting.main"));
-		if (args.length != 2) {
+		if (args.length < 2) {
 			System.out
 					.println(StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.main.usage"));
 			return;
 		}
+		// args[0] - agent jar path to attach
+		// args[1] - VM name fragment/pid to attach to
+
+		attach(args[0], args[1]);
+	}
+
+	private static void attach(String agentJarPath, String vmDescr) {
 		List<VirtualMachineDescriptor> runningVMsList = VirtualMachine.list();
+
 		boolean found = false;
-		// args[0] - agent path to attach
-		// args[1] - VM name to attach to
 
 		for (VirtualMachineDescriptor rVM : runningVMsList) {
-			if (rVM.displayName().contains(args[1]) && !rVM.displayName().contains(ZorkaAttach.class.getSimpleName())) {
+			if ((rVM.displayName().contains(vmDescr) && !rVM.displayName().contains(ZorkaAttach.class.getSimpleName()))
+					|| rVM.id().equalsIgnoreCase(vmDescr)) {
 				try {
 					VirtualMachine vm = VirtualMachine.attach(rVM.id());
-					File pathFile = new File(
-							ZorkaAttach.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-					String agentPath = pathFile.getAbsolutePath();
-					LOGGER.log(OpLevel.INFO, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-							"ZorkaAttach.attaching.agent"), agentPath, rVM.displayName());
-					vm.loadAgent(agentPath, args[0]);
-					vm.detach();
+					try {
+						File pathFile = new File(
+								ZorkaAttach.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+						String agentPath = pathFile.getAbsolutePath();
+						LOGGER.log(OpLevel.INFO, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+								"ZorkaAttach.attaching.agent"), agentPath, rVM.displayName());
+						vm.loadAgent(agentPath, agentJarPath);
+					} finally {
+						vm.detach();
+					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -99,13 +109,14 @@ public final class ZorkaAttach {
 
 		if (!found) {
 			System.out.println(StreamsResources.getStringFormatted(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-					"ZorkaAttach.no.jvm", args[1]));
+					"ZorkaAttach.no.jvm", vmDescr));
 			System.out.println(
 					StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.available.jvms"));
 			System.out
 					.println(StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.list.begin"));
 			for (VirtualMachineDescriptor vmD : runningVMsList) {
-				System.out.println(vmD.displayName());
+				System.out.println(StreamsResources.getStringFormatted(ZorkaConstants.RESOURCE_BUNDLE_NAME,
+						"ZorkaAttach.list.item", vmD.id(), vmD.displayName()));
 			}
 			System.out.println(StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.list.end"));
 		}

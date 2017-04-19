@@ -34,13 +34,12 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
     * Write streams configuration file. See ['Streams configuration'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#streams-configuration) chapter for more details
     * use `StreamsAgent.runFromAPI(configFileName)` in your code
 * As Java agent attached to running JVM
-    * use `bin/zorka-attach.bat` or `bin/zorka-attach.sh` to attach to running JVM and continue as standalone
-      application
+    * use `bin/zorka-attach.bat` or `bin/zorka-attach.sh` to attach to running JVM and continue as standalone application
 
 ## Samples
 
 ### Running samples
-When release assemblies are built, samples are located in `samples` directory i.e.
+When release assemblies are built, samples are located in [`samples`](./samples/) directory i.e.
 `../build/tnt4j-streams-zorka/tnt4j-streams-zorka-1.0.0/samples`.
 To run desired sample:
 * go to sample directory
@@ -51,11 +50,11 @@ and JavaDocs.
 
 #### Zorka Connector
 
-This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico
-service as listener (client) depending on defined configuration. Default is `localhost:8640`.
+This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico service as listener 
+(client) depending on defined configuration. Default is `localhost:8640`.
 Most basic way to use sample is to send Http request to Zorka monitored Tomcat server.
 
-Sample files can be found in `samples/ZorkaConnector` directory.
+Sample files can be found in [`samples/ZorkaConnector`](./samples/ZorkaConnector/) directory.
 
 How to use and configure Zorka, see [`samples/ZorkaConnector/readme.md`](samples/ZorkaConnector/readme.md).
 
@@ -339,34 +338,30 @@ Sample stream configuration:
 </tnt-data-source>
 ```
 
-Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`,
-`ZorkaWebService`, `ZorkaJMS`, `ZorkaWebSocket` and `ZorkaTrace` shall be used.
+Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`, `ZorkaWebService`, `ZorkaJMS`, 
+`ZorkaWebSocket` and `ZorkaTrace` shall be used.
 
-`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property
-indicates that stream should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map`
-data structure and puts it to buffer queue to be processed by referenced parsers. Note that parsers uses attribute
-`tags` to map concrete parser with received trace over trace attribute `MARKER`.
+`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property indicates that stream 
+should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map` data structure and puts it to buffer 
+queue to be processed by referenced parsers. Note that parsers uses attribute `tags` to map concrete parser with received trace over trace 
+attribute `MARKER`.
 
-`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is
-`HTTP`, thus parser `tags` value should be same.
+`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is `HTTP`, thus parser 
+`tags` value should be same.
 
-`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is
-`SQL`.
+`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is `SQL`.
 
-`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is
-`LDAP`.
+`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is `LDAP`.
 
-`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service
- trace marker is `WS_TNT4J_STREAMS_TRACKER`.
+`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service trace marker is 
+`WS_TNT4J_STREAMS_TRACKER`.
 
-`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is
-`JMS_TNT4J_STREAMS_TRACKER`.
+`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is `JMS_TNT4J_STREAMS_TRACKER`.
 
-`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace
-marker is `WebSocket`.
+`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace marker is 
+`WebSocket`.
 
-`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace
-marker is `TRACE`.
+`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace marker is `TRACE`.
 
 Activity event mapped fields:
 
@@ -376,11 +371,11 @@ Activity event mapped fields:
  * `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
  * `Class` is mapped from trace attribute named `CLASS`. It represents class name of object trace was taken from.
  * `Method` is mapped from trace attribute named `METHOD`. It represents method name trace was taken from.
- * `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and
- `JK_CORR_SID` values are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION`
- value is retrieved from JMS message field `correlationId`.
- * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration
- then this field is filled with trace data as string.
+ * `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and `JK_CORR_SID` values 
+ are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION` value is retrieved from JMS message field 
+ `correlationId`.
+ * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration then this field is 
+ filled with trace data as string.
  * `TrackingId` is mapped from trace attribute named `TrackingId`. It represents unique identifier of activity event.
  * `ParentId` is mapped from trace attribute named `ParentId`. It represents unique identifier of parent trace activity.
 
@@ -392,9 +387,13 @@ Custom fields values defined in parser fields mapping can be found as activity e
 
 ##### Zorka Connector as Java agent
 
-To run Zorka Connector sample using Zorka as attached Java Agent use `run-attach.bat` or `run-attach.sh` depending on
-Your OS. To change Zorka home dir open `.bat` or `.sh` file and change first parameter of `zorka-attach` executable to
-actual path on Your system.
+To run Zorka Connector sample using Zorka as attached Java Agent use `run-attach.bat` or `run-attach.sh` depending on Your OS.
+
+To change Zorka home dir open `.bat` or `.sh` file and change first parameter of `zorka-attach` executable to actual path on Your system.
+
+`zorka-attach` parameters: `zorka-attach zorkaAgentPath VMDescriptor`
+ * zorkaAgentPath - Zorka agent jar (`zorka*.jar`) path. (Required)
+ * VMDescriptor - Java VM name fragment/pid to attach to. (Required)
 
 Configuring TNT4J-Streams-Zorka
 ======================================
@@ -407,8 +406,8 @@ Details on TNT4J-Streams related configuration can be found in TNT4J-Streams REA
 
  * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
  * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
- * MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means
- stream whole stack trace. (Optional)
+ * MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means stream 
+ whole stack trace. (Optional)
  * Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times values to use for averages 
  calculation. Setting `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
  Default value - `0`. (Optional)
@@ -464,8 +463,8 @@ How to Build TNT4J-Streams-Zorka
 * [Apache Maven 3](https://maven.apache.org/)
 * [TNT4J-Streams](https://github.com/Nastel/tnt4j-streams) `core` module in particular
 
-All other required dependencies are defined in project modules `pom.xml` files. If maven is running
-online mode it should download these defined dependencies automatically.
+All other required dependencies are defined in project [`pom.xml`](./pom.xml) file. If maven is running online mode it should download these 
+defined dependencies automatically.
 
 ### Manually installed dependencies
 
@@ -473,8 +472,8 @@ online mode it should download these defined dependencies automatically.
 it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
-case we would recommend to download those dependencies manually into `lib` directory and install into local maven repository by running 
-maven script `lib/pom.xml` with `package` goal.
+case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local maven repository by 
+running maven script [`lib/pom.xml`](./lib/pom.xml) using `package` goal.
 
 **NOTE:** `TNT4J-Streams-Zorka` project will be ready to build only when manually downloaded libraries will be installed to local maven 
 repository.
@@ -493,22 +492,23 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 
 **NOTE:** also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
-
 ## Building
    * to build project and make release assemblies run maven goals `clean package`
    * to build project, make release assemblies and install to local repo run maven goals `clean install`
 
 Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 
-**NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks
-fine, but maven still complains about missing dependencies try to delete local maven repository
-by hand: i.e. delete contents of `c:\Users\[username]\.m2\repository` directory.
+**NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
+missing dependencies try to delete local maven repository by hand: i.e. on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
+directory.
 
 So resuming build process quick "how to build" steps would be like this:
 1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib` directory.
 2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn package`.
-3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a `pom.xml` file located in `tnt4j-streams` directory. 
-4. now you can build `tnt4j-streams-zorka`: run `mvn clean install` for a `pom.xml` file located in `tnt4j-streams-zorka` directory.     
+3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
+file located in `tnt4j-streams` directory.
+4. now you can build `tnt4j-streams-zorka`: run `mvn clean install` for a [`pom.xml`](./pom.xml) file located in `tnt4j-streams-zorka` 
+directory.
 
 ## Running samples
 
