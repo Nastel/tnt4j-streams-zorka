@@ -23,7 +23,6 @@ import static com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants.*;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,6 @@ import com.jkoolcloud.tnt4j.core.OpType;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
-import com.jkoolcloud.tnt4j.streams.fields.ActivityInfo;
 import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter;
 import com.jkoolcloud.tnt4j.streams.filters.TRSizeFilter;
@@ -406,10 +404,10 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected ActivityInfo applyParsers(Object data) throws IllegalStateException, ParseException {
+	protected String[] getDataTags(Object data) {
 		Map<String, Object> dataMap = (Map<String, Object>) data;
-		String[] tags = new String[] { String.valueOf(dataMap.get(ZORKA_PROP_MARKER)) };
-		return applyParsers(tags, data);
+
+		return new String[] { String.valueOf(dataMap.get(ZORKA_PROP_MARKER)) };
 	}
 
 	/**
