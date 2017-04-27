@@ -30,40 +30,6 @@ public final class ZorkaConstants {
 	 */
 	public static final String RESOURCE_BUNDLE_NAME = "tnt4j-streams-zorka"; // NON-NLS
 
-	/**
-	 * Property name defining Zorka traces filtering to produce max number of events for method stack trace.
-	 */
-	public static final String PROP_MAX_TRACE_EVENTS = "MaxTraceEvents"; // NON-NLS
-
-	/**
-	 * Constant for name of built-in Zorka connector {@value} property.
-	 */
-	public static final String PROP_JMX_QUERY = "JMXQuery"; // NON-NLS
-
-	/**
-	 * Constant for name of built-in Zorka connector {@value} property.
-	 */
-	public static final String PROP_SCHEDULER_EXPR = "CronSchedExpr"; // NON-NLS
-
-	/**
-	 * Constant for property filtering Zorka trace by method time
-	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger K times an N-period standard deviation
-	 * above the EMA(nPeriod).
-	 */
-	public static final String PROP_BB_K_TIMES = "Bollinger_K_times"; // NON-NLS
-
-	/**
-	 * Constant for property filtering Zorka trace by method time
-	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger nPeriod an N-period moving average (EMA).
-	 */
-	public static final String PROP_BB_N_PERIOD = "Bollinger_N_period"; // NON-NLS
-
-	/**
-	 * Constant for property filtering Zorka trace by method time
-	 * {@link com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter}. Bollinger bands recalculation time.
-	 */
-	public static final String PROP_BB_RECALCULATION_TIME = "BollingerRecalculationPeriod"; // NON-NLS
-
 	// Zorka mappings
 	/**
 	 * The constant for bad reply.
@@ -115,6 +81,5 @@ public final class ZorkaConstants {
 	public static final String TRACE_MARKER = "TRACE"; // NON-NLS
 
 	private ZorkaConstants() {
-
 	}
 }

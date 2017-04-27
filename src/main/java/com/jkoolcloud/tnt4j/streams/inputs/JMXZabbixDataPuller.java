@@ -32,6 +32,7 @@ import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
+import com.jkoolcloud.tnt4j.streams.configure.ZorkaStreamProperties;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
@@ -113,9 +114,9 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.valueOf(value);
-			} else if (ZorkaConstants.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
 				jmxQueryString = value;
-			} else if (ZorkaConstants.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
 				jmxSchedulerExpression = value;
 			}
 
@@ -130,10 +131,10 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 			return socketPort;
 		}
-		if (ZorkaConstants.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
 			return jmxQueryString;
 		}
-		if (ZorkaConstants.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
 			return jmxSchedulerExpression;
 		}
 
@@ -151,7 +152,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 
 		if (StringUtils.isEmpty(jmxQueryString)) {
 			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_NAME,
-					"TNTInputStream.property.undefined", ZorkaConstants.PROP_JMX_QUERY));
+					"TNTInputStream.property.undefined", ZorkaStreamProperties.PROP_JMX_QUERY));
 		}
 
 		this.scheduler = StdSchedulerFactory.getDefaultScheduler();

@@ -33,8 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
+import com.jkoolcloud.tnt4j.streams.configure.ZorkaStreamProperties;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
-import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 
 /**
  * @author akausinis
@@ -58,9 +58,9 @@ public class JMXZabbixDataPullerTest {
 		Map<String, String> properties = new HashMap<>(4);
 		properties.put(StreamProperties.PROP_HOST, "localhost"); // NON-NLS
 		properties.put(StreamProperties.PROP_PORT, String.valueOf(TEST_PORT));
-		properties.put(ZorkaConstants.PROP_JMX_QUERY,
+		properties.put(ZorkaStreamProperties.PROP_JMX_QUERY,
 				"\"java\",\"java.lang:type=Memory\",\"HeapMemoryUsage\",\"used\""); // NON-NLS
-		properties.put(ZorkaConstants.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *"); // NON-NLS
+		properties.put(ZorkaStreamProperties.PROP_SCHEDULER_EXPR, "0/1 * * 1/1 * ? *"); // NON-NLS
 		stream.setProperties(properties.entrySet());
 		testPropertyList(stream, properties.entrySet());
 	}

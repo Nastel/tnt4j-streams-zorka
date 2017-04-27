@@ -43,6 +43,7 @@ import com.jkoolcloud.tnt4j.core.OpType;
 import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
+import com.jkoolcloud.tnt4j.streams.configure.ZorkaStreamProperties;
 import com.jkoolcloud.tnt4j.streams.fields.StreamFieldType;
 import com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter;
 import com.jkoolcloud.tnt4j.streams.filters.TRSizeFilter;
@@ -146,13 +147,13 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 				host = value;
 			} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 				socketPort = Integer.parseInt(value);
-			} else if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
 				maxTraceEvents = Integer.parseInt(value);
-			} else if (ZorkaConstants.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
 				kTimes = Integer.parseInt(value);
-			} else if (ZorkaConstants.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
 				nPeriod = Integer.parseInt(value);
-			} else if (ZorkaConstants.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
+			} else if (ZorkaStreamProperties.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
 				bbRecalculateTime = Integer.parseInt(value);
 			}
 		}
@@ -166,16 +167,16 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
 			return socketPort;
 		}
-		if (ZorkaConstants.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
 			return maxTraceEvents;
 		}
-		if (ZorkaConstants.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
 			return kTimes;
 		}
-		if (ZorkaConstants.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
 			return nPeriod;
 		}
-		if (ZorkaConstants.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
+		if (ZorkaStreamProperties.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
 			return bbRecalculateTime;
 		}
 		return super.getProperty(name);
