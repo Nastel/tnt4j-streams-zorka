@@ -1,5 +1,10 @@
 #! /bin/bash
-SCRIPTPATH=`realpath $0`
-RUNDIR=`dirname $SCRIPTPATH`
+if command -v realpath >/dev/null 2>&1; then
+    SCRIPTPATH=`dirname $(realpath $0)`
+else
+    SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
+fi
+
+RUNDIR=`pwd`
 MAINCLASS="com.jkoolcloud.tnt4j.streams.configure.zookeeper.ZKConfigInit"
-tnt4j-streams.sh -c -f:$RUNDIR/../config/zk-init-cfg.properties
+tnt4j-streams.sh -c -f:$SCRIPTPATH/../config/zk-init-cfg.properties
