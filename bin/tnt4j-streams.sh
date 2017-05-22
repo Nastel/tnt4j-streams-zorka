@@ -6,7 +6,7 @@ else
 fi
 
 RUNDIR=`pwd`
-CLASSPATH="$CLASSPATH:$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*"
+LIBPATH="$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*"
 TNT4JOPTS="-Dtnt4j.config=$SCRIPTPATH/../config/tnt4j.properties"
 LOG4JOPTS="-Dlog4j.configuration=file:$SCRIPTPATH/../config/log4j.properties"
 #LOGBACKOPTS="-Dlogback.configurationFile=file:$SCRIPTPATH/../config/logback.xml"
@@ -16,4 +16,4 @@ if [ "$MAINCLASS" == "" ]; then
 	MAINCLASS="com.jkoolcloud.tnt4j.streams.StreamsAgent"
 fi
 
-java ${STREAMSOPTS} -classpath ${CLASSPATH} ${MAINCLASS} $*
+java $STREAMSOPTS -classpath "$LIBPATH" $MAINCLASS $*
