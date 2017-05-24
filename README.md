@@ -473,7 +473,7 @@ it manually.
 
 Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
 case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local maven repository by 
-running maven script [`lib/pom.xml`](./lib/pom.xml) using `package` goal.
+running maven script [`lib/pom.xml`](./lib/pom.xml) using `install` goal.
 
 **NOTE:** `TNT4J-Streams-Zorka` project will be ready to build only when manually downloaded libraries will be installed to local maven 
 repository.
@@ -504,7 +504,7 @@ directory.
 
 So resuming build process quick "how to build" steps would be like this:
 1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib` directory.
-2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn package`.
+2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn install`.
 3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
 file located in `tnt4j-streams` directory.
 4. now you can build `tnt4j-streams-zorka`: run `mvn clean install` for a [`pom.xml`](./pom.xml) file located in `tnt4j-streams-zorka` 

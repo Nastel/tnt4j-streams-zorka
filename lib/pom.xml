@@ -17,7 +17,7 @@
     </prerequisites>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
+        <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -26,7 +26,7 @@
                 <executions>
                     <execution>
                         <id>install-zico-util</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
@@ -41,7 +41,7 @@
                     </execution>
                     <execution>
                         <id>install-zorka</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>install-file</goal>
                         </goals>
