@@ -72,7 +72,7 @@
         </fileSet>
         <!-- static content -->
         <fileSet>
-            <directory></directory>
+            <directory>.</directory>
             <includes>
                 <include>README*</include>
                 <include>LICENSE*</include>
