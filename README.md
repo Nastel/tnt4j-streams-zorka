@@ -39,7 +39,7 @@ Also see TNT4J-Streams README document chapter ['Running TNT4J-Streams'](https:/
 ## Samples
 
 ### Running samples
-When release assemblies are built, samples are located in [`samples`](./samples/) directory i.e.
+When release assemblies are built, samples are located in [`samples`](./samples/) directory, e.g.,
 `../build/tnt4j-streams-zorka/tnt4j-streams-zorka-1.0.0/samples`.
 To run desired sample:
 * go to sample directory
@@ -499,7 +499,7 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
 
 **NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
-missing dependencies try to delete local maven repository by hand: i.e. on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
+missing dependencies try to delete local maven repository by hand: e.g., on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
 directory.
 
 So resuming build process quick "how to build" steps would be like this:
