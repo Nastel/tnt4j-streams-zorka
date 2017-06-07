@@ -422,7 +422,7 @@ Details on TNT4J-Streams related configuration can be found in TNT4J-Streams REA
     <property name="Host" value="some.host.name"/>
     <property name="Port" value="8645"/>
     <property name="MaxTraceEvents" value="32"/>
-    
+
     <property name="Bollinger_N_period" value="25"/>
     <property name="Bollinger_K_times" value="3"/>
     <property name="BollingerRecalculationPeriod" value="2000"/>
