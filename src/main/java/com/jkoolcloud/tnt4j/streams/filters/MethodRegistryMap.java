@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MethodRegistryMap {
 
-	private Map<Integer, MethodRegistry> methodRegistryMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Integer, MethodRegistry> methodRegistryMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Constructs a new MethodRegistryMap.
@@ -61,7 +61,7 @@ public class MethodRegistryMap {
 	 *
 	 * @return the set
 	 */
-	public synchronized Set<Map.Entry<Integer, MethodRegistry>> entrySet() {
+	public Set<Map.Entry<Integer, MethodRegistry>> entrySet() {
 		return methodRegistryMap.entrySet();
 	}
 
@@ -111,7 +111,7 @@ public class MethodRegistryMap {
 	 *
 	 * @see MethodRegistry
 	 */
-	public synchronized void fixup(Integer newSymbol, MethodRegistry methodRegistry) {
+	public void fixup(Integer newSymbol, MethodRegistry methodRegistry) {
 		int oldSymbol = methodRegistry.getSymbol();
 		methodRegistry.setSymbol(newSymbol);
 		methodRegistryMap.put(methodRegistry.getSymbol(), methodRegistryMap.remove(oldSymbol));
