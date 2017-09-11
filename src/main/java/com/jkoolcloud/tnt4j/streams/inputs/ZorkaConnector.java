@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.jitlogic.zico.core.ZicoService;
 import com.jitlogic.zorka.common.tracedata.HelloRequest;
@@ -119,7 +120,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
-	private final Object filterConstructorLock = new Object();
+	private final ReentrantLock filterConstructorLock = new ReentrantLock();
 
 	/**
 	 * Constructs an empty ZorkaConnector. Requires configuration settings to set input stream source.
@@ -134,7 +135,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	@Override
-	public void setProperties(Collection<Map.Entry<String, String>> props) throws Exception {
+	public void setProperties(Collection<Map.Entry<String, String>> props) {
 		if (props == null) {
 			return;
 		}
@@ -378,11 +379,13 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			return rec; // DO NOT create FILTER if maxTraceEvents not set;
 		}
 
-		synchronized (filterConstructorLock) {
+		filterConstructorLock.lock();
+		try {
 			if (sizeFilter == null) {
 				sizeFilter = new TRSizeFilter(maxTraceEvents);
-				filterConstructorLock.notify();
 			}
+		} finally {
+			filterConstructorLock.unlock();
 		}
 
 		return sizeFilter.filter(rec);
@@ -393,11 +396,13 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			return rec; // DO NOT create FILTER if nPeriod not set;
 		}
 
-		synchronized (filterConstructorLock) {
+		filterConstructorLock.lock();
+		try {
 			if (methodTimeFilter == null) {
 				methodTimeFilter = new TRDynamicFilter(nPeriod, kTimes, bbRecalculateTime, symbolRegistry);
-				filterConstructorLock.notify();
 			}
+		} finally {
+			filterConstructorLock.unlock();
 		}
 
 		return methodTimeFilter.filter(rec);

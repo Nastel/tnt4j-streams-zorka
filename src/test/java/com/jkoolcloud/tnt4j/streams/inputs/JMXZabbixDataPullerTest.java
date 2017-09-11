@@ -54,7 +54,7 @@ public class JMXZabbixDataPullerTest {
 	}
 
 	@Test
-	public void testProperties() throws Exception {
+	public void testProperties() {
 		Map<String, String> properties = new HashMap<>(4);
 		properties.put(StreamProperties.PROP_HOST, "localhost"); // NON-NLS
 		properties.put(StreamProperties.PROP_PORT, String.valueOf(TEST_PORT));
