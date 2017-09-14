@@ -153,8 +153,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 					"TNTInputStream.property.undefined", ZorkaStreamProperties.PROP_JMX_QUERY));
 		}
 
-		this.scheduler = StdSchedulerFactory.getDefaultScheduler();
-		this.scheduler.start();
+		scheduler = StdSchedulerFactory.getDefaultScheduler();
+		scheduler.start();
 
 		JobDataMap jobAttrs = new JobDataMap();
 		jobAttrs.put(JOB_PROP_STREAM_KEY, this);
@@ -179,6 +179,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		if (scheduler != null) {
 			try {
 				scheduler.shutdown(true);
+				scheduler = null;
 			} catch (SchedulerException exc) {
 				logger().log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
 						"JMXZabbixDataPuller.error.closing.scheduler"), exc);
@@ -221,7 +222,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			Integer socketPort = dataMap.getInt(JOB_PROP_PORT_KEY);
 			List<String> jmxQueries = (List<String>) dataMap.get(JOB_PROP_JMX_QUERIES_KEY);
 
-			final Map<String, String> inputData = new HashMap<>();
+			Map<String, String> inputData = new HashMap<>();
 			Socket echoSocket = null;
 			PrintWriter out = null;
 			BufferedReader in = null;
@@ -235,7 +236,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 					is = mkIS("ZBXD", 1, 0x0c, 0, 0, 0, 0, 0, 0, 0, "zorka.jmx[", query, "]", 0x0a); // NON-NLS
 					IOUtils.copy(is, out, Utils.UTF8);
 					out.flush();
-					final String response = in.readLine();
+					String response = in.readLine();
 					if (response != null) {
 						inputData.put(query, response.substring(13));
 					}

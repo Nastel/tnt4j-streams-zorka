@@ -5,7 +5,6 @@ else
     SCRIPTPATH=$( cd "$(dirname "$0")" ; pwd -P )
 fi
 
-RUNDIR=`pwd`
 TOOLS_PATH="$JAVA_HOME/lib/tools.jar"
 export PATH="$PATH:$JAVA_HOME/jre/bin/"
 LIBPATH="$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*:$TOOLS_PATH"
