@@ -207,14 +207,14 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			@Override
 			public ZicoDataProcessor get(Socket socket, HelloRequest hello) throws IOException {
 				if (hello == null) {
-					logger().log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-							"ZorkaConnector.received.null.hello.packet"));
+					logger().log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+							"ZorkaConnector.received.null.hello.packet");
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
 							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hello.packet"));
 				}
 				if (hello.getHostname() == null) {
-					logger().log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-							"ZorkaConnector.received.null.hostname"));
+					logger().log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+							"ZorkaConnector.received.null.hostname");
 					throw new ZicoException(ZicoPacket.ZICO_BAD_REQUEST, StreamsResources
 							.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.null.hostname"));
 				}
@@ -236,9 +236,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		zicoService.start();
 
-		logger().log(OpLevel.DEBUG,
-				StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, "TNTInputStream.stream.start"),
-				getClass().getSimpleName(), getName());
+		logger().log(OpLevel.DEBUG, StreamsResources.getBundle(StreamsResources.RESOURCE_BUNDLE_NAME),
+				"TNTInputStream.stream.start", getClass().getSimpleName(), getName());
 	}
 
 	/**
@@ -278,9 +277,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		rec = filterOversizeTrace(rec);
 
 		long reducedTrCount = ZorkaUtils.countTraceRecord(rec);
-		LOGGER.log(OpLevel.INFO,
-				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaConnector.reduced.trace"),
-				recCount, reducedTrCount, maxTraceEvents);
+		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+				"ZorkaConnector.reduced.trace", recCount, reducedTrCount, maxTraceEvents);
 		processTraceRecursive(rec, rec.getChildren(), null, 1);
 	}
 
@@ -288,8 +286,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		Map<String, Object> translation = new HashMap<>();
 		if (attributeMap != null) {
 			for (Map.Entry<Integer, Object> attrEntry : attributeMap.entrySet()) {
-				final String symbolName = symbolRegistry.symbolName(attrEntry.getKey());
-				final Object attribute = attrEntry.getValue();
+				String symbolName = symbolRegistry.symbolName(attrEntry.getKey());
+				Object attribute = attrEntry.getValue();
 				translation.put(symbolName, attribute);
 			}
 		}
@@ -299,25 +297,25 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID,
 			int level) {
 
-		final Map<Integer, Object> attrs = parentRec.getAttrs();
+		Map<Integer, Object> attrs = parentRec.getAttrs();
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
-			final Map<String, Object> markerActivity = new HashMap<>();
-			final Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
+			Map<String, Object> markerActivity = new HashMap<>();
+			Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
 			markerActivity.putAll(zorkaActivityRecord);
 
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
 
-			final String activityID = uuidGenerator.newUUID();
+			String activityID = uuidGenerator.newUUID();
 			markerActivity.put(StreamFieldType.TrackingId.name(), activityID);
 			markerActivity.put(StreamFieldType.ParentId.name(), parentUUID);
 			markerActivity.put(TNT4J_PROP_EV_TYPE, OpType.ACTIVITY.name());
 			parentUUID = activityID;
 			addInputToBuffer(markerActivity);
 
-			final Map<String, Object> markerEvent = new HashMap<>(markerActivity);
+			Map<String, Object> markerEvent = new HashMap<>(markerActivity);
 
-			final String eventID;
+			String eventID;
 			if (markerEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				eventID = uuidGenerator.newUUID();
 				markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
@@ -331,11 +329,11 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			addInputToBuffer(markerEvent);
 		}
 
-		final Map<String, Object> translatedTrace = new HashMap<>();
+		Map<String, Object> translatedTrace = new HashMap<>();
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
 		if (attrs != null) {
-			final Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
+			Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
 			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				attributeEvent.put(StreamFieldType.TrackingId.name(), uuidGenerator.newUUID());
@@ -352,8 +350,9 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		translatedTrace.put(TNT4J_PROP_LEVEL, level);
 
 		addInputToBuffer(translatedTrace);
-		if (children == null)
+		if (children == null) {
 			return;
+		}
 
 		// parentUUID = eventID;
 		for (TraceRecord child : children) {

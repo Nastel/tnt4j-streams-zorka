@@ -67,8 +67,8 @@ public final class ZorkaAttach {
 	 *            </table>
 	 */
 	public static void main(String... args) {
-		LOGGER.log(OpLevel.DEBUG,
-				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.starting.main"));
+		LOGGER.log(OpLevel.DEBUG, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+				"ZorkaAttach.starting.main");
 		if (args.length < 2) {
 			System.out
 					.println(StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.main.usage"));
@@ -94,8 +94,8 @@ public final class ZorkaAttach {
 						File pathFile = new File(
 								ZorkaAttach.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 						String agentPath = pathFile.getAbsolutePath();
-						LOGGER.log(OpLevel.INFO, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-								"ZorkaAttach.attaching.agent"), agentPath, rVM.displayName());
+						LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+								"ZorkaAttach.attaching.agent", agentPath, rVM.displayName());
 						vm.loadAgent(agentPath, agentJarPath);
 					} finally {
 						vm.detach();
@@ -135,14 +135,13 @@ public final class ZorkaAttach {
 	 * @see AgentMain#premain(String, Instrumentation)
 	 */
 	public static void agentmain(String zorkaHomePath, Instrumentation inst) throws Exception {
-		final String zorkaDirPath = new File(zorkaHomePath).getAbsolutePath();
+		String zorkaDirPath = new File(zorkaHomePath).getAbsolutePath();
 		System.setProperty("zorka.home.dir", zorkaDirPath);
-		LOGGER.log(OpLevel.DEBUG,
-				StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.zorka.path"),
-				zorkaDirPath);
+		LOGGER.log(OpLevel.DEBUG, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+				"ZorkaAttach.zorka.path", zorkaDirPath);
 
 		File zorkaPath = new File(zorkaDirPath);
-		final String[] classPathEntries = zorkaPath.list(new WildcardFileFilter("*.jar")); // NON-NLS
+		String[] classPathEntries = zorkaPath.list(new WildcardFileFilter("*.jar")); // NON-NLS
 		if (classPathEntries != null) {
 			for (String classPathEntry : classPathEntries) {
 				File pathFile = new File(classPathEntry);
@@ -168,9 +167,8 @@ public final class ZorkaAttach {
 			try {
 				method.invoke(classLoader, classPathEntryURL);
 			} catch (Exception e) {
-				LOGGER.log(OpLevel.ERROR,
-						StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "ZorkaAttach.could.not.load"),
-						classPathEntryURL, e);
+				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+						"ZorkaAttach.could.not.load", classPathEntryURL, e);
 			}
 		}
 	}

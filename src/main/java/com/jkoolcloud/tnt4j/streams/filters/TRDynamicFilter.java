@@ -152,8 +152,8 @@ public class TRDynamicFilter implements TraceRecordFilter {
 			String symbolName = symbolRegistry.symbolName(methodId);
 			String signature = symbolRegistry.symbolName(signatureId);
 			if (!methodContext.checkSymbolName(methodId, symbolName)) {
-				LOGGER.log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-						"TRDynamicFilter.recovering.symbol"));
+				LOGGER.log(OpLevel.WARNING, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+						"TRDynamicFilter.recovering.symbol");
 				methodContext = methodTimeBuffer.lookup(symbolName, signature);
 				if (methodContext != null) {
 					methodTimeBuffer.fixup(methodId, methodContext);
@@ -198,7 +198,7 @@ public class TRDynamicFilter implements TraceRecordFilter {
 
 			// #JAXB implementation
 			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class, Long.class);
-			final Marshaller marshaller = jaxb.createMarshaller();
+			Marshaller marshaller = jaxb.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			// MethodRegistryMap mapDelegate = new MethodRegistryMap();
@@ -206,11 +206,11 @@ public class TRDynamicFilter implements TraceRecordFilter {
 
 			marshaller.marshal(methodTimeBuffer, new FileOutputStream(METHOD_REGISTRY_F_NAME));
 
-			LOGGER.log(OpLevel.INFO, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-					"TRDynamicFilter.registry.persisted"), METHOD_REGISTRY_F_NAME);
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+					"TRDynamicFilter.registry.persisted", METHOD_REGISTRY_F_NAME);
 		} catch (Exception exc) {
-			LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-					"TRDynamicFilter.registry.persisting.failed"), METHOD_REGISTRY_F_NAME, exc);
+			LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+					"TRDynamicFilter.registry.persisting.failed", METHOD_REGISTRY_F_NAME, exc);
 		}
 
 	}
@@ -233,19 +233,18 @@ public class TRDynamicFilter implements TraceRecordFilter {
 
 			// JAXB implementation
 			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class, Long.class);
-			final Unmarshaller unmarshaller = jaxb.createUnmarshaller();
+			Unmarshaller unmarshaller = jaxb.createUnmarshaller();
 			methodTimeBuffer = (MethodRegistryMap) unmarshaller.unmarshal(new File(METHOD_REGISTRY_F_NAME));
-			LOGGER.log(OpLevel.INFO,
-					StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, "TRDynamicFilter.registry.loaded"),
-					METHOD_REGISTRY_F_NAME);
+			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+					"TRDynamicFilter.registry.loaded", METHOD_REGISTRY_F_NAME);
 		} catch (Exception exc) {
 			methodTimeBuffer = new MethodRegistryMap();
 			if ((new File(METHOD_REGISTRY_F_NAME)).exists()) {
-				LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-						"TRDynamicFilter.registry.load.failed"), METHOD_REGISTRY_F_NAME, exc);
+				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+						"TRDynamicFilter.registry.load.failed", METHOD_REGISTRY_F_NAME, exc);
 			} else {
-				LOGGER.log(OpLevel.INFO, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-						"TRDynamicFilter.registry.not.found"));
+				LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+						"TRDynamicFilter.registry.not.found");
 			}
 			return;
 		}

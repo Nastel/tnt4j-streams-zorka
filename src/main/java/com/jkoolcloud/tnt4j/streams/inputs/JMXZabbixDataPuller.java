@@ -181,8 +181,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 				scheduler.shutdown(true);
 				scheduler = null;
 			} catch (SchedulerException exc) {
-				logger().log(OpLevel.WARNING, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-						"JMXZabbixDataPuller.error.closing.scheduler"), exc);
+				logger().log(OpLevel.WARNING, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+						"JMXZabbixDataPuller.error.closing.scheduler", exc);
 			}
 		}
 
@@ -241,8 +241,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 						inputData.put(query, response.substring(13));
 					}
 				} catch (IOException exc) {
-					LOGGER.log(OpLevel.ERROR, StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME,
-							"JMXZabbixDataPuller.request.error"), host, socketPort, query);
+					LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+							"JMXZabbixDataPuller.request.error", host, socketPort, query);
 				} finally {
 					Utils.close(is);
 					Utils.close(out);
@@ -257,13 +257,15 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 			byte buf[] = new byte[2048];
 			int pos = 0;
 			for (Object arg : args) {
-				if (arg instanceof String)
-					for (char ch : ((String) arg).toCharArray())
+				if (arg instanceof String) {
+					for (char ch : ((String) arg).toCharArray()) {
 						buf[pos++] = ((byte) ch);
-				else if (arg instanceof Integer)
+					}
+				} else if (arg instanceof Integer) {
 					buf[pos++] = ((byte) (int) (Integer) arg);
-				else if (arg instanceof Byte)
+				} else if (arg instanceof Byte) {
 					buf[pos++] = ((Byte) arg);
+				}
 			}
 
 			return new ByteArrayInputStream(buf, 0, pos);
