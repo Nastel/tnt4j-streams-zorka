@@ -131,7 +131,7 @@ public class ZorkaConnectorTest {
 		conn.connect();
 
 		conn.hello("test", "aaa"); // NON-NLS
-		final TraceRecord traceRecord = new TraceRecord();
+		TraceRecord traceRecord = new TraceRecord();
 		conn.submit(new Symbol(1, "test")); // NON-NLS
 		Thread.sleep(10000000);
 		Utils.close(conn);
@@ -141,15 +141,16 @@ public class ZorkaConnectorTest {
 	public void testRB() {
 		String keyModule = "ZorkaConnector.received.null.hello.packet";
 		String keyCore = "ActivityField.field.type.name.empty";
+		String brbStr;
 
 		String rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyModule);
 		assertNotEquals("Zorka resource bundle entry not found", keyModule, rbs1);
 		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyModule);
 		assertEquals("Zorka resource bundle entry found in core", keyModule, rbs1);
-		rbs1 = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyCore);
-		assertNotEquals("Core resource bundle entry not found", keyCore, rbs1);
+		brbStr = StreamsResources.getString(StreamsResources.RESOURCE_BUNDLE_NAME, keyCore);
+		assertNotEquals("Core resource bundle entry not found", keyCore, brbStr);
 		rbs1 = StreamsResources.getString(ZorkaConstants.RESOURCE_BUNDLE_NAME, keyCore);
-		assertEquals("Core resource bundle entry found in zorka", keyCore, rbs1);
+		assertEquals("Core resource bundle entry found in zorka", brbStr, rbs1);
 	}
 
 }
