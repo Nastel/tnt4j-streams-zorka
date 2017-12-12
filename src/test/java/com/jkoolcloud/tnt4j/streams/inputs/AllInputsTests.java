@@ -29,5 +29,4 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ JMXZabbixDataPullerTest.class, ZorkaConnectorTest.class })
 public class AllInputsTests {
-
 }

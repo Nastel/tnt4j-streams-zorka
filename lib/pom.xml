@@ -16,6 +16,10 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
+    <properties>
+        <zorka.version>1.0.16</zorka.version>
+    </properties>
+
     <build>
         <defaultGoal>initialize</defaultGoal>
         <plugins>
@@ -33,9 +37,9 @@
                         <configuration>
                             <groupId>com.jitlogic.zico</groupId>
                             <artifactId>zico-util</artifactId>
-                            <version>1.0.15</version>
+                            <version>${zorka.version}</version>
                             <packaging>jar</packaging>
-                            <file>zico-util.jar</file>
+                            <file>zorka/${zorka.version}/zico-util.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -48,9 +52,9 @@
                         <configuration>
                             <groupId>com.jitlogic.zorka</groupId>
                             <artifactId>zorka</artifactId>
-                            <version>1.0.15</version>
+                            <version>${zorka.version}</version>
                             <packaging>jar</packaging>
-                            <file>zorka.jar</file>
+                            <file>zorka/${zorka.version}/zorka.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>

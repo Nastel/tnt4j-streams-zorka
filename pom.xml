@@ -72,6 +72,8 @@
         <skipTests>true</skipTests>
         <gpg.skip.sign>true</gpg.skip.sign>
         <build.assemblies.attach>false</build.assemblies.attach>
+
+        <zorka.version>1.0.16</zorka.version>
     </properties>
 
     <profiles>
@@ -298,12 +300,12 @@
         <dependency>
             <groupId>com.jitlogic.zico</groupId>
             <artifactId>zico-util</artifactId>
-            <version>1.0.15</version>
+            <version>${zorka.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jitlogic.zorka</groupId>
             <artifactId>zorka</artifactId>
-            <version>1.0.15</version>
+            <version>${zorka.version}</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>

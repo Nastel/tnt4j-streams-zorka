@@ -485,8 +485,12 @@ What to download manually:
 Download the above libraries and place into the `tnt4j-streams-zorka/lib` directory like this:
 ```
     lib
-     |- zico-util.jar
-     |- zorka.jar
+     + 1.0.15
+         |- zico-util.jar
+         |- zorka.jar
+     + 1.0.16
+         |- zico-util.jar
+         |- zorka.jar 
 ```
 (O) marked libraries are optional
 
@@ -503,7 +507,7 @@ missing dependencies try to delete local maven repository by hand: e.g., on MS W
 directory.
 
 So resuming build process quick "how to build" steps would be like this:
-1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib` directory.
+1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib/{version}/` directory.
 2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn initialize`.
 3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
 file located in `tnt4j-streams` directory.
