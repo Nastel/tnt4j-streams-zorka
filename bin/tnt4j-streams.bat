@@ -10,7 +10,7 @@ set STREAMSOPTS=%STREAMSOPTS% %LOG4JOPTS% %TNT4JOPTS%
 
 IF ["%MAINCLASS%"] EQU [""] (
   set MAINCLASS=com.jkoolcloud.tnt4j.streams.StreamsAgent
-}
+)
 
 @echo on
 java %STREAMSOPTS% -classpath "%LIBPATH%" %MAINCLASS% %*
