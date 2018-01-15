@@ -139,6 +139,16 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		return super.getProperty(name);
 	}
 
+	@Override
+	protected void applyProperties() throws Exception {
+		super.applyProperties();
+
+		if (StringUtils.isEmpty(jmxQueryString)) {
+			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_NAME,
+					"TNTInputStream.property.undefined", ZorkaStreamProperties.PROP_JMX_QUERY));
+		}
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -147,11 +157,6 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	@Override
 	protected void initialize() throws Exception {
 		super.initialize();
-
-		if (StringUtils.isEmpty(jmxQueryString)) {
-			throw new IllegalStateException(StreamsResources.getStringFormatted(StreamsResources.RESOURCE_BUNDLE_NAME,
-					"TNTInputStream.property.undefined", ZorkaStreamProperties.PROP_JMX_QUERY));
-		}
 
 		scheduler = StdSchedulerFactory.getDefaultScheduler();
 		scheduler.start();

@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
-  
+
 zorka.require("tnt4j_base_tomcat.bsh", "ldap.bsh");
-  
+
 // This script gets TNT4J Correlation IDs
-  
+
 __tnt4j_ldap() {
-  
+
     spy.add(spy.instrument("LDAP_TNT4J_STREAMS_TRACKER")
         .onEnter(spy.fetchArg("NAME", 1), spy.fetchArg("FILTER", 2),
             spy.tlGet("JK_CORR_SID", tnt4j._JK_CORR_SID),

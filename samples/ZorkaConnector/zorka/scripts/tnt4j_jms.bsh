@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
-  
+
 zorka.require("tnt4j_base_tomcat.bsh", "javax/jms.bsh");
 
 // Generic JMS monitoring
@@ -31,7 +31,7 @@ __javax_jms() {
 		  text = "";
           while (names.hasMoreElements()) {
             name = names.nextElement();
-			text = text + name + "=" + msg.getObject(name) + ", "; 
+			text = text + name + "=" + msg.getObject(name) + ", ";
           }
 
           tracer.newAttr("TEXT", text);

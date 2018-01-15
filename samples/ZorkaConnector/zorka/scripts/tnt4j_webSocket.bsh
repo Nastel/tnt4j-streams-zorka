@@ -18,7 +18,7 @@
  */
 
  zorka.require("tracer.bsh");
- 
+
 __java_webSocket() {
 
     _SESSION = new ThreadLocal();
@@ -46,7 +46,7 @@ __java_webSocket() {
             sb.append("\"}");
             rec.put("SendTrackingID", stid);
             endpoint.sendText(sb.toString(), true);
-            rec.put("ReceiveTrackingID", tid);
+            rec.put("ReceiveTrackingID", rtid);
             rec.put("SESSION", sessionUUID);
 
             return rec;
@@ -89,7 +89,24 @@ __java_webSocket() {
 
         return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
     }
-	
+
+    message_processor() {
+        process(rec) {
+            maxlen = 30;
+            message = rec.get("MSG");
+            if (message != null && message.length() > maxlen) {
+                message = message.substring(0, maxlen) + "...";
+                rec.put("MSG", message);
+            } else if (message == null) {
+                rec.put("MSG", "null");
+            }
+
+            return rec;			
+        }
+
+        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+    }
+
     getField(Class clazz, String fieldName) {
         try {
             return clazz.getDeclaredField(fieldName);
@@ -102,22 +119,23 @@ __java_webSocket() {
             }
         }
     }
-	
+
     spy.add(spy.instrument ("WEB_SOCKET_SEND")
         .onEnter(
             spy.fetchArg("MSG", 1),
             spy.fetchArg("ENDPOINT", 0),
+            tracer.begin("WebSocket"),
             augment_message(),
-            spy.format("MSG", "${MSG}" ),
-            spy.put("EVENT_TYPE", "SEND"),
-            spy.put("MARKER", "WebSocket"),
-            tracer.attr("MARKER", "MARKER"),
-            tracer.attr("METHOD", "EVENT_TYPE"),
-            tracer.attr("TrackingId", "SendTrackingID"),
-            tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
+            message_processor(),
+            tracer.formatAttr("MARKER", "WebSocket"),
+            tracer.formatAttr("METHOD", "WebSocket Send"),
+            tracer.formatAttr("EVENT_TYPE", "SEND"),
+            //tracer.attr("TrackingID", "SendTrackingID"),
+            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND####################"),
             tracer.attr("MSG", "MSG")
         )
         .onReturn(
+            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND RETURN####################"),
             tracer.flags(tracer.SUBMIT_TRACE)
         )
         .include(
@@ -126,32 +144,34 @@ __java_webSocket() {
             spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String")
         )
     );
- 
+
     spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
         .onEnter(
             spy.fetchArg("MESSAGE_HANDLER", 0),
+            spy.fetchArg("MSG", 1),
+            tracer.begin("WebSocket"),
+            message_processor(),
             augment_message_session(),
             // spy.format("SESSION", "${MESSAGE_HANDLER.session.getHttpSessionId()}" ),
-            tracer.begin("WebSocket"),
-            spy.put("EVENT_TYPE", "RECEIVE"),
-            spy.put("MARKER", "WebSocket"),
-            tracer.attr("MARKER", "MARKER"),
-            tracer.attr("METHOD", "EVENT_TYPE"),
-            tracer.attr("EVENT_TYPE", "EVENT_TYPE"),
-            tracer.attr("TrackingId", "ReceiveTrackingID"),
-            tracer.attr("SESSION", "SESSION")
+            tracer.formatAttr("MARKER", "WebSocket"),
+            tracer.formatAttr("METHOD", "WebSocket Receive"),
+            tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
+            tracer.attr("TrackingID", "ReceiveTrackingID"),
+            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE####################"),
+            tracer.attr("SESSION", "SESSION"),
+            tracer.attr("MSG", "MSG")
         )
-        /* .onReturn(
+        .onReturn(
+            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE RETURN####################"),
             tracer.flags(tracer.SUBMIT_TRACE)
-         )
-		 */
+        )
         .include(
             spy.byInterface("javax.websocket.MessageHandler$Partial"),
             spy.byInterface("javax.websocket.MessageHandler$Whole")
         )
     );
 
-    tracer.include("com.slabs.jsfManaged.**", "org.apache.tomcat.websocket.**");
+    //tracer.include("com.slabs.jsfManaged.**", "org.apache.tomcat.websocket.**");
 
     return this;
 }
