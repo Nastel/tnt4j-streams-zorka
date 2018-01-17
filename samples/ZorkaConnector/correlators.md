@@ -30,8 +30,8 @@ How tnt4j-streams-zorka correlators work?
 
 
 
-JKool Cloud accepts variety of correlators into field `correlator`. These correlators user to relate 
-Your event data into connected events bundle.
+JKool Cloud accepts variety of correlators into field `correlator`. These correlators user to relate your event data into connected events 
+bundle.
 
 You set your correlators in the application as session attributes in backing bean:
 
@@ -53,8 +53,8 @@ You set your correlators in the application as session attributes in backing bea
 `JK_CORR_SID` it's a session correlator, as `JK_CORR_RID` - request correlator. 
 
 Zorka intercepts these correlators, as soon as script `tnt4j_base_tomcat.bsh` is loaded.
-Zorka attaches spy to on of the Tomcat's request flow class  - org.apache.catalina.core.StandardContextValve
-and extracts these attributes in `attributes_processor()` and adds attributes by calling method _attributeTntCorrIds():
+Zorka attaches spy to on of the Tomcat's request flow class  - `org.apache.catalina.core.StandardContextValve` and extracts these 
+attributes in `attributes_processor()` and adds attributes by calling method _attributeTntCorrIds():
 
 ```java
     spy.add(spy.instrument("CATALINA_TNT4J_STREAMS_TRACKER")
@@ -70,8 +70,8 @@ and extracts these attributes in `attributes_processor()` and adds attributes by
 
 
 Attributes processor fetches `JK_CORR_RID` and `JK_CORR_SID` and put them to ThreadLocal for later use.
-And method _attributeTntCorrIds() is called in every script supplied by tnt4j-streams-zorka to attribute all traces 
-by application services (SQL, LDAP, JMS etc.) to attribute these traces with correct correlator.
+And method _attributeTntCorrIds() is called in every script supplied by tnt4j-streams-zorka to attribute all traces by application services 
+(SQL, LDAP, JMS etc.) to attribute these traces with correct correlator.
 
 JMS message correlator is retrieved over JMS spy as message attribute. Mapping into TNT4J activity event is performed
 over JMS traces parser configuration:
