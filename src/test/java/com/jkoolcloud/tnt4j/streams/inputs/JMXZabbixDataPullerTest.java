@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 JKOOL, LLC.
+ * Copyright 2014-2018 JKOOL, LLC.
  *
  * This file is part of TNT4J-Streams-Zorka.
  *
@@ -106,7 +106,7 @@ public class JMXZabbixDataPullerTest {
 		stream.startStream();
 
 		Thread.sleep(500);
-		final Map<String, String> nextItem = stream.getNextItem();
+		Map<String, String> nextItem = stream.getNextItem();
 		stream.cleanup();
 		assertFalse("JMX response is empty!", nextItem.isEmpty()); // NON-NLS
 		assertEquals("Unexpected JMX bean value", "TEST_MEMORY_USED", nextItem.entrySet().iterator().next().getValue());// NON-NLS

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 JKOOL, LLC.
+ * Copyright 2014-2018 JKOOL, LLC.
  *
  * This file is part of TNT4J-Streams-Zorka.
  *
@@ -52,12 +52,12 @@ public class TRSizeFilter implements TraceRecordFilter {
 
 	@Override
 	public TraceRecord filter(TraceRecord rec) {
-		final long recCount = ZorkaUtils.countTraceRecord(rec);
+		long recCount = ZorkaUtils.countTraceRecord(rec);
 		if (maxTraceEvents == 0 || recCount <= maxTraceEvents) {
 			return rec;
 		}
-		final Long wholeTraceTime = rec.getTime();
-		final Float percentageOffset = (float) ((double) maxTraceEvents / (double) recCount);
+		Long wholeTraceTime = rec.getTime();
+		Float percentageOffset = (float) ((double) maxTraceEvents / (double) recCount);
 		TraceRecord filteredRec = cloneTraceRecord(rec, wholeTraceTime, percentageOffset);
 
 		return filteredRec;
