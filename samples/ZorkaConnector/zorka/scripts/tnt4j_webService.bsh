@@ -22,9 +22,12 @@ zorka.require("tnt4j_base_tomcat.bsh");
 __java_webs() {
 
     spy.add(spy.instrument("WS_TNT4J_STREAMS_INVOKER_TUBE")
-        .onReturn(spy.fetchArg("PACKAGE", 1), spy.fetchArg("METHOD", 2), spy.fetchArg("ARGS", 3),
-            spy.format("METHOD", "${METHOD.name}" ),
-            spy.format("SOAP_ACTION", "${PACKAGE.soapAction}" ),
+        .onReturn(
+            spy.fetchArg("PACKAGE", 1),
+            spy.fetchArg("METHOD", 2),
+            spy.fetchArg("ARGS", 3),
+            spy.format("METHOD", "${METHOD.name}"),
+            spy.format("SOAP_ACTION", "${PACKAGE.soapAction}"),
             tracer.begin("WS_TNT4J_STREAMS_TRACKER"),
             tracer.attr("SOAP_METHOD", "METHOD"),
             tracer.attr("SOAP_ACTION", "SOAP_ACTION"),

@@ -24,7 +24,9 @@ zorka.require("tnt4j_base_tomcat.bsh", "ldap.bsh");
 __tnt4j_ldap() {
 
     spy.add(spy.instrument("LDAP_TNT4J_STREAMS_TRACKER")
-        .onEnter(spy.fetchArg("NAME", 1), spy.fetchArg("FILTER", 2),
+        .onEnter(
+            spy.fetchArg("NAME", 1),
+            spy.fetchArg("FILTER", 2),
             spy.tlGet("JK_CORR_SID", tnt4j._JK_CORR_SID),
             spy.tlGet("JK_CORR_RID", tnt4j._JK_CORR_RID),
             tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
