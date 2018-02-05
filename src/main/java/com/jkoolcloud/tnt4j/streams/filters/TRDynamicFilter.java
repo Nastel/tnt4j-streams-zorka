@@ -209,10 +209,9 @@ public class TRDynamicFilter implements TraceRecordFilter {
 			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 					"TRDynamicFilter.registry.persisted", METHOD_REGISTRY_F_NAME);
 		} catch (Exception exc) {
-			LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+			Utils.logThrowable(LOGGER, OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 					"TRDynamicFilter.registry.persisting.failed", METHOD_REGISTRY_F_NAME, exc);
 		}
-
 	}
 
 	/**
@@ -240,7 +239,8 @@ public class TRDynamicFilter implements TraceRecordFilter {
 		} catch (Exception exc) {
 			methodTimeBuffer = new MethodRegistryMap();
 			if ((new File(METHOD_REGISTRY_F_NAME)).exists()) {
-				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+				Utils.logThrowable(LOGGER, OpLevel.ERROR,
+						StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 						"TRDynamicFilter.registry.load.failed", METHOD_REGISTRY_F_NAME, exc);
 			} else {
 				LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),

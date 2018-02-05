@@ -167,8 +167,10 @@ public final class ZorkaAttach {
 			try {
 				method.invoke(classLoader, classPathEntryURL);
 			} catch (Exception e) {
-				LOGGER.log(OpLevel.ERROR, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
-						"ZorkaAttach.could.not.load", classPathEntryURL, e);
+				Utils.logThrowable(LOGGER, OpLevel.ERROR,
+						StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME), "ZorkaAttach.could.not.load",
+						classPathEntryURL, e);
+
 			}
 		}
 	}

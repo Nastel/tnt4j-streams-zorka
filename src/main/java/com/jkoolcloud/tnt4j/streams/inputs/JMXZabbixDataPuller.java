@@ -186,7 +186,8 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 				scheduler.shutdown(true);
 				scheduler = null;
 			} catch (SchedulerException exc) {
-				logger().log(OpLevel.WARNING, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
+				Utils.logThrowable(logger(), OpLevel.WARNING,
+						StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 						"JMXZabbixDataPuller.error.closing.scheduler", exc);
 			}
 		}
