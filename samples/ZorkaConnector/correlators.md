@@ -30,8 +30,8 @@ How tnt4j-streams-zorka correlators work?
 
 
 
-JKool Cloud accepts variety of correlators into field `correlator`. These correlators user to relate your event data into connected events 
-bundle.
+[JKoolCloud](https://www.jkoolcloud.com) accepts variety of correlators into field `correlator`. These correlators user to relate your 
+event data into connected events bundle.
 
 You set your correlators in the application as session attributes in backing bean:
 
