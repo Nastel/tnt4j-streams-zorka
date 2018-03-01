@@ -55,8 +55,7 @@ import com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
-import com.jkoolcloud.tnt4j.uuid.JUGFactoryImpl;
-import com.jkoolcloud.tnt4j.uuid.UUIDFactory;
+import com.jkoolcloud.tnt4j.uuid.DefaultUUIDFactory;
 
 /**
  * Implements a Zorka traces data processor as activity stream, where each trace data package is assumed to represent a
@@ -119,8 +118,6 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	private ZicoService zicoService = null;
 	private boolean inputEnd = false;
-
-	private UUIDFactory uuidGenerator = new JUGFactoryImpl();
 
 	private final ReentrantLock filterConstructorLock = new ReentrantLock();
 
@@ -306,7 +303,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
 
-			String activityID = uuidGenerator.newUUID();
+			String activityID = DefaultUUIDFactory.getInstance().newUUID();
 			markerActivity.put(StreamFieldType.TrackingId.name(), activityID);
 			markerActivity.put(StreamFieldType.ParentId.name(), parentUUID);
 			markerActivity.put(TNT4J_PROP_EV_TYPE, OpType.ACTIVITY.name());
@@ -317,7 +314,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 			String eventID;
 			if (markerEvent.get(StreamFieldType.TrackingId.name()) == null) {
-				eventID = uuidGenerator.newUUID();
+				eventID = DefaultUUIDFactory.getInstance().newUUID();
 				markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
 			} else {
 				eventID = String.valueOf(markerEvent.get(StreamFieldType.TrackingId.name()));
@@ -336,7 +333,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 			Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
 			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
-				attributeEvent.put(StreamFieldType.TrackingId.name(), uuidGenerator.newUUID());
+				attributeEvent.put(StreamFieldType.TrackingId.name(), DefaultUUIDFactory.getInstance().newUUID());
 			}
 			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
 				addInputToBuffer(attributeEvent);
