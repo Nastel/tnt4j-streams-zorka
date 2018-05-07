@@ -12,9 +12,9 @@
     <name>tnt4j-streams-zorka-dep-install</name>
     <description>Installs TNT4J-Streams-Zorka 3rd party dependencies</description>
 
-    <prerequisites>
-        <maven>3.0.0</maven>
-    </prerequisites>
+    <!--<prerequisites>-->
+    <!--<maven>3.0.0</maven>-->
+    <!--</prerequisites>-->
 
     <properties>
         <zorka.version>1.0.16</zorka.version>
