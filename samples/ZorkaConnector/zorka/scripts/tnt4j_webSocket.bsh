@@ -29,21 +29,37 @@ __java_webSocket() {
         process(rec) {
             StringBuilder sb = new StringBuilder();
             sb.append("{");
-            sb.append("\"ZORKA\": \"TRUE\"");
+            sb.append("\"ZORKA\": true");
             sb.append(", ");
-            sb.append("\"ReceiveTrackingID\": \"");
+            sb.append("\"ReceiveTrackingID\": ");
             String rtid = _TRACKING_RECEIVE.get();
-            sb.append(rtid);
-            sb.append("\", ");
-            sb.append("\"SendTrackingID\": \"");
+            if (rtid != null) {
+                sb.append("\"");
+                sb.append(rtid);
+                sb.append("\", ");
+            } else {
+                sb.append("null, ");
+            }
+            sb.append("\"SendTrackingID\": ");
             String stid = _TRACKING_SEND.get();
-            sb.append(stid);
-            sb.append("\", ");
-            sb.append("\"SESSION_ID\": \"");
+            if (stid != null) {
+                sb.append("\"");
+                sb.append(stid);
+                sb.append("\", ");
+            } else {
+                sb.append("null,  ");
+            }
+            sb.append("\"SESSION_ID\": ");
             String sessionUUID = _SESSION.get();
-            sb.append(sessionUUID);
+            if (sessionUUID != null) {
+                sb.append("\"");
+                sb.append(sessionUUID);
+                sb.append("\" ");
+            } else {
+                sb.append("null  ");
+            }
+            sb.append("}");
             endpoint = rec.get("ENDPOINT");
-            sb.append("\"}");
             rec.put("SendTrackingID", stid);
             endpoint.sendText(sb.toString(), true);
             rec.put("ReceiveTrackingID", rtid);
