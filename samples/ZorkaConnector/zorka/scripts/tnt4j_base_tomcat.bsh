@@ -79,5 +79,5 @@ __tnt4j() {
 
     return this;
 }
-			
+
 tnt4j = __tnt4j();

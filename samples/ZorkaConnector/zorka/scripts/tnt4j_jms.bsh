@@ -23,12 +23,12 @@ zorka.require("tnt4j_base_tomcat.bsh", "javax/jms.bsh");
 
 __javax_jms() {
 
-	_fetchMapTNTProcessor() {
+    _fetchMapTNTProcessor() {
       process(rec) {
         names = rec.get("MAP_NAMES");
         msg = rec.get("MSG");
         if (names != null && msg != null) {
-		  text = "";
+          text = "";
           while (names.hasMoreElements()) {
             name = names.nextElement();
             text = text + name + "=" + msg.getObject(name) + ", ";
@@ -76,6 +76,7 @@ __javax_jms() {
             spy.format("DESTINATION", "${RES:unknown}"),
             tracer.attr("DESTINATION","DESTINATION"),
             spy.format("SEND", "SEND"),
+            tracer.attr("EVENT_TYPE", "SEND"),
             tracer.attr("EVENT_NAME", "SEND"),
             _log ? spy.zorkaLog("DEBUG", "JMS", "#######################send####################") : null,
             tnt4j._attributeTntCorrIds(),
@@ -83,7 +84,8 @@ __javax_jms() {
             tracer.flags(tracer.SUBMIT_TRACE)
         )
         .onReturn(
-            tracer.flags(tracer.SUBMIT_TRACE))
+            tracer.flags(tracer.SUBMIT_TRACE)
+        )
         .include(spy.byInterfaceAndMethod(0, "javax.jms.MessageProducer", "send", "void", "javax.jms.Message"))
     );
 
@@ -98,6 +100,7 @@ __javax_jms() {
             _log ? spy.zorkaLog("DEBUG", "JMS", "#######################send2####################") : null,
             spy.format("SEND", "SEND"),
             tracer.attr("EVENT_NAME", "SEND"),
+            tracer.attr("EVENT_TYPE", "SEND"),
             tnt4j._attributeTntCorrIds(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps,
             tracer.flags(tracer.SUBMIT_TRACE)
@@ -115,10 +118,10 @@ __javax_jms() {
             tracer.attr("DESTINATION","DESTINATION")
         )
         .onReturn(
-            spy.fetchRetVal("MSG"),
             _log ? spy.zorkaLog("DEBUG", "JMS", "#######################receive####################") : null,
             spy.format("RECEIVE", "RECEIVE"),
             tracer.attr("EVENT_NAME", "RECEIVE"),
+            tracer.attr("EVENT_TYPE", "RECEIVE"),
             tnt4j._attributeTntCorrIds(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps,
             tracer.flags(tracer.SUBMIT_TRACE)

@@ -17,82 +17,106 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require("tracer.bsh");
-
 // This file contains instrumentation definitions for Apache httpclient library.
+
+zorka.require(
+  "tracer.bsh"
+);
 
 __nastel_httpclient() {
 
-    zorka.defCfg("tnt4j.log", "no");
-    _log = zorka.boolCfg("tnt4j.log");
+  zorka.defCfg("tnt4j.log", "no");
+  _log = zorka.boolCfg("tnt4j.log");
 
-    response_processor() {
-        process(rec) {
-            method = rec.get("RET");
-            if (method != null) {
-                ihdr = util.get(method, "getAllHeaders");
-                if (method != null && ihdr != null) {
-                    for (hdr : ihdr) {
-                        tracer.newAttr("RespHdr__" + hdr.getName(), ""+hdr.getValue());
-                    }
-                }
+  response_processor() {
+      process(rec) {
+          method = rec.get("RET");
+          if (method != null) {
+            ihdr = util.get(method, "getAllHeaders");
+            if (method != null && ihdr != null) {
+              for (hdr : ihdr) {
+                tracer.newAttr("RespHdr__" + hdr.getName(), ""+hdr.getValue());
+              }
             }
-            return rec;
-        }
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
-    }
+          }
+          return rec;
+      }
+      return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+  }
 
-    spy.add(spy.instrument("NASTEL_HTTPCLIENT_SEND")
-        .onEnter(
-            spy.fetchArg("METHOD", 1),
-            spy.fetchArg("CONNECTION", 0),
-            tracer.begin("HTTP_CLI_SEND"),
-            tracer.formatAttr("URI", "${METHOD.getUri()}"),
-            tracer.formatAttr("HOST", "${CONNECTION.httpHost}"),
-            tracer.formatAttr("METHOD", "${METHOD.getMethod()}")
-        )
-        .onError(tracer.flags(tracer.SUBMIT_TRACE))
-        .onSubmit(
-            _log ? spy.zorkaLog("DEBUG", "HTTP_CLI", "########################HTTP_CLI SEND ####################") : null,
-            tracer.flags(tracer.SUBMIT_TRACE)
-        )
-        .include(spy.byMethod(spy.AC_PUBLIC, "com.nastel.jkool.net.http.**", "sendRequest", "void","com.nastel.jkool.net.http.HttpRequest", "boolean"))
-    );
-
-    headers_processor1() {
-        process(rec) {
-            req = rec.get("REQ");
-            if (req != null && req.getAllHeaders() != null) {
-                for (hdr : req.getAllHeaders()) {
-                    tracer.newAttr("ReqHdr__" + hdr.getName(), ""+hdr.getValue());
-                }
+  paramsProcessor() {
+      process(rec) {
+          met = rec.get("METHOD");
+          uri = met.getUri();
+          try {
+            uriVsParams = uri.toString().split("\\?");
+            tracer.newAttr("URI", uriVsParams[0]);
+            parameters = uriVsParams[1].toString().split("&");
+            for (param : parameters) {
+              keyValue = param.toString().split("=");
+              tracer.newAttr(keyValue[0], keyValue[1]);
             }
-            return rec;
-        }
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
-    }
+          } catch (java.lang.Exception e) {}
+          return rec;
+      }
+      return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+  }
 
-    spy.add(spy.instrument("NASTEL_HTTPCLIENT_GET")
-        .onEnter(
-            tracer.begin("HTTP_CLI_RECEIVE")
-        )
-        .onReturn(
-            spy.fetchRetVal("RET"),
-            /*tracer.formatAttr("CONTENT", "${RET.getContentString()}"), can't do causes internals unstable*/
-            tracer.formatAttr("STATUS", "${RET.getStatus().getCode()}"),
-            response_processor()
-        )
-        .onError(tracer.flags(tracer.SUBMIT_TRACE))
-        .onSubmit(
-            _log ? spy.zorkaLog("DEBUG", "HTTP_CLI", "########################HTTP_CLI RECEIVE  ####################") : null,
-            tracer.flags(tracer.SUBMIT_TRACE)
-        )
-        .include(spy.byMethod(spy.AC_PUBLIC, "com.nastel.jkool.net.http.**", "getResponse", "com.nastel.jkool.net.http.HttpResponse"))
-    );
+  spy.add(
+    spy.instrument("NASTEL_HTTPCLIENT_SEND")
+      .onEnter(
+          spy.fetchArg("METHOD", 1),
+          spy.fetchArg("CONNECTION", 0),
+          tracer.begin("HTTP_CLI_SEND"),
+          tracer.formatAttr("URI", "${METHOD.getUri()}"),
+          paramsProcessor(),
+          tracer.formatAttr("HOST", "${CONNECTION.httpHost}"),
+          tracer.formatAttr("EVENT_TYPE", "SEND"),
+          tracer.formatAttr("METHOD", "${METHOD.getMethod()}")
+      )
+      .onError(tracer.flags(tracer.SUBMIT_TRACE))
+      .onSubmit(
+          _log ? spy.zorkaLog("DEBUG", "HTTP_CLI", "########################HTTP_CLI SEND ####################") : null,
+          tracer.flags(tracer.SUBMIT_TRACE)
+      )
+      .include(spy.byMethod(spy.AC_PUBLIC, "com.nastel.jkool.net.http.**", "sendRequest", "void","com.nastel.jkool.net.http.HttpRequest", "boolean"))
+  );
 
-    tracer.exclude("org.apache.http.**");
+  headers_processor1() {
+      process(rec) {
+          req = rec.get("REQ");
+          if (req != null && req.getAllHeaders() != null) {
+              for (hdr : req.getAllHeaders()) {
+                  tracer.newAttr("ReqHdr__" + hdr.getName(), ""+hdr.getValue());
+              }
+          }
+          return rec;
+      }
+      return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+  }
 
-    return this;
+  spy.add(
+    spy.instrument("NASTEL_HTTPCLIENT_GET")
+      .onEnter(
+          tracer.begin("HTTP_CLI_RECEIVE")
+      )
+      .onReturn(
+          spy.fetchRetVal("RET"),
+          /*tracer.formatAttr("CONTENT", "${RET.getContentString()}"), can't do causes internals unstable*/
+          tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
+          tracer.formatAttr("STATUS", "${RET.getStatus().getCode()}"),
+          response_processor()
+      )
+      .onError(tracer.flags(tracer.SUBMIT_TRACE))
+      .onSubmit(
+          _log ? spy.zorkaLog("DEBUG", "HTTP_CLI", "########################HTTP_CLI RECEIVE  ####################") : null,
+          tracer.flags(tracer.SUBMIT_TRACE)
+      )
+      .include(spy.byMethod(spy.AC_PUBLIC, "com.nastel.jkool.net.http.**", "getResponse", "com.nastel.jkool.net.http.HttpResponse")));
+
+     tracer.exclude("org.apache.http.**");
+
+     return this;
 }
 
 nastel_httpclient = __nastel_httpclient();

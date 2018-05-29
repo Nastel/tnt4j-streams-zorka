@@ -43,5 +43,5 @@ __tnt4j_ldap() {
 
     return this;
 }
-			
+
 tnt4j_ldap = __tnt4j_ldap();

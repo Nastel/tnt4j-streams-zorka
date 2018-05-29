@@ -322,7 +322,18 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 			markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
 			markerEvent.put(StreamFieldType.ParentId.name(), parentUUID);
-			markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
+
+			try {
+				OpType declaredEventType = OpType.valueOf(zorkaActivityRecord.get(TNT4J_PROP_EV_TYPE));
+				if (declaredEventType == null) {
+					markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
+				} else {
+					markerEvent.put(TNT4J_PROP_EV_TYPE, declaredEventType);
+				}
+			} catch (NullPointerException e) {
+				markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
+			}
+
 			addInputToBuffer(markerEvent);
 		}
 

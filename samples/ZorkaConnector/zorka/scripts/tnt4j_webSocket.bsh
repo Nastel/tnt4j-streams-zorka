@@ -24,7 +24,7 @@ __java_webSocket() {
     _SESSION = new ThreadLocal();
     _TRACKING_RECEIVE = new ThreadLocal();
     _TRACKING_SEND = new ThreadLocal();
-	
+
     augment_message() {
         process(rec) {
             StringBuilder sb = new StringBuilder();
@@ -117,7 +117,7 @@ __java_webSocket() {
                 rec.put("MSG", "null");
             }
 
-            return rec;			
+            return rec;
         }
 
         return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
@@ -138,47 +138,81 @@ __java_webSocket() {
 
     spy.add(spy.instrument ("WEB_SOCKET_SEND")
         .onEnter(
+            tracer.begin("WebSocket"),
+            spy.fetchThread("THREAD"),
             spy.fetchArg("MSG", 1),
             spy.fetchArg("ENDPOINT", 0),
-            tracer.begin("WebSocket"),
+            tracer.formatAttr("THREAD", "${THREAD}"),
             augment_message(),
             message_processor(),
             tracer.formatAttr("MARKER", "WebSocket"),
             tracer.formatAttr("METHOD", "WebSocket Send"),
             tracer.formatAttr("EVENT_TYPE", "SEND"),
-            //tracer.attr("TrackingID", "SendTrackingID"),
-            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND####################"),
-            tracer.attr("MSG", "MSG")
+            tracer.attr("TrackingID", "SendTrackingID"),
+            tracer.attr("MSG", "MSG"),
+
+            tracer.formatTraceAttr("WebSocketSend", "MARKER2", "WebSocket"),
+            tracer.formatTraceAttr("WebSocketSend", "METHOD2", "WebSocket Send"),
+            tracer.formatTraceAttr("WebSocketSend", "EVENT_TYPE2", "SEND"),
+            tracer.traceAttr("WebSocketSend", "TrackingID2", "SendTrackingID2"),
+            tracer.traceAttr("WebSocketSend", "MSG2", "MSG"),
+
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND ${MSG} ####################")
         )
         .onReturn(
-            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND RETURN####################"),
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_SEND RETURN####################"),
             tracer.flags(tracer.SUBMIT_TRACE)
+        )
+        .onSubmit(
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################SUBMIT###################")
         )
         .include(
             spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String",
                 "boolean"),
             spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String")
+        ),
+      spy.instrument ("GET_BASIC_REMOTE")
+        .onEnter(
+            tracer.begin("WebSocketSend"),
+            spy.fetchThread("THREAD"),
+            tracer.formatAttr("THREAD", "${THREAD}"),
+            spy.fetchArg("WS_SESSION", 0),
+            spy.call("WS_SESSION", "SESSION_ID", "getHttpSessionId"),
+            tracer.formatTraceAttr("WebSocketSend", "SESSION" ,  "${SESSION_ID}"),
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################ON WsSession ${WS_SESSION} id ${SESSION_ID}, ${WS_SESSION.getHttpSessionId()}   ####################")
+        )
+        .include(
+            spy.byMethod("org.apache.tomcat.websocket.WsSession", "getBasicRemote")
+        )
+        .onReturn(
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################GET_BASIC_REMOTE RETURN####################")
+        )
+        .onSubmit(
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################GET_BASIC_REMOTE SUBMIT###################")
         )
     );
-
+ 
     spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
         .onEnter(
             spy.fetchArg("MESSAGE_HANDLER", 0),
             spy.fetchArg("MSG", 1),
+
             tracer.begin("WebSocket"),
+            spy.fetchThread("THREAD"),
+            tracer.formatAttr("THREAD", "${THREAD}"),
             message_processor(),
             augment_message_session(),
-            // spy.format("SESSION", "${MESSAGE_HANDLER.session.getHttpSessionId()}" ),
+            spy.format("SESSION", "${MESSAGE_HANDLER.session.getHttpSessionId()}"),
             tracer.formatAttr("MARKER", "WebSocket"),
             tracer.formatAttr("METHOD", "WebSocket Receive"),
             tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
             tracer.attr("TrackingID", "ReceiveTrackingID"),
-            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE####################"),
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE####################"),
             tracer.attr("SESSION", "SESSION"),
             tracer.attr("MSG", "MSG")
         )
         .onReturn(
-            //spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE RETURN####################"),
+            spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################WEB_SOCKET_RECEIVE RETURN####################"),
             tracer.flags(tracer.SUBMIT_TRACE)
         )
         .include(
@@ -186,6 +220,14 @@ __java_webSocket() {
             spy.byInterface("javax.websocket.MessageHandler$Whole")
         )
     );
+
+    tracer.include(spy.byMethod("org.apache.tomcat.websocket.WsSession", "getBasicRemote"));
+    tracer.include(
+        spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String", "boolean"),
+        spy.byInterfaceAndMethod(0, "javax.websocket.RemoteEndpoint$Basic", "sendText", "void", "java.lang.String")
+    );
+    tracer.exclude("com.jayway**");
+    tracer.exclude("com.antlr**");
 
     //tracer.include("com.slabs.jsfManaged.**", "org.apache.tomcat.websocket.**");
 

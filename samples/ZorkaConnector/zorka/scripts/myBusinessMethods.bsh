@@ -36,5 +36,5 @@ __my_business() {
 
     return this;
 }
-			
+
 my_business = __my_business();

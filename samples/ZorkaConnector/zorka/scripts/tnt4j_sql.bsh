@@ -34,16 +34,16 @@ __tnt4j_sql() {
                 tracer.attr("ERROR", "YES"),
                 tracer.attr("EXCEPTION", "EXCEPTION")
             )
-		    .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
-		        spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")
-		    )
-	);
+            .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"),
+                spy.byMethod("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
+                spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
+                spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
+                spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
+                spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")
+            )
+    );
 
     return this;
 }
-			
+
 tnt4j_sql = __tnt4j_sql ();

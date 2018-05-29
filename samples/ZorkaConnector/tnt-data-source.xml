@@ -4,6 +4,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Nastel/tnt4j-streams/master/config/tnt-data-source.xsd">
 
     <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+        <field name="ApplName" value="HTTP"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" separator=",">
@@ -42,9 +43,12 @@
             <field-map source="500:511" target="ERROR" type="Range"/>
         </field>
         <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
+        <field name="a" locator="STATUS" locator-type="Label"/>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
+        <field name="ApplName" value="SQL"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -55,7 +59,7 @@
 
         <field name="Severity" locator="ERROR" locator-type="Label">
             <field-map source="YES" target="ERROR"/>
-            <field-map source="" target="SUCCESS"/>
+            <field-map source="" target="INFO"/>
         </field>
 
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -69,7 +73,7 @@
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="DB" locator-type="Label"/>
@@ -78,11 +82,13 @@
             <field-locator locator="SQL" locator-type="Label"/>
             <field-locator locator="DB" locator-type="Label"/>
         </field>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="ApplName" value="LDAP"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
@@ -94,7 +100,7 @@
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" separator=",">
@@ -102,10 +108,12 @@
             <field-locator locator="DC" locator-type="Label"/>
             <field-locator locator="NAME" locator-type="Label"/>
         </field>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
             tags="WS_TNT4J_STREAMS_TRACKER">
+        <field name="ApplName" value="WEBSERVICE"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -119,7 +127,7 @@
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="ResourceName" locator="MARKER" locator-type="Label"/>  <!-- resource name value-->
@@ -128,11 +136,13 @@
             <field-locator locator="SOAP_ACTION" locator-type="Label"/>
             <field-locator locator="SOAP_METHOD" locator-type="Label"/>
         </field>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
             tags="JMS_TNT4J_STREAMS_TRACKER">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
+        <field name="ApplName" value="APACHE_MQ"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
@@ -147,7 +157,7 @@
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
 
         <field name="Message" separator=",">
@@ -157,12 +167,14 @@
             <field-locator locator="PERSIST" locator-type="Label"/>
             <field-locator locator="REDELIVERY" locator-type="Label"/>
         </field>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
         <!--    <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/> -->
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
+        <field name="ApplName" value="WEBSOCKET"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="CompCode" locator="ERROR" locator-type="Label">
             <field-map source="YES" target="ERROR"/>
@@ -170,7 +182,7 @@
         </field>
         <field name="Severity" locator="ERROR" locator-type="Label">
             <field-map source="YES" target="ERROR"/>
-            <field-map source="" target="SUCCESS"/>
+            <field-map source="" target="INFO"/>
         </field>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds"
                locator-type="Label"/>
@@ -182,9 +194,10 @@
             <!--<field-locator locator="MESSAGE_ID" locator-type="Label"/>-->
         </field>
         <field name="SESSIONID" locator="SESSION" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <field name="Message" locator="MSG" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
@@ -202,10 +215,11 @@
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
-        <field name="ParentId" locator="ParentId" locator-type="Label"/>
+        <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="Level" locator="Level" locator-type="Label"/>
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
+        <field name="all" locator="*" locator-type="Label"/>
     </parser>
 
     <parser name="JMXDataParser" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
