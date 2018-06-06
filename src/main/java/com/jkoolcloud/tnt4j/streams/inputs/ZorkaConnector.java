@@ -296,9 +296,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		Map<Integer, Object> attrs = parentRec.getAttrs();
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
-			Map<String, Object> markerActivity = new HashMap<>();
 			Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
-			markerActivity.putAll(zorkaActivityRecord);
+			Map<String, Object> markerActivity = new HashMap<>(zorkaActivityRecord);
 
 			addDefaultTraceAttributes(markerActivity, parentRec);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
@@ -340,22 +339,23 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		Map<String, Object> translatedTrace = new HashMap<>();
 		addDefaultTraceAttributes(translatedTrace, parentRec);
 
+		translatedTrace.put(StreamFieldType.ParentId.name(), parentUUID);
+		translatedTrace.put(TNT4J_PROP_LEVEL, level);
+
 		if (attrs != null) {
 			Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
 			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				attributeEvent.put(StreamFieldType.TrackingId.name(), DefaultUUIDFactory.getInstance().newUUID());
 			}
-			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
-				addInputToBuffer(attributeEvent);
-			}
+			// if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
+			// addInputToBuffer(attributeEvent);
+			// }
 		}
 
 		// ** FOR TRACE TREE ** ACTIVITIES NEEDED IN EUM
 		// String eventID = uuidGenerator.newUUID();
 		// translatedTrace.put(StreamFieldType.TrackingId.name (), eventID);
-		translatedTrace.put(StreamFieldType.ParentId.name(), parentUUID);
-		translatedTrace.put(TNT4J_PROP_LEVEL, level);
 
 		addInputToBuffer(translatedTrace);
 		if (children == null) {
