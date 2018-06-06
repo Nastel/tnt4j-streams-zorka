@@ -1,0 +1,103 @@
+[
+    {
+        "d-0048d7fd-43dc-0fd6-6f1f67cfc66b": {
+            "removedViewletIds": "[]",
+            "dashboardDefinations": {
+                "d-0048d7fd-43dc-0fd6-6f1f67cfc66b": {
+                    "noOfColumnsOnPage": 1,
+                    "viewletDefinations": [
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widgete1b8e4d6-ac68-0e9e-70f9171a9bb8\":{\"viewletName\":\"Resources\",\"viewletQuery\":\"Get number of Event for This Day where EventName = 'KAFKA_SEND' group by resource show as summary\",\"viewletType\":\"summary\",\"position\":{\"column\":\"center\",\"row\":0},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widgetcd19cf93-fa00-cf8a-4b51aeb7328a\":{\"viewletName\":\"Viewlet 13\",\"viewletQuery\":\"get number of Event for today where EventName = 'KAFKA_RECEIVE' group by Properties('SERIALIZEDVALUESIZE') bucketed by COUNT 12 show as colchart\",\"viewletType\":\"colchart\",\"position\":{\"row\":3,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"I:Properties('SERIALIZEDVALUESIZE')\",\"label\":\"SERIALIZEDVALUESIZE\",\"name\":\"Properties('SERIALIZEDVALUESIZE')\",\"type\":\"RANGE(INTEGER)\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget427e1e0d-671a-c4c9-beaa5a29242e\":{\"viewletName\":\"Send vs Receive\",\"viewletQuery\":\"get number of Event fields Min(ElapsedTime), Avg(ElapsedTime), Max(ElapsedTime) for This Day where EventName CONTAINS 'KAFKA' group by EventName show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":1,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"EventName\",\"label\":\"EventName\",\"name\":\"EventName\",\"type\":\"STRING\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget4d708f7e-58ba-bedd-da8779c5f3e9\":{\"viewletName\":\"Topics\",\"viewletQuery\":\"get number of Event for This Day where EventName CONTAINS 'KAFKA' AND EventName = 'KAFKA_SEND' group by ResourceName show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":2,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"ResourceName\",\"label\":\"ResourceName\",\"name\":\"ResourceName\",\"type\":\"STRING\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget9d2ea41c-21cd-fcaf-c5b6ac7e2891\":{\"viewletName\":\"Viewlet 14\",\"viewletQuery\":\"get number of Event group by Properties('type') show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":4,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":false,\"frequency\":20,\"windowSize\":50}}}"
+                        }
+                    ],
+                    "panelSize": {},
+                    "pageId": "d-0048d7fd-43dc-0fd6-6f1f67cfc66b",
+                    "pageName": "zorka_KAFKA",
+                    "removedViewletDefinations": []
+                }
+            },
+            "viewletIds": "[\"widget427e1e0d-671a-c4c9-beaa5a29242e\",\"widget4d708f7e-58ba-bedd-da8779c5f3e9\",\"widgetcd19cf93-fa00-cf8a-4b51aeb7328a\",\"widgete1b8e4d6-ac68-0e9e-70f9171a9bb8\",\"widget9d2ea41c-21cd-fcaf-c5b6ac7e2891\"]"
+        }
+    },
+    {
+        "d-f144d6a1-262f-8412-0e5d6fea9b25": {
+            "removedViewletIds": "[]",
+            "dashboardDefinations": {
+                "d-f144d6a1-262f-8412-0e5d6fea9b25": {
+                    "noOfColumnsOnPage": 1,
+                    "viewletDefinations": [
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget69510002-efd8-0650-b1f40c0a3d5c\":{\"viewletName\":\"Viewlet 12\",\"viewletQuery\":\"get number of Event fields Min(ElapsedTime), Avg(ElapsedTime), Max(ElapsedTime) where EventName = 'JMS_SEND' group by Properties('DESTINATION') show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":2,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"S:Properties('DESTINATION')\",\"label\":\"DESTINATION\",\"name\":\"Properties('DESTINATION')\",\"type\":\"STRING\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget38b90256-3467-6c18-1a13450eba22\":{\"viewletName\":\"Viewlet 11\",\"viewletQuery\":\"get number of events group by name\",\"viewletType\":\"table\",\"position\":{\"row\":1,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"data\":{\"hiddenColumns\":[]}}}}"
+                        }
+                    ],
+                    "panelSize": {},
+                    "pageId": "d-f144d6a1-262f-8412-0e5d6fea9b25",
+                    "pageName": "zorka_ACTIVEMQ",
+                    "removedViewletDefinations": []
+                }
+            },
+            "viewletIds": "[\"widget38b90256-3467-6c18-1a13450eba22\",\"widget69510002-efd8-0650-b1f40c0a3d5c\"]"
+        }
+    },
+    {
+        "d-8ffe830d-b3a6-f271-0491fa41079d": {
+            "removedViewletIds": "[]",
+            "dashboardDefinations": {
+                "d-8ffe830d-b3a6-f271-0491fa41079d": {
+                    "noOfColumnsOnPage": 2,
+                    "viewletDefinations": [
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget0afdd844-298b-5767-671eb399d380\":{\"viewletName\":\"REQUESTS-Copy\",\"viewletQuery\":\"get number of Event fields Min(ElapsedTime), Avg(ElapsedTime), Max(ElapsedTime) for This Hour where EventName = 'HTTP_CLI_SEND' group by Properties('URI') show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":3,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"S:Properties('URI')\",\"label\":\"URI\",\"name\":\"Properties('URI')\",\"type\":\"STRING\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget48f35412-fedc-de6b-0abb12183d59\":{\"viewletName\":\"STATUS\",\"viewletQuery\":\"get number of Event for Latest Hour where EventName = 'HTTP_CLI_RECEIVE' group by Properties('STATUS') show as table\",\"viewletType\":\"table\",\"position\":{\"row\":2,\"column\":\"east\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"data\":{\"hiddenColumns\":[]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget5a8618fe-eb8a-295f-b21b4733dc19\":{\"viewletName\":\"REQUESTS\",\"viewletQuery\":\"get number of Event for This Hour where EventName = 'HTTP_CLI_SEND' group by Properties('URI') show as piechart\",\"viewletType\":\"piechart\",\"position\":{\"row\":1,\"column\":\"east\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"S:Properties('URI')\",\"label\":\"URI\",\"name\":\"Properties('URI')\",\"type\":\"STRING\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"NumberOf\",\"label\":\"Events Count\",\"name\":\"NumberOf\",\"type\":\"INTEGER\",\"dbField\":null,\"fields\":null}]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widgetd5ef8d9e-852f-455a-1fa449ef270f\":{\"viewletName\":\"Resource req\",\"viewletQuery\":\"get number of Event fields Min(ElapsedTime), Max(ElapsedTime), Avg(ElapsedTime) for This Day where EventName = 'HTTP' group by ResourceName show as table\",\"viewletType\":\"table\",\"position\":{\"row\":2,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"data\":{\"hiddenColumns\":[]}}}}"
+                        },
+                        {
+                            "Version": 2,
+                            "viewletDefinations": "{\"widget9d2de151-1160-cf73-da8f9ee2ffdd\":{\"viewletName\":\"Viewlet 10\",\"viewletQuery\":\"get Event fields ElapsedTime, StartTime, Properties('RespHdr__Content-Length') for Latest 3 Minutes where EventName = 'HTTP_CLI_RECEIVE' order by StartTime show as linechart\",\"viewletType\":\"linechart\",\"position\":{\"row\":1,\"column\":\"center\"},\"size\":340,\"settings\":{},\"realTimeSettings\":{\"isOn\":true,\"frequency\":20,\"windowSize\":50},\"chartSettings\":{\"legend\":{\"isVisible\":true},\"axes\":{\"x\":[{\"header\":\"StartTime\",\"label\":\"StartTime\",\"name\":\"StartTime\",\"type\":\"TIMESTAMP\",\"dbField\":null,\"fields\":null}],\"y\":[{\"header\":\"ElapsedTime\",\"label\":\"ElapsedTime\",\"name\":\"ElapsedTime\",\"type\":\"TIMEINTERVAL\",\"dbField\":null,\"fields\":null}]}}}}"
+                        }
+                    ],
+                    "panelSize": {
+                        "east": "45.26"
+                    },
+                    "pageId": "d-8ffe830d-b3a6-f271-0491fa41079d",
+                    "pageName": "zorka_HTTP",
+                    "removedViewletDefinations": []
+                }
+            },
+            "viewletIds": "[\"widget0afdd844-298b-5767-671eb399d380\",\"widget48f35412-fedc-de6b-0abb12183d59\",\"widget5a8618fe-eb8a-295f-b21b4733dc19\",\"widget9d2de151-1160-cf73-da8f9ee2ffdd\",\"widgetd5ef8d9e-852f-455a-1fa449ef270f\"]"
+        }
+    }
+]
