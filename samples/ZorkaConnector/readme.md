@@ -15,8 +15,8 @@ Zorka and TNT4J-streams integration
 
 TNT4J-streams works as Zorka's traces collector.
 
-To work with TNT4J-streams you need to send the traces. There are some out-of the box configuration samples
-that work instrumenting Tomcat Web Server, MySQL, WebServices, LDAP, JMS.
+To work with TNT4J-streams you need to send the traces. There are some out-of the box configuration samples that work instrumenting Tomcat 
+Web Server, MySQL, WebServices, LDAP, JMS.
 
 TNT4J-streams collects whole trace attributes and sends to [JKoolCloud](https://www.jkoolcloud.com).
 
@@ -43,8 +43,8 @@ General architecture in short
                        JKoolCloud
 ```
 
-Zorka works as *java agent* in JVM by transforming and instrumenting your application classes the way you have
-defined in Zorka scripts and Zorka configuration file `zorka.properties`.
+Zorka works as *java agent* in JVM by transforming and instrumenting your application classes the way you have defined in Zorka scripts and 
+Zorka configuration file `zorka.properties`.
 
 Zorka preparing Traces, and transporting these traces by means of binding socket to TNT4J-Streams Zorka connector.
 TNT4J-Streams is parsing these traces the way you have defined your tnt-data-source.xml configuration file.
@@ -57,20 +57,18 @@ Zorka Setup
 Starting application with Zorka Agent
 -------------------------------------
 
-In order to start Apache Tomcat server with Zorka agent
-you need to add following command line arguments:
-
-* `-javaagent:<zorka.path>zorka.jar -Dzorka.home.dir=<zorka.path>`
-
+In order to start Apache Tomcat server with Zorka agent you need to add following command line arguments:
+```cmd
+   -javaagent:<zorka.path>zorka.jar -Dzorka.home.dir=<zorka.path>
+```
 
 Zorka configuration
 -------------------
 
-Depending on your configuration you need to setup your Zorka agent to instrument (spy) methods
-needed.
+Depending on your configuration you need to setup your Zorka agent to instrument (spy) methods needed.
 
 The basic approach configuring zorka:
-	*	Add `*.bsh` script to zorka configuration file `zorka.properties` 
+	*	Add `*.bsh` script to zorka configuration file `zorka.properties`
 	*	Configure the script itself
 
 For example if your Web Server is Apache's Tomcat and you use MySQL your configuration may look like:
@@ -93,17 +91,17 @@ For example if your Web Server is Apache's Tomcat and you use MySQL your configu
 
 You need to configure `tracer.min.trace.time` and `tracer.min.method.time` to exclude fast traces.
 
-Zorka sends traces as trace records, each labeled with trace Marker. TNT4J streams looks for trace head and 
-collects all attributes in trace. These attributes is sent by Zorka depending on Zorka's tracer configuration.
-Trace attributes contains human readable useful process information.
+Zorka sends traces as trace records, each labeled with trace Marker. TNT4J streams looks for trace head and collects all attributes in 
+trace. These attributes is sent by Zorka depending on Zorka's tracer configuration. Trace attributes contains human readable useful process 
+information.
 
 ### Zorka SQL configuration
 
-SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query 
-application performing, database and other valuable information. Trace is retrieved attributes map.
+SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query application performing, database and other 
+valuable information. Trace is retrieved attributes map.
 
 To add SQL traces to your [JKoolCloud](https://www.jkoolcloud.com) you need to configure zorka.properties to send SQL traces.
-First of all you need to add `tnt4j_sql.bsh` script to your's configuration. 
+First of all you need to add `tnt4j_sql.bsh` script to your's configuration.
 
 ```properties
     scripts = tnt4j_sql.bsh
@@ -169,8 +167,7 @@ As in other scripts property `jms.trace.time` is your choice.
 
 To fetch actual message text use `jms.fetch.text = yes`.
 
-NOTE: in default Zorka configuration message's text hidden.
-
+**NOTE:** in default Zorka configuration message's text hidden.
 
 Correlators
 -----------
@@ -178,11 +175,9 @@ Correlators
 All TNT4J streams comes with example Zorka script to collect and share [JKoolCloud](https://www.jkoolcloud.com) correlation ID's in Tomcat 
 server with MySQL database. You may need expand this script to share correlators with other services. 
 
-Basically you will need get these Id from application server, from request's session data, where they are stored. And
-you need these values saved to ThreadLocal. Each service you want to share correlators you need to find class you're
-interested to trace and add these correlators. You may look for Zorka example scripts in
-`zorka.jar\com\jitlogic\zorka\scripts\`
-
+Basically you will need get these Id from application server, from request's session data, where they are stored. And you need these values 
+saved to ThreadLocal. Each service you want to share correlators you need to find class you're interested to trace and add these 
+correlators. You may look for Zorka example scripts in `zorka.jar\com\jitlogic\zorka\scripts\`:
 ```java
     spy.add(
         spy.instrument("SQL_TNT4J_STREAMS")
@@ -192,7 +187,7 @@ interested to trace and add these correlators. You may look for Zorka example sc
             tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
             tracer.attr("JK_CORR_SID", "JK_CORR_SID")
          )
-         .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"))));
+        .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"))));
 
 ```
 
@@ -215,8 +210,7 @@ Zorka traces are forwarded as `java.util.Map`. It is advisable to use
 
 TNT4J-Streams parser is used to transform Zorka Traces to TNT4J activity events.
 
-In the sample configuration there are defined several out of the box parser configurations
-to use with sample scripts. 
+In the sample configuration there are defined several out of the box parser configurations to use with sample scripts.
 
 In a single `tnt-data-source.xml` configuration file there are defined several parser rules, tnt4j-stream determines
 witch parser to use by **tags** property:
@@ -227,38 +221,32 @@ witch parser to use by **tags** property:
 
 The **tags** is compared to Zorka's trace *MARKER* keys Value. Once it comply's, the defined parser is used.
 
-As for general you need no change, but as for going deeper inside Zorka scripts the *MARKER* key is inherited from
-line:
+As for general you need no change, but as for going deeper inside Zorka scripts the *MARKER* key is inherited from line:
 ```java
     tarcer.begin("YOUR_CUSTOM_MARKER_GOES_HERE")
 ```
 
 ### Attributes to Fields
 
-To bind Zorka's trace attribute to JKool activity event field simply use locator of type `Label`.
-Field name represents JKool activity event field name to bind, and locator value - trace attribute from witch
-the field is parsed/mapped from.
+To bind Zorka's trace attribute to JKool activity event field simply use locator of type `Label`. Field name represents JKool activity 
+event field name to bind, and locator value - trace attribute from witch the field is parsed/mapped from.
 
 ```xml
     <field name="EventFieldName" locator="MARKER" locator-type="Label"/>
 ```
 
 For date/time related trace attributes use one of these:
-
 * For Unix time stamp
-
 ```xml
     <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
 ```
 
 * For Formatted date
-
 ```xml
     <field name="EndTime" locator="TSTAMP" locator-type="Label" datatype="DateTime" format="yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'" timezone="GMT"/>
 ```
 
-To map attributes values use: 
-	
+To map attributes values use:	
 ```xml
     <field name="CompCode" locator="STATUS" locator-type="Label">
     <field-map source="100" target="SUCCESS"/>
@@ -272,13 +260,11 @@ In Zorka scripts mapped values are defined as trace attributes `tracer.attr("ERR
 
 Where first argument of  method *attr* is the name of attribute you're getting in Zorka trace.
 
-
-
 #### Zorka Connector
 
-This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico
-service as listener (client) depending on defined configuration. Default is `localhost:8640`.
-Most basic way to use sample is to send Http request to Zorka monitored Tomcat server.
+This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico service as listener 
+(client) depending on defined configuration. Default is `localhost:8640`. Most basic way to use sample is to send Http request to Zorka 
+monitored Tomcat server.
 
 Sample files can be found in `samples/ZorkaConnector` directory.
 
@@ -286,34 +272,34 @@ How to use and configure Zorka, see [`samples/ZorkaConnector/readme.md`](samples
 
 Sample stream configuration: [tnt-data-source.xml](./tnt-data-source.xml)
 
-Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`,
-`ZorkaWebService`, `ZorkaJMS`, `ZorkaWebSocket` and `ZorkaTrace` shall be used.
+Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`, `ZorkaWebService`, `ZorkaJMS`, 
+`ZorkaWebSocket`, `ZorkaKafka` and `ZorkaTrace` shall be used.
 
-`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property
-indicates that stream should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map`
-data structure and puts it to buffer queue to be processed by referenced parsers. Note that parsers uses attribute
-`tags` to map concrete parser with received trace over trace attribute `MARKER`.
+`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property indicates that stream 
+should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map` data structure and puts it to buffer 
+queue to be processed by referenced parsers. Note that parsers uses attribute `tags` to map concrete parser with received trace over trace 
+attribute `MARKER`.
 
-`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is
-`HTTP`, thus parser `tags` value should be same.
+`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is 
+`HTTP_CLI_SEND,HTTP_CLI_RECEIVE,HTTP`, thus parser `tags` value should be same.
 
-`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is
-`SQL`.
+`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is `SQL`.
 
-`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is
-`LDAP`.
+`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is `LDAP`.
 
-`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service
- trace marker is `WS_TNT4J_STREAMS_TRACKER`.
+`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service  trace marker is 
+`WS_TNT4J_STREAMS_TRACKER`.
 
-`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is
-`JMS_TNT4J_STREAMS_TRACKER`.
+`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is 
+`JMS_TNT4J_STREAMS_TRACKER,JMS_RECEIVE,JMS_SEND`.
 
-`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace
-marker is `WebSocket`.
+`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace marker is 
+`WebSocket`.
 
-`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace
-marker is `TRACE`.
+`ZorkaKafka` parser is used to fill activity event fields from Apache Kafka trace attributes map data. WebSocket trace marker is 
+`KAFKA_RECEIVE,KAFKA_SEND`.
+
+`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace marker is `TRACE`.
 
 Activity event mapped fields:
 
@@ -336,3 +322,12 @@ Additional fields can be mapped on user demand.
 Custom fields values defined in parser fields mapping can be found as activity event properties.
 
 **NOTE:** Stream stops only when critical runtime error/exception occurs or application gets terminated.
+
+# JKool UI for Zorka
+
+## Importing dashboard into your JKool repository
+
+You can import provided Dashboards into JKool:
+* Login your `jkool.jkoolcloud.com`
+* menu -> import/export -> dashboards -> import -> import dashboards -> chose file
+* select dashboard file from `samples/ZorkaConnector/dashboards` directory
