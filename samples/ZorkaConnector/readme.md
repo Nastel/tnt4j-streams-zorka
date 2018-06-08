@@ -277,8 +277,8 @@ Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP
 
 `ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property indicates that stream 
 should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map` data structure and puts it to buffer 
-queue to be processed by referenced parsers. Note that parsers uses attribute `tags` to map concrete parser with received trace over trace 
-attribute `MARKER`.
+queue to be processed by referenced parsers. **Note** that parsers uses attribute `tags` to map corresponding parser and trace data over 
+received trace data attribute `MARKER`.
 
 `ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is 
 `HTTP_CLI_SEND,HTTP_CLI_RECEIVE,HTTP`, thus parser `tags` value should be same.
