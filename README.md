@@ -1,7 +1,7 @@
 # tnt4j-streams-zorka
 TNT4J transaction &amp; method tracing streams for Java.
 
-TNT4J-Streams-Zorka is extension of TNT4J-Streams to give ability of streaming Zorka traces as activity events to [JKoolCloud](https://www.jkoolcloud.com).
+TNT4J-Streams-Zorka is extension of TNT4J-Streams to give ability of streaming Zorka traces as activity events to [jKoolCloud](https://www.jkoolcloud.com).
 
 TNT4J-Streams-Zorka is under GPLv3 license as Zorka itself.
 

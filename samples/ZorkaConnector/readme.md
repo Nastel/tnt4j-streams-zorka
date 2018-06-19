@@ -18,7 +18,7 @@ TNT4J-streams works as Zorka's traces collector.
 To work with TNT4J-streams you need to send the traces. There are some out-of the box configuration samples that work instrumenting Tomcat 
 Web Server, MySQL, WebServices, LDAP, JMS.
 
-TNT4J-streams collects whole trace attributes and sends to [JKoolCloud](https://www.jkoolcloud.com).
+TNT4J-streams collects whole trace attributes and sends to [jKoolCloud](https://www.jkoolcloud.com).
 
 
 General architecture in short
@@ -40,7 +40,7 @@ General architecture in short
                    (Activity events)
                            |
                            v
-                       JKoolCloud
+                       jKoolCloud
 ```
 
 Zorka works as *java agent* in JVM by transforming and instrumenting your application classes the way you have defined in Zorka scripts and 
@@ -48,7 +48,7 @@ Zorka configuration file `zorka.properties`.
 
 Zorka preparing Traces, and transporting these traces by means of binding socket to TNT4J-Streams Zorka connector.
 TNT4J-Streams is parsing these traces the way you have defined your tnt-data-source.xml configuration file.
-Once parsed TNT4J streams activity events are generated and send over the network to [JKoolCloud](https://www.jkoolcloud.com) account store.
+Once parsed TNT4J streams activity events are generated and send over the network to [jKoolCloud](https://www.jkoolcloud.com) account store.
 You define your Token in `tnt4j.properties` file.
 
 Zorka Setup
@@ -100,7 +100,7 @@ information.
 SQL traces enable you to see SQL queries within application. SQL traces gives you SQL query application performing, database and other 
 valuable information. Trace is retrieved attributes map.
 
-To add SQL traces to your [JKoolCloud](https://www.jkoolcloud.com) you need to configure zorka.properties to send SQL traces.
+To add SQL traces to your [jKoolCloud](https://www.jkoolcloud.com) you need to configure zorka.properties to send SQL traces.
 First of all you need to add `tnt4j_sql.bsh` script to your's configuration.
 
 ```properties
@@ -123,7 +123,7 @@ More information about zorka's configuration can be found on [Zorka guide](http:
 
 ### Zorka LDAP configuration
 
-In order you need LDAP traces in your [JKoolCloud](https://www.jkoolcloud.com), you:
+In order you need LDAP traces in your [jKoolCloud](https://www.jkoolcloud.com), you:
 * Add `tnt4j_ldap.bsh` to *scripts* in zorka.properties file
 * Configure LDAP trace:
 
@@ -158,9 +158,9 @@ In order you need LDAP traces in your [JKoolCloud](https://www.jkoolcloud.com), 
     jms.fetch.all = yes				;  <-- This one neabled gives you all of bellow fetched
     jms.fetch.attrs = yes			;  <-- Fetch JMS message atributes as "ID", "TSTAMP", "CORRELATION",
                                     ;	"PERSIST", "REDELIVERY", "JMSTYPE", "PRIORITY", "EXPIRATION"
-                                    ; CORRELATION is particularly important and gives extra correlator available on JKoolCloud
-    jms.fetch.map = yes				;  <-- Fetches JMS MAP message content to JKoolsCloud message field
-    jms.fetch.text = yes			;  <-- Fetches JMS Text message to JKoolsCloud message field
+                                    ; CORRELATION is particularly important and gives extra correlator available on jKoolCloud
+    jms.fetch.map = yes				;  <-- Fetches JMS MAP message content to jKoolCloud message field
+    jms.fetch.text = yes			;  <-- Fetches JMS Text message to jKoolCloud message field
 ```
 
 As in other scripts property `jms.trace.time` is your choice.
@@ -172,7 +172,7 @@ To fetch actual message text use `jms.fetch.text = yes`.
 Correlators
 -----------
 
-All TNT4J streams comes with example Zorka script to collect and share [JKoolCloud](https://www.jkoolcloud.com) correlation ID's in Tomcat 
+All TNT4J streams comes with example Zorka script to collect and share [jKoolCloud](https://www.jkoolcloud.com) correlation ID's in Tomcat 
 server with MySQL database. You may need expand this script to share correlators with other services. 
 
 Basically you will need get these Id from application server, from request's session data, where they are stored. And you need these values 
@@ -228,7 +228,7 @@ As for general you need no change, but as for going deeper inside Zorka scripts 
 
 ### Attributes to Fields
 
-To bind Zorka's trace attribute to JKool activity event field simply use locator of type `Label`. Field name represents JKool activity 
+To bind Zorka's trace attribute to jKool activity event field simply use locator of type `Label`. Field name represents jKool activity 
 event field name to bind, and locator value - trace attribute from witch the field is parsed/mapped from.
 
 ```xml
@@ -323,11 +323,11 @@ Custom fields values defined in parser fields mapping can be found as activity e
 
 **NOTE:** Stream stops only when critical runtime error/exception occurs or application gets terminated.
 
-# JKool UI for Zorka
+# jKool UI for Zorka
 
-## Importing dashboard into your JKool repository
+## Importing dashboard into your jKool repository
 
-You can import provided Dashboards into JKool:
+You can import provided Dashboards into jKool:
 * Login your `jkool.jkoolcloud.com`
 * menu -> import/export -> dashboards -> import -> import dashboards -> chose file
 * select dashboard file from `samples/ZorkaConnector/dashboards` directory

@@ -29,7 +29,7 @@ import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
 
 /**
- * {@link TraceRecord} filter for filtering method traces by maximum number of trace records to send to JKoolCloud.
+ * {@link TraceRecord} filter for filtering method traces by maximum number of trace records to send to jKoolCloud.
  * Filter checks {@link TraceRecord} for most time consuming methods and filter out branches that's not relevant for
  * parent method time.
  *
