@@ -8,5 +8,5 @@ fi
 TOOLS_PATH="$JAVA_HOME/lib/tools.jar"
 export PATH="$PATH:$JAVA_HOME/jre/bin/"
 LIBPATH="$SCRIPTPATH/../*:$SCRIPTPATH/../lib/*:$TOOLS_PATH"
-java -classpath "$LIBPATH" com.jkoolcloud.tnt4j.streams.utils.ZorkaAttach $1 $2
+"$JAVA_HOME/bin/java" -classpath "$LIBPATH" com.jkoolcloud.tnt4j.streams.utils.ZorkaAttach $1 $2
 ./tnt4j-streams.sh $3
