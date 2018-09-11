@@ -486,11 +486,10 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 ```
     lib
      + zorka
-         + 1.0.15
-             |- zico-util.jar
-             |- zorka.jar
          + 1.0.16
              |- zico-util.jar
+             |- zorka.jar
+         + 1.0.17
              |- zorka.jar 
 ```
 (O) marked libraries are optional

@@ -17,7 +17,8 @@
     <!--</prerequisites>-->
 
     <properties>
-        <zorka.version>1.0.16</zorka.version>
+        <zico.version>1.0.16</zico.version>
+        <zorka.version>1.0.17</zorka.version>
     </properties>
 
     <build>
@@ -37,9 +38,9 @@
                         <configuration>
                             <groupId>com.jitlogic.zico</groupId>
                             <artifactId>zico-util</artifactId>
-                            <version>${zorka.version}</version>
+                            <version>${zico.version}</version>
                             <packaging>jar</packaging>
-                            <file>zorka/${zorka.version}/zico-util.jar</file>
+                            <file>zorka/${zico.version}/zico-util.jar</file>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
