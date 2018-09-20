@@ -20,7 +20,6 @@ Web Server, MySQL, WebServices, LDAP, JMS.
 
 TNT4J-streams collects whole trace attributes and sends to [jKoolCloud](https://www.jkoolcloud.com).
 
-
 General architecture in short
 -----------------------------
 
@@ -131,7 +130,7 @@ In order you need LDAP traces in your [jKoolCloud](https://www.jkoolcloud.com), 
     ldap.trace = yes
     ldap.trace.time = 0
 ```
- 
+
 ### Zorka WebServices configuration
 
 * Add `tnt4j_webService.bsh` to *scripts* in zorka.properties file.
@@ -173,7 +172,7 @@ Correlators
 -----------
 
 All TNT4J streams comes with example Zorka script to collect and share [jKoolCloud](https://www.jkoolcloud.com) correlation ID's in Tomcat 
-server with MySQL database. You may need expand this script to share correlators with other services. 
+server with MySQL database. You may need expand this script to share correlators with other services.
 
 Basically you will need get these Id from application server, from request's session data, where they are stored. And you need these values 
 saved to ThreadLocal. Each service you want to share correlators you need to find class you're interested to trace and add these 
@@ -199,7 +198,6 @@ You need to setup your steams to use ZorkaConnector:
 ```
 
 ZorkaConnector Stream opens port `8640` by default, to collect Zorka's traces.
-
 
 ## TNT4J-streams parser configuration
 
@@ -255,7 +253,7 @@ To map attributes values use:
     <field-map source="500" target="ERROR"/>
     </field>
 ```
-	
+
 In Zorka scripts mapped values are defined as trace attributes `tracer.attr("ERROR", "YES")`
 
 Where first argument of  method *attr* is the name of attribute you're getting in Zorka trace.

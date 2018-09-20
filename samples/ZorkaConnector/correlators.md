@@ -28,8 +28,6 @@ How tnt4j-streams-zorka correlators work?
             jKoolCloud
 ```
 
-
-
 [jKoolCloud](https://www.jkoolcloud.com) accepts variety of correlators into field `correlator`. These correlators user to relate your 
 event data into connected events bundle.
 
@@ -50,7 +48,7 @@ You set your correlators in the application as session attributes in backing bea
     session.setAttribute("JK_CORR_RID", rid);
 ```
 
-`JK_CORR_SID` it's a session correlator, as `JK_CORR_RID` - request correlator. 
+`JK_CORR_SID` it's a session correlator, as `JK_CORR_RID` - request correlator.
 
 Zorka intercepts these correlators, as soon as script `tnt4j_base_tomcat.bsh` is loaded.
 Zorka attaches spy to on of the Tomcat's request flow class  - `org.apache.catalina.core.StandardContextValve` and extracts these 
@@ -67,7 +65,6 @@ attributes in `attributes_processor()` and adds attributes by calling method _at
         )
         .include(spy.byMethod("org.apache.catalina.core.StandardContextValve", "invoke")));
 ```
-
 
 Attributes processor fetches `JK_CORR_RID` and `JK_CORR_SID` and put them to ThreadLocal for later use.
 And method _attributeTntCorrIds() is called in every script supplied by tnt4j-streams-zorka to attribute all traces by application services 
