@@ -17,7 +17,6 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 // This script gets TNT4J Correlation IDs
 
 __my_business() {

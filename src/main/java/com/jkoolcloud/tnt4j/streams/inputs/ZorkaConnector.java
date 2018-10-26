@@ -31,12 +31,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.jitlogic.zico.core.ZicoService;
-import com.jitlogic.zorka.common.tracedata.HelloRequest;
-import com.jitlogic.zorka.common.tracedata.Symbol;
-import com.jitlogic.zorka.common.tracedata.SymbolRegistry;
-import com.jitlogic.zorka.common.tracedata.TraceRecord;
+import com.jitlogic.zico.core.ZicoUtil;
+import com.jitlogic.zico.shared.data.SymbolicExceptionInfo;
+import com.jitlogic.zorka.common.tracedata.*;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessor;
 import com.jitlogic.zorka.common.zico.ZicoDataProcessorFactory;
 import com.jitlogic.zorka.common.zico.ZicoException;
@@ -276,7 +277,8 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		long reducedTrCount = ZorkaUtils.countTraceRecord(rec);
 		LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 				"ZorkaConnector.reduced.trace", recCount, reducedTrCount, maxTraceEvents);
-		processTraceRecursive(rec, rec.getChildren(), null, 1);
+		long totalTime = rec.getTime();
+		processTraceRecursive(rec, rec.getChildren(), null, 1, totalTime, null);
 	}
 
 	private Map<String, Object> translateSymbols(Map<Integer, Object> attributeMap) {
@@ -291,21 +293,23 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		return translation;
 	}
 
-	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID,
-			int level) {
+	private void processTraceRecursive(TraceRecord parentRec, List<TraceRecord> children, String parentUUID, int level,
+			long totalTime, String appl) {
 
 		Map<Integer, Object> attrs = parentRec.getAttrs();
 		if (parentRec.getMarker() != null && parentRec.getParent() == null) {
 			Map<String, Object> zorkaActivityRecord = translateSymbols(attrs);
 			Map<String, Object> markerActivity = new HashMap<>(zorkaActivityRecord);
 
-			addDefaultTraceAttributes(markerActivity, parentRec);
+			addDefaultTraceAttributes(markerActivity, parentRec, totalTime);
 			markerActivity.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
 
 			String activityID = DefaultUUIDFactory.getInstance().newUUID();
 			markerActivity.put(StreamFieldType.TrackingId.name(), activityID);
 			markerActivity.put(StreamFieldType.ParentId.name(), parentUUID);
 			markerActivity.put(TNT4J_PROP_EV_TYPE, OpType.ACTIVITY.name());
+			appl = String.valueOf(zorkaActivityRecord.get("APPL"));
+			markerActivity.put(StreamFieldType.ApplName.name(), appl);
 			parentUUID = activityID;
 			addInputToBuffer(markerActivity);
 
@@ -337,20 +341,33 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		}
 
 		Map<String, Object> translatedTrace = new HashMap<>();
-		addDefaultTraceAttributes(translatedTrace, parentRec);
+		addDefaultTraceAttributes(translatedTrace, parentRec, totalTime);
 
 		translatedTrace.put(StreamFieldType.ParentId.name(), parentUUID);
 		translatedTrace.put(TNT4J_PROP_LEVEL, level);
+		translatedTrace.put(StreamFieldType.ApplName.name(), appl);
 
-		if (attrs != null) {
+		if (MapUtils.isNotEmpty(attrs) && level > 1) {
 			Map<String, Object> attributeEvent = new HashMap<>(translateSymbols(attrs));
+
+			if (parentRec.getMarker() != null) {
+				translatedTrace.put(ZORKA_PROP_MARKER, symbolRegistry.symbolName(parentRec.getMarker().getTraceId()));
+			}
+			translatedTrace.put(TNT4J_PROP_LEVEL, level);
+
+			appl = String.valueOf(attributeEvent.get("APPL"));
+			translatedTrace.put(StreamFieldType.ApplName.name(), appl);
+
 			attributeEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 			if (attributeEvent.get(StreamFieldType.TrackingId.name()) == null) {
 				attributeEvent.put(StreamFieldType.TrackingId.name(), DefaultUUIDFactory.getInstance().newUUID());
 			}
-			// if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
-			// addInputToBuffer(attributeEvent);
-			// }
+			if (attributeEvent.containsKey(TNT4J_PROP_EV_TYPE)) {
+				addInputToBuffer(attributeEvent);
+			} else {
+				translatedTrace.putAll(attributeEvent);
+			}
+
 		}
 
 		// ** FOR TRACE TREE ** ACTIVITIES NEEDED IN EUM
@@ -364,12 +381,12 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 		// parentUUID = eventID;
 		for (TraceRecord child : children) {
-			processTraceRecursive(child, child.getChildren(), parentUUID, level + 1);
+			processTraceRecursive(child, child.getChildren(), parentUUID, level + 1, totalTime, appl);
 		}
 	}
 
-	private Map<String, Object> addDefaultTraceAttributes(Map<String, Object> translatedTrace,
-			TraceRecord masterRecord) {
+	private Map<String, Object> addDefaultTraceAttributes(Map<String, Object> translatedTrace, TraceRecord masterRecord,
+			long totalTraceTime) {
 		long clock = masterRecord.getClock();
 		translatedTrace.put(ZORKA_PROP_CLOCK, clock <= 0 ? System.currentTimeMillis() : clock);
 		translatedTrace.put(ZORKA_PROP_METHOD_TIME, masterRecord.getTime());
@@ -378,8 +395,20 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 		translatedTrace.put(ZORKA_PROP_CLASS, symbolRegistry.symbolName(masterRecord.getClassId()));
 		translatedTrace.put(ZORKA_PROP_METHOD, symbolRegistry.symbolName(masterRecord.getMethodId()));
 		translatedTrace.put(ZORKA_PROP_SIGNATURE, symbolRegistry.symbolName(masterRecord.getSignatureId()));
+		translatedTrace.put(ZORKA_PROP_PCT, (float) masterRecord.getTime() / totalTraceTime * 100);
 		translatedTrace.put(ZORKA_PROP_MARKER, TRACE_MARKER);
+		Object exception = masterRecord.getException();
+		if (exception != null) {
+			if (exception instanceof SymbolicException) {
+				SymbolicExceptionInfo value = ZicoUtil.extractSymbolicExceptionInfo(symbolRegistry,
+						(SymbolicException) exception);
 
+				translatedTrace.put(ZORKA_PROP_EXCEPTION,
+						value.getMessage() + StringUtils.join(value.getStackTrace(), "\n"));
+			} else {
+				translatedTrace.put(ZORKA_PROP_EXCEPTION, exception);
+			}
+		}
 		return translatedTrace;
 	}
 

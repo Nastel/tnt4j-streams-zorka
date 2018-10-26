@@ -191,7 +191,7 @@ __java_webSocket() {
             spy.zorkaLog("DEBUG", "WEB_SOCKET", "########################GET_BASIC_REMOTE SUBMIT###################")
         )
     );
- 
+
     spy.add(spy.instrument ("WEB_SOCKET_RECEIVE")
         .onEnter(
             spy.fetchArg("MESSAGE_HANDLER", 0),

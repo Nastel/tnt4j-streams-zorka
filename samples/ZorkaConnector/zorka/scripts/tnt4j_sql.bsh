@@ -17,29 +17,80 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require("tnt4j_base_tomcat.bsh", "jdbc/mysql.bsh");
+zorka.require("sql.bsh", "tnt4j_comm.bsh");
 
 // This script gets TNT4J Correlation IDs
 
 __tnt4j_sql() {
 
+    _trace = true;
+
     spy.add(
         spy.instrument("SQL_TNT4J_STREAMS_TRACKER")
             .onEnter(
-                tnt4j._attributeTntCorrIds()
+                    spy.fetchArg("THIS", 0), spy.fetchArg("SQL", 1),
+                    tracer.isInTrace("HTTP") ? null : tracer.begin("SQL"),
+                    tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
+                    __tnt4j.attrAppl("SQL"),
+                    __tnt4j.attrCorrelator(),
+                    spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} "),
+                    tracer.formatAttr("EVENT_TYPE", "SEND"),
+                    tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
+                    spy.format("DB", "${THIS.connection.database}"),
+                    _trace
+                        ? spy.subchain(
+                            tracer.isInTrace("HTTP") ? null : tracer.begin("SQL"),
+                            tracer.attr("SQL", "SQL"),
+                            __tnt4j.getThread(),
+                            tracer.attr("DB", "DB"))
+                        : null
             )
             .onError(
-                spy.fetchError("ERROR"),
-                spy.format("EXCEPTION", "${ERROR}"),
-                tracer.attr("ERROR", "YES"),
-                tracer.attr("EXCEPTION", "EXCEPTION")
+                    spy.fetchError("ERR"),
+                    _trace ? tracer.flags(tracer.SUBMIT_TRACE) : null, 
+                    sql._error_chain
             )
-            .include(spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"),
-                spy.byMethod("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
-                spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
-                spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
-                spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
-                spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")
+            .onSubmit(spy.strTime("TIME"), sql._slow_chain, sql._stats_chain)
+            .include(
+                    spy.byMethod(spy.AC_PUBLIC, "com.mysql.jdbc.StatementImpl", "execut*", null, "String")
+            )
+    );
+
+    spy.add(
+        spy.instrument("SQL_TNT4J_STREAMS_TRACKER2")
+            .onEnter(
+                    spy.fetchArg("THIS", 0),
+                    tracer.isInTrace("HTTP") ? null : tracer.begin("SQL"),
+                    __tnt4j.attrAppl("SQL"),
+                    __tnt4j.attrCorrelator(),
+                    tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
+                    tracer.formatAttr("EVENT_TYPE", "SEND"),
+                    spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} "),
+                    tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
+                    spy.format("SQL", "${THIS.originalSql|THIS.SQLText}"),
+                    spy.format("DB", "${THIS.connection.database|THIS.lcc.dbname}"),
+                    _trace
+                        ? spy.subchain(
+                            tracer.isInTrace("HTTP") ? null : tracer.begin("SQL", zorka.longCfg("sql.trace.time")),
+                            tracer.attr("SQL", "SQL"),
+                            __tnt4j.getThread(),
+                            tracer.attr("DB", "DB"))
+                        : null
+            )
+            .onError(
+                    spy.fetchError("ERR"), 
+                    _trace ? tracer.flags(tracer.SUBMIT_TRACE) : null, 
+                    sql._error_chain
+            )
+            .onSubmit(spy.strTime("TIME"), sql._slow_chain, sql._stats_chain)
+            .include(
+                    spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"),
+                    spy.byMethod("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
+                    spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
+                    spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
+                    spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
+                    spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*"),
+                    spy.byMethod("org.apache.derby.impl.jdbc.EmbedPreparedStatement", "execut*")
             )
     );
 

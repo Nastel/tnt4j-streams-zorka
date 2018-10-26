@@ -48,6 +48,14 @@ public final class ZorkaConstants {
 	 */
 	public static final String ZORKA_PROP_SIGNATURE = "SIGNATURE"; // NON-NLS
 	/**
+	 * The constant ZORKA_PROP_PCT. Value to set to percentage of method execution time of trace record.
+	 */
+	public static final String ZORKA_PROP_PCT = "PCT"; // NON-NLS
+	/**
+	 * The constant ZORKA_PROP_PCT. Value to set to percentage of method execution time of trace record.
+	 */
+	public static final String ZORKA_PROP_EXCEPTION = "EXCEPTION"; // NON-NLS
+	/**
 	 * The constant ZORKA_PROP_METHOD. Value to set to method field of trace record.
 	 */
 	public static final String ZORKA_PROP_METHOD = "METHOD"; // NON-NLS
