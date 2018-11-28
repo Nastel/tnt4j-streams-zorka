@@ -56,7 +56,7 @@ __javax_tnt4j_jms() {
             if (message instanceof com.ibm.ws.sib.mfp.impl.JsJmsMessageImpl) {
                 propertyName = zorka.stringCfg("tnt4j.jms.correlator.name", "JanusMessageSignature" );
                 String tntID =  java.util.UUID.randomUUID().toString();
-                rec.put("TNTID", tntID);
+                rec.put("JanusMessageSignature", tntID);
                 ((com.ibm.ws.sib.mfp.impl.JsJmsMessageImpl) message).setObjectProperty(propertyName, tntID);
                 // NOTE! Cant't start with JMS*
                 // Other special cases: JMSXAppID, JMSXUserID, JMS_IBM_MQMD_*, JMS_IBM_Character_Set, JMS_IBM_Encoding
@@ -201,7 +201,7 @@ __javax_tnt4j_jms() {
             spy.call("RES", "THIS", "getDestinationAddress"),
             spy.format("DESTINATION", "${RES.getDestinationName:unknown}"),
             tracer.attr("DESTINATION","DESTINATION"),
-            tracer.attr("TNTID","TNTID"),
+            tracer.attr("JanusMessageSignature","JanusMessageSignature"),
             spy.format("SEND", "SEND"),
             tracer.attr("EVENT_NAME", "SEND"),
             tracer.attr("EVENT_TYPE", "SEND"),

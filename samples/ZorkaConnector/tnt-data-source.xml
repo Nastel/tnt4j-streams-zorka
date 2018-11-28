@@ -33,7 +33,7 @@
             <parser-ref name="JMSSendMessageParserStage1"></parser-ref>
         </field>
 
-        <field name="correlator" locator="jid" locator-type="activity"/>
+        <field name="Correlator" locator="jid" locator-type="activity"/>
 
         <field name="parser" value="ZorkaKAFKA"/>
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
@@ -186,11 +186,12 @@
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds" locator-type="Label"/>
         <field name="ResourceName" locator="DESTINATION" locator-type="Label" formattingPattern="QUEUE={0}"/> <!-- queue/topic name -->
         <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
+        <field name="JanusMessageSignature" locator="JanusMessageSignature" locator-type="Label"/>
 
         <field name="Correlator" separator=",">
             <field-locator locator="JK_CORR_RID" locator-type="Label"/>
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
-            <field-locator locator="CORRELATION" locator-type="Label"/>
+            <field-locator locator="JanusMessageSignature" locator-type="Activity"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
@@ -243,7 +244,8 @@
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds" locator-type="Label"/>
-        <field name="ResourceName" locator="CLASS" locator-type="Label"/>
+        <!--<field name="ResourceName" locator="CLASS" locator-type="Label"/>-->
+        <field name="Class" locator="CLASS" locator-type="Label"/>
         <field name="Severity" locator="METHOD_FLAGS" locator-type="Label">
             <field-map source="0:127" target="INFO" type="Range"/>
             <field-map source="128:" target="WARNING" type="Range"/>
@@ -256,6 +258,12 @@
         <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         <field name="Level" locator="Level" locator-type="Label"/>
+        <!--ommit all the traces -->
+        <!--<filter name="Level Filter">-->
+        <!--<expression handle="exclude" lang="groovy"><![CDATA[-->
+        <!--${Level} > 1-->
+        <!--]]></expression>-->
+        <!--</filter>-->
         <field name="parser" value="ZorkaTrace"/>
         <!--field name="ParentId" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/-->
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
