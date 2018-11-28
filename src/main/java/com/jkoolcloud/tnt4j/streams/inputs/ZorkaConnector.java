@@ -23,14 +23,12 @@ import static com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants.*;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -135,28 +133,21 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 	}
 
 	@Override
-	public void setProperties(Collection<Map.Entry<String, String>> props) {
-		super.setProperties(props);
+	public void setProperty(String name, String value) {
+		super.setProperty(name, value);
 
-		if (CollectionUtils.isNotEmpty(props)) {
-			for (Map.Entry<String, String> prop : props) {
-				String name = prop.getKey();
-				String value = prop.getValue();
-
-				if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
-					host = value;
-				} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
-					socketPort = Integer.parseInt(value);
-				} else if (ZorkaStreamProperties.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
-					maxTraceEvents = Integer.parseInt(value);
-				} else if (ZorkaStreamProperties.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
-					kTimes = Integer.parseInt(value);
-				} else if (ZorkaStreamProperties.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
-					nPeriod = Integer.parseInt(value);
-				} else if (ZorkaStreamProperties.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
-					bbRecalculateTime = Integer.parseInt(value);
-				}
-			}
+		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
+			host = value;
+		} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
+			socketPort = Integer.parseInt(value);
+		} else if (ZorkaStreamProperties.PROP_MAX_TRACE_EVENTS.equalsIgnoreCase(name)) {
+			maxTraceEvents = Integer.parseInt(value);
+		} else if (ZorkaStreamProperties.PROP_BB_K_TIMES.equalsIgnoreCase(name)) {
+			kTimes = Integer.parseInt(value);
+		} else if (ZorkaStreamProperties.PROP_BB_N_PERIOD.equalsIgnoreCase(name)) {
+			nPeriod = Integer.parseInt(value);
+		} else if (ZorkaStreamProperties.PROP_BB_RECALCULATION_TIME.equalsIgnoreCase(name)) {
+			bbRecalculateTime = Integer.parseInt(value);
 		}
 	}
 

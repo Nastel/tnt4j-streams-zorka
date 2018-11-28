@@ -23,7 +23,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
@@ -100,24 +99,17 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 	}
 
 	@Override
-	public void setProperties(Collection<Map.Entry<String, String>> props) {
-		super.setProperties(props);
+	public void setProperty(String name, String value) {
+		super.setProperty(name, value);
 
-		if (CollectionUtils.isNotEmpty(props)) {
-			for (Map.Entry<String, String> prop : props) {
-				String name = prop.getKey();
-				String value = prop.getValue();
-
-				if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
-					host = value;
-				} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
-					socketPort = Integer.valueOf(value);
-				} else if (ZorkaStreamProperties.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
-					jmxQueryString = value;
-				} else if (ZorkaStreamProperties.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
-					jmxSchedulerExpression = value;
-				}
-			}
+		if (StreamProperties.PROP_HOST.equalsIgnoreCase(name)) {
+			host = value;
+		} else if (StreamProperties.PROP_PORT.equalsIgnoreCase(name)) {
+			socketPort = Integer.valueOf(value);
+		} else if (ZorkaStreamProperties.PROP_JMX_QUERY.equalsIgnoreCase(name)) {
+			jmxQueryString = value;
+		} else if (ZorkaStreamProperties.PROP_SCHEDULER_EXPR.equalsIgnoreCase(name)) {
+			jmxSchedulerExpression = value;
 		}
 	}
 
