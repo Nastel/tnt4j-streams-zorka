@@ -186,11 +186,19 @@
         <field name="ResourceName" locator="DESTINATION" locator-type="Label" formattingPattern="QUEUE={0}"/> <!-- queue/topic name -->
         <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
         <field name="JanusMessageSignature" locator="JanusMessageSignature" locator-type="Label"/>
+            
+        <field name="ID" locator="ID" locator-type="Label">
+			<field-transform lang="groovy"><![CDATA[
+				$fieldValue == null ? null : $fieldValue - "ID:"
+                ]]>
+            </field-transform>
+	</field>
 
         <field name="Correlator" separator=",">
             <field-locator locator="JK_CORR_RID" locator-type="Label"/>
             <field-locator locator="JK_CORR_SID" locator-type="Label"/>
             <field-locator locator="JanusMessageSignature" locator-type="Activity"/>
+            <field-locator locator="ID" locator-type="Activity"/>
             <!--<field-locator locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
         </field>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
@@ -253,6 +261,7 @@
         <!-- <field name="Method_Flags" locator="METHOD_FLAGS" locator-type="Label"/> -->
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
+        <field name="CLASS" locator="Class" locator-type="Label"/>
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
         <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
