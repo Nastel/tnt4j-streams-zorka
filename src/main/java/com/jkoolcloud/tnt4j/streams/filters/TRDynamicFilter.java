@@ -197,7 +197,7 @@ public class TRDynamicFilter implements TraceRecordFilter {
 			// fileOut.close();
 
 			// #JAXB implementation
-			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class, Long.class);
+			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class);
 			Marshaller marshaller = jaxb.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -231,7 +231,7 @@ public class TRDynamicFilter implements TraceRecordFilter {
 			// fileIn.close();
 
 			// JAXB implementation
-			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class, Long.class);
+			JAXBContext jaxb = JAXBContext.newInstance(MethodRegistryMap.class);
 			Unmarshaller unmarshaller = jaxb.createUnmarshaller();
 			methodTimeBuffer = (MethodRegistryMap) unmarshaller.unmarshal(new File(METHOD_REGISTRY_F_NAME));
 			LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),

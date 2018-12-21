@@ -21,6 +21,7 @@ package com.jkoolcloud.tnt4j.streams.inputs;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.apache.commons.io.IOUtils;
@@ -232,7 +233,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 					out = new PrintWriter(echoSocket.getOutputStream(), true);
 					in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 					is = mkIS("ZBXD", 1, 0x0c, 0, 0, 0, 0, 0, 0, 0, "zorka.jmx[", query, "]", 0x0a); // NON-NLS
-					IOUtils.copy(is, out, Utils.UTF8);
+					IOUtils.copy(is, out, StandardCharsets.UTF_8);
 					out.flush();
 					String response = in.readLine();
 					if (response != null) {
