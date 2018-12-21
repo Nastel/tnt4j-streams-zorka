@@ -214,7 +214,14 @@ In a single `tnt-data-source.xml` configuration file there are defined several p
 witch parser to use by **tags** property:
 
 ```xml
-    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
+        ...
+    </parser>
+
+    <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
+        ...
+        <parser-ref name="ZorkaHTTP" tags="HTTP"/>
+    </stream>
 ```
 
 The **tags** is compared to Zorka's trace *MARKER* keys Value. Once it comply's, the defined parser is used.

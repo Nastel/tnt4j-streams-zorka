@@ -439,7 +439,7 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected String[] getDataTags(Object data) {
+	public String[] getDataTags(Object data) {
 		Map<String, Object> dataMap = (Map<String, Object>) data;
 
 		return new String[] { String.valueOf(dataMap.get(ZORKA_PROP_MARKER)) };

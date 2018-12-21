@@ -65,7 +65,7 @@ Sample stream configuration:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Nastel/tnt4j-streams/master/config/tnt-data-source.xsd">
 
-    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP">
+    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" separator=",">
@@ -106,7 +106,7 @@ Sample stream configuration:
         <field name="ReasonCode" locator="STATUS" locator-type="Label"/>
     </parser>
 
-    <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
+    <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -142,7 +142,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
+    <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -166,8 +166,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
-            tags="WS_TNT4J_STREAMS_TRACKER">
+    <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -192,8 +191,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
-            tags="JMS_TNT4J_STREAMS_TRACKER">
+    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -221,7 +219,7 @@ Sample stream configuration:
         </field>
     </parser>
 
-    <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
+    <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <!--    <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/> -->
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -249,7 +247,7 @@ Sample stream configuration:
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
     </parser>
 
-    <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
+    <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="EventType" value="EVENT"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -311,13 +309,13 @@ Sample stream configuration:
         <!--<property name="Bollinger_N_period" value="20"/> -->
         <!--<property name="BollingerRecalculationPeriod" value="3000"/> -->
 
-        <parser-ref name="ZorkaHTTP"/>
-        <parser-ref name="ZorkaSQL"/>
-        <parser-ref name="ZorkaLDAP"/>
-        <parser-ref name="ZorkaWebService"/>
-        <parser-ref name="ZorkaJMS"/>
-        <parser-ref name="ZorkaWebSocket"/>
-        <parser-ref name="ZorkaTrace"/>
+        <parser-ref name="ZorkaHTTP" tags="HTTP"/>
+        <parser-ref name="ZorkaSQL" tags="SQL"/>
+        <parser-ref name="ZorkaLDAP" tags="LDAP"/>
+        <parser-ref name="ZorkaWebService" tags="WS_TNT4J_STREAMS_TRACKER"/>
+        <parser-ref name="ZorkaJMS" tags="JMS_TNT4J_STREAMS_TRACKER"/>
+        <parser-ref name="ZorkaWebSocket" tags="WebSocket"/>
+        <parser-ref name="ZorkaTrace" tags="TRACE"/>
     </stream>
 
     <stream name="ZabbixStream" class="com.jkoolcloud.tnt4j.streams.inputs.JMXZabbixDataPuller">

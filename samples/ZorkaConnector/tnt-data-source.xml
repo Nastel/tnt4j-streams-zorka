@@ -19,7 +19,7 @@
         <field name="keys" locator="keys" locator-type="label"/>
     </parser>
 
-    <parser name="ZorkaKafka" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="KAFKA_RECEIVE,KAFKA_SEND">
+    <parser name="ZorkaKafka" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -39,7 +39,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="HTTP_CLI_SEND,HTTP_CLI_RECEIVE,HTTP">
+    <parser name="ZorkaHTTP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -82,7 +82,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="SQL">
+    <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
@@ -123,7 +123,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="LDAP">
+    <parser name="ZorkaLDAP" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -149,7 +149,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WS_TNT4J_STREAMS_TRACKER">
+    <parser name="ZorkaWebService" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -176,8 +176,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser"
-            tags="JMS_SEND,JMS_SEND2,JMS_TNT4J_STREAMS_TRACKER,JMS_RECEIVE">
+    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -209,7 +208,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="WebSocket">
+    <parser name="ZorkaWebSocket" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <!--    <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/> -->
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -238,7 +237,7 @@
         <field name="all" locator="#" locator-type="Label" datatype="Generic"/>
     </parser>
 
-    <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="TRACE">
+    <parser name="ZorkaTrace" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
         <field name="EventType" value="CALL"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -283,14 +282,14 @@
         <property name="BuildSourceFQNFromStreamedData" value="true"/>
         <property name="SourceFQN" value="APPL=${ApplName}#SERVER=${ServerName}#NETADDR=${ServerIp}"/>
 
-        <parser-ref name="ZorkaHTTP"/>
-        <parser-ref name="ZorkaSQL"/>
-        <parser-ref name="ZorkaLDAP"/>
-        <parser-ref name="ZorkaWebService"/>
-        <parser-ref name="ZorkaJMS"/>
-        <parser-ref name="ZorkaWebSocket"/>
-        <parser-ref name="ZorkaTrace"/>
-        <parser-ref name="ZorkaKafka"/>
+        <parser-ref name="ZorkaHTTP" tags="HTTP_CLI_SEND,HTTP_CLI_RECEIVE,HTTP"/>
+        <parser-ref name="ZorkaSQL" tags="SQL"/>
+        <parser-ref name="ZorkaLDAP" tags="LDAP"/>
+        <parser-ref name="ZorkaWebService" tags="WS_TNT4J_STREAMS_TRACKER"/>
+        <parser-ref name="ZorkaJMS" tags="JMS_SEND,JMS_SEND2,JMS_TNT4J_STREAMS_TRACKER,JMS_RECEIVE"/>
+        <parser-ref name="ZorkaWebSocket" tags="WebSocket"/>
+        <parser-ref name="ZorkaTrace" tags="TRACE"/>
+        <parser-ref name="ZorkaKafka" tags="KAFKA_RECEIVE,KAFKA_SEND"/>
     </stream>
 
 </tnt-data-source>

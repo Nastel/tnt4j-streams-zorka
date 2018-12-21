@@ -74,11 +74,16 @@ JMS message correlator is retrieved over JMS spy as message attribute. Mapping i
 over JMS traces parser configuration:
 
 ```xml
-    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser" tags="JMS_TNT4J_STREAMS_TRACKER">
+    <parser name="ZorkaJMS" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         ...
         <field name="Correlator" locator="JK_CORR_RID" locator-type="Label"/>
         <field name="Correlator" locator="JK_CORR_SID" locator-type="Label"/>
         <field name="Correlator" locator="CORRELATION" locator-type="Label"/>
         ...
     </parser>
+    
+    <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
+        ...
+        <parser-ref name="ZorkaJMS" tags="JMS_TNT4J_STREAMS_TRACKER"/>
+    </stream>
 ```
