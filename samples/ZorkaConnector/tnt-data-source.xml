@@ -186,13 +186,12 @@
         <field name="ResourceName" locator="DESTINATION" locator-type="Label" formattingPattern="QUEUE={0}"/> <!-- queue/topic name -->
         <field name="EventName" locator="EVENT_NAME" locator-type="Label"/> <!-- send/receive -->
         <field name="JanusMessageSignature" locator="JanusMessageSignature" locator-type="Label"/>
-            
+
         <field name="ID" locator="ID" locator-type="Label">
-			<field-transform lang="groovy"><![CDATA[
-				$fieldValue == null ? null : $fieldValue - "ID:"
-                ]]>
-            </field-transform>
-	</field>
+            <field-transform lang="groovy"><![CDATA[
+                $fieldValue == null ? null : $fieldValue - "ID:"
+            ]]></field-transform>
+        </field>
 
         <field name="Correlator" separator=",">
             <field-locator locator="JK_CORR_RID" locator-type="Label"/>
