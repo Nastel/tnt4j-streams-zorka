@@ -65,10 +65,11 @@ __tnt4j_sql() {
                     __tnt4j.attrCorrelator(),
                     tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
                     tracer.formatAttr("EVENT_TYPE", "SEND"),
-                    spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} "),
+
                     tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
-                    spy.format("SQL", "${THIS.originalSql|THIS.SQLText}"),
-                    spy.format("DB", "${THIS.connection.database|THIS.lcc.dbname}"),
+                    spy.format("SQL", "${THIS.originalSql|THIS.SQLText|THIS.sqlObject.originalSql}"),
+                    spy.format("DB", "${THIS.connection.database|THIS.lcc.dbname|THIS.statement.t4Connection.database}:${THIS.statement.t4Connection.userName}"),
+                    spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${SQL} ${THIS.class}"),
                     _trace
                         ? spy.subchain(
                             tracer.isInTrace("HTTP") ? null : tracer.begin("SQL", zorka.longCfg("sql.trace.time")),
@@ -84,15 +85,32 @@ __tnt4j_sql() {
             )
             .onSubmit(spy.strTime("TIME"), sql._slow_chain, sql._stats_chain)
             .include(
+
+                    // MySQL
                     spy.byMethod("com.mysql.jdbc.PreparedStatement", "execut*"),
                     spy.byMethod("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
                     spy.byMethod("com.mysql.jdbc.CallableStatement", "execut*"),
                     spy.byMethod("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
                     spy.byMethod("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
                     spy.byMethod("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*"),
-                    spy.byMethod("org.apache.derby.impl.jdbc.EmbedPreparedStatement", "execut*")
+
+                    // Derby
+                    spy.byMethod("org.apache.derby.impl.jdbc.EmbedPreparedStatement", "execut*"),
+
+                    // Oracle
+                    spy.byMethod("oracle.jdbc.driver.OracleCallableStatementWrapper", "execut*"),
+                    spy.byMethod("oracle.jdbc.driver.OracleStatementWrapper", "execut*"),
+                    spy.byMethod("oracle.jdbc.driver.OraclePreparedStatementWrapper", "execut*"),
+                    spy.byMethod("oracle.jdbc.driver.OraclePreparedStatement", "~execute[^I].*"),
+                    spy.byMethod("oracle.jdbc.driver.OracleStatement", "~execute[^I].*"),
+                    spy.byMethod("oracle.jdbc.driver.OracleCallableStatement", "~execute[^I].*")
+
             )
     );
+
+    if (zorka.boolCfg("tracer")) {
+      tracer.exclude("oracle.jdbc.**", "oracle.sql.**");
+    } 
 
     return this;
 }
