@@ -105,7 +105,7 @@
         </field>
 
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds" locator-type="Label"/>
-        <field name="EventName" locator="METHOD" locator-type="Label"/> <!-- insert, delete .. -->
+        <field name="EventName" value="SQL execute"/>
         <field name="Exception" locator="EXCEPTION" locator-type="Label"/>
 
         <field name="Correlator" separator=",">
