@@ -130,7 +130,7 @@ __was() {
 
   _log = zorka.boolCfg("tnt4j.log", false);
   _logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
-
+  
   pmi_register() {
       pmi = null;
       process(rec) {
@@ -145,11 +145,12 @@ __was() {
       }
       return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
   }
-
+     
   spy.add(spy.instance("WAS_MBS_REGISTER")
     .onReturn(spy.fetchArg("THIS", 0), jvm.autoregister_plugin(), pmi_register())
     .include(spy.byMethod("com.ibm.ws.management.AdminServiceImpl", "<init>")));
 
+	
   headers_processor(hdrIn, hdrOut) {
 
       _iprefix = zorka.stringCfg("http.headers.iprefix");
@@ -198,12 +199,12 @@ __was() {
                           i++;
                       }
                   }
-                  try {
-                      if ("Location".equals(name) && hdrs != null && hdrs.size() > 0) {
-                        tracer.newAttr("REDIRECT", hdrs.get(0));
-                        rec.put("REDIRECT", hdrs.get(0));
-                      }
-                  } catch (Exception e) {}
+				  try {
+					  if ("Location".equals(name) && hdrs != null && hdrs.size() > 0) {
+						tracer.newAttr("REDIRECT", hdrs.get(0));
+						rec.put("REDIRECT", hdrs.get(0));
+					  }
+				  } catch (Exception e) {}
               }
           }
 
@@ -218,10 +219,8 @@ __was() {
           cl = rec.get("THIS");
           zorka.logInfo("Found application server class loader: " + cl);
           super.super.class_loader = cl;
-
           return rec;
       }
-
       return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
   }
 
@@ -229,54 +228,54 @@ __was() {
     .onReturn(spy.fetchArg("THIS", 0), class_loader_catcher())
     .include(spy.byMethod("com.ibm.ws.classloader.ProtectionClassLoader", "<init>")));
 
+
   // HTTP tracing
 
   _ireq  = new ThreadLocal();
 
   spy.add(spy.instrument("WAS_HTTP_HELPER")
     .onEnter(
-        spy.fetchArg("IREQ", 1), spy.tlSet("IREQ", _ireq),
-        _log ? spy.zorkaLog(_logLevel, "HTTP", "SET the tl ${IREQ}") : null)
+		spy.fetchArg("IREQ", 1), spy.tlSet("IREQ", _ireq),
+		_log ? spy.zorkaLog(_logLevel, "HTTP", "SET the tl ${IREQ}") : null )
     .onSubmit(spy.tlRemove(_ireq))
-    .include(spy.byMethod("com.ibm.ws.webcontainer.WebContainer", "handleRequest"))
-  );
+    .include(spy.byMethod("com.ibm.ws.webcontainer.WebContainer", "handleRequest")));
 
   // HTTP Request class: com.ibm.ws.webcontainer.srt.SRTServletRequest
   // HTTP Response class: com.ibm.ws.webcontainer.srt.SRTServletResponse
 
   spy.add(spy.instrument("WAS_HTTP")
     .onEnter(spy.fetchArg("REQ", 1), spy.fetchArg("RESP", 2), spy.tlGet("IREQ", _ireq),
+	  spy.fetchArg("THIS", 0),
       spy.format("URI", "${IREQ.requestURI}"),
-      http._trace
-        ? spy.subchain(
-            http._uriQualifier,
-            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################Begin !") : null,
-            __tnt4j.generateCommonCorrelator(),
-            __tnt4j.resolveAppl(),
-            tracer.begin("HTTP", zorka.longCfg("http.trace.time")),
-            tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
-            tracer.attr("URI", "URI"))
-        : null,
-      http._congestion ? spy.zorkaStats("java", http._mbean, "stats", "ALL", "T", null, spy.ACTION_ENTER) : null
-    )
+      http._trace ? spy.subchain(
+        http._uriQualifier,
+		__tnt4j.generateCommonCorrelator(), 
+		
+		spy.format("APPLHANDLE", "${THIS.webapp.applicationName}"),
+		
+		_log ? spy.zorkaLog(_logLevel, "HTTP", "########################Begin ${APPLHANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}"): null,
+        tracer.begin("HTTP", zorka.longCfg("http.trace.time")),
+		tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
+        tracer.attr("URI", "URI")
+      ) : null,
+      http._congestion ? spy.zorkaStats("java", http._mbean, "stats", "ALL", "T", null, spy.ACTION_ENTER) : null)
     .onReturn(
-        spy.put("ERR", ""),
-        _log ? spy.zorkaLog(_logLevel, "HTTP", "########################RETURN !") : null,
-        spy.strTime("TIME"),
+		spy.put("ERR", ""), 
+		_log ? spy.zorkaLog(_logLevel, "HTTP", "########################RETURN !"): null,
+			  spy.strTime("TIME"),
       spy.get("STATUS", "RESP", "statusCode"),
-      http._trace
-        ? spy.subchain(
-            http._uriQualifier,
-            tracer.attr("STATUS", "STATUS"),
-            __tnt4j.getThread(),
-            tracer.filterBy("STATUS", null, http._errors, null, null),
-            http._params ? http.param_processor() : spy.put("PARAMS", ""),
-            http._headers ? headers_processor(true, true) : null,
-            http._cookies ? http.cookies_processor(true, true) : spy.put("COOKIES", ""),
-            spy.format("DEFAPPL", "PlantsByWebsphereDF"),
-            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################END !") : null,
-            tracer.formatAttr("APPL", "${APPLHANDLE|DEFAPPL}"))
-        : null,
+      http._trace ? spy.subchain(
+        http._uriQualifier,
+        tracer.attr("STATUS", "STATUS"),
+        __tnt4j.getThread(), 
+        tracer.filterBy("STATUS", null, http._errors, null, null),
+        http._params ? http.param_processor() : spy.put("PARAMS", ""),
+        http._headers ? headers_processor(true, true) : null,
+        http._cookies ? http.cookies_processor(true, true) : spy.put("COOKIES", ""),
+		spy.format("DEFAPPL", "PlantsByWebsphereDF"),
+		_log ? spy.zorkaLog(_logLevel, "HTTP", "########################END !"): null,
+		tracer.formatAttr("APPL", "${APPLHANDLE|DEFAPPL}")
+      ) : null,
       http._slow_chain,
       spy.subchain(
         spy.valSetFilter("STATUS", http._errors),
@@ -284,19 +283,18 @@ __was() {
         http._error_chain),
       http._stats ? spy.zorkaStats("java", http._mbean, "stats", "ALL", "T", null, http._action) : null,
       http._tags_chain
-    )
+	)
     .onError(spy.fetchError("EX"), spy.format("ERR", "${EX}"), spy.format("STATUS", "ERR"),
-      http._trace
-        ? spy.subchain(
-            http._uriQualifier,
-            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################Error occured !") : null,
-            tracer.flags(tracer.SUBMIT_TRACE),
-            tracer.attr("ERR", "ERR"))
-        : null)
+      http._trace ? spy.subchain(
+        http._uriQualifier,
+		_log ? spy.zorkaLog(_logLevel, "HTTP", "########################Error occured !"): null,
+        tracer.flags(tracer.SUBMIT_TRACE),
+        tracer.attr("ERR", "ERR")
+      ) : null)
     .include(
       spy.byMethod("com.ibm.ws.webcontainer.servlet.CacheServletWrapper", "handleRequest"),
-      spy.byMethod("com.ibm.ws.webcontainer.webapp.WebApp", "handleRequest"))
-    );
+      spy.byMethod("com.ibm.ws.webcontainer.webapp.WebApp", "handleRequest")
+    ));
 
     // EJB monitoring
 
@@ -305,7 +303,7 @@ __was() {
           spy.fetchArg("MDESC", 2), spy.fetchArg("ARGS", 4),
           ejb._trace ? tracer.begin("EJB", zorka.longCfg("ejb.trace.time")) : null,
           ejb._trace ? tracer.formatAttr("METHOD", "${MDESC.name}") : null,
-          ejb._trace ? tracer.formatAttr("EVENT_TYPE", "RECEIVE") : null,
+		  ejb._trace ? tracer.formatAttr("EVENT_TYPE", "RECEIVE") : null,
           ejb._trace ? tracer.formatAttr("CLASS", "${MDESC.declaringClass.name}") : null)
       .onError(
           ejb._trace ? tracer.flags(tracer.SUBMIT_TRACE) : null,
@@ -328,6 +326,7 @@ __was() {
             spy.byMethod("com.ibm.ejs.container.EJSContainer", "invokeProceed"))
     );
 
+
   if (zorka.boolCfg("zabbix.active")) {
     zabbix.tagMetadata("WEBSPHERE");
   }
@@ -336,48 +335,15 @@ __was() {
 
   if (zorka.boolCfg("tracer")) {
     tracer.exclude(
-      "com.ibm.cds.CDSBundleFile",
-      "com.ibm.cds.CDSHookImpls",
-      "com.ibm.ejs.ras.**",
-      "com.ibm.ejs.util.**",
-      "com.ibm.isclite.common.tree.TreeNode",
-      "com.ibm.isclite.datastore.runtime.**",
-      "com.ibm.isclite.wccm.base.impl.**",
-      "com.ibm.isclite.wccm.navigation.impl.**",
-      "com.ibm.oti.shared.**",
-      "com.ibm.rmi.util.**",
-      "com.ibm.sec.authz.**",
-      "com.ibm.security.util.**",
-      "com.ibm.websphere.models.config.**",
-      "com.ibm.websphere.pmi.**",
-      "com.ibm.websphere.resource.**",
-
-      "com.ibm.ws.adaptor.ClasspathPrepend**",
-      "com.ibm.ws.bootstrap.**",
-      "com.ibm.ws.classloader.**",
-      "com.ibm.ws.featureref.impl.**",
-      "com.ibm.ws.genericbnf.**",
-      "com.ibm.ws.injectionengine.**",
-      "com.ibm.ws.jsp.translator.**",
-      "com.ibm.ws.logging.**",
-      "com.ibm.ws.management.authorizer.**",
-      "com.ibm.ws.PluginModelObject",
-      "com.ibm.ws.pmi.**",
-      "com.ibm.ws.rsadapter.jdbc.**",
-      "com.ibm.ws.security.**",
-      "com.ibm.ws.sibx.scax.mediation.component.**",
-      "com.ibm.ws.tx.util.logging.**",
-      "com.ibm.ws.util.**",
-      "com.ibm.ws.webcontainer.srt.**",
-      "com.ibm.ws.webcontainer.util.**",
-      "com.ibm.ws.wim.xpath.**",
-
-      "com.ibm.xtq.common.utils.**",
-      "com.ibm.xtq.xslt.**"
+      "com.ibm.**",
+	  "org.omg.CORBA.**",
+	  "com.sun.**",
+	  "jdk.internal.**"
     );
   }
 
   return this;
 }
+
 
 was = __was();

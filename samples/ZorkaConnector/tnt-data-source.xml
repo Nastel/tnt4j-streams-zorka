@@ -84,6 +84,13 @@
 
     <parser name="ZorkaSQL" class="com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser">
         <field name="ApplName" locator="ApplName" locator-type="Label"/>
+
+        <filter name="APPL Filter">
+            <expression handle="exclude" lang="groovy"><![CDATA[
+                ${ApplName} == "SERVER"
+            ]]></expression>
+        </filter>
+
         <field name="EventType" locator="EVENT_TYPE" locator-type="Label"/>
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="StartTime" locator="CLOCK" datatype="Timestamp" locator-type="Label"/>
@@ -251,7 +258,8 @@
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds" locator-type="Label"/>
         <!--<field name="ResourceName" locator="CLASS" locator-type="Label"/>-->
-        <field name="Class" locator="CLASS" locator-type="Label"/>
+        <field name="CLASS" locator="CLASS" locator-type="Label"/>
+        <field name="CLASS" locator="Class" locator-type="Label"/>
         <field name="Severity" locator="METHOD_FLAGS" locator-type="Label">
             <field-map source="0:127" target="INFO" type="Range"/>
             <field-map source="128:" target="WARNING" type="Range"/>
@@ -260,7 +268,7 @@
         <!-- <field name="Method_Flags" locator="METHOD_FLAGS" locator-type="Label"/> -->
         <field name="EventName" locator="METHOD" locator-type="Label"/>
         <field name="MethodSignature" locator="SIGNATURE" locator-type="Label"/>
-        <field name="CLASS" locator="Class" locator-type="Label"/>
+
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
         <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
