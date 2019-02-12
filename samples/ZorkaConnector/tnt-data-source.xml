@@ -258,8 +258,11 @@
         <field name="Tag" locator="MARKER" locator-type="Label"/>
         <field name="ElapsedTime" locator="METHOD_TIME" datatype="Number" format="###########0" units="Nanoseconds" locator-type="Label"/>
         <!--<field name="ResourceName" locator="CLASS" locator-type="Label"/>-->
-        <field name="CLASS" locator="CLASS" locator-type="Label"/>
-        <field name="CLASS" locator="Class" locator-type="Label"/>
+        <field name="CLASS">
+            <field-locator locator="CLASS" locator-type="Label"></field-locator>
+            <field-locator locator="Class" locator-type="Label"/>
+        </field>
+
         <field name="Severity" locator="METHOD_FLAGS" locator-type="Label">
             <field-map source="0:127" target="INFO" type="Range"/>
             <field-map source="128:" target="WARNING" type="Range"/>
