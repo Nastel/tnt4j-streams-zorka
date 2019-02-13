@@ -41,8 +41,8 @@ __kafka() {
           tracer.newAttr("OFFSET", record_single.offset());
           tracer.newAttr(record_single.timestampType().toString(), record_single.timestamp());
           tracer.newAttr("CHECKSUM", record_single.checksum());
-          tracer.newAttr("SERIALIZEDKEYSIZE", record_single.serializedKeySize());
-          tracer.newAttr("SERIALIZEDVALUESIZE", record_single.serializedValueSize());
+          tracer.newAttr("SERIALIZED_KEY_SIZE", record_single.serializedKeySize());
+          tracer.newAttr("SERIALIZED_VALUE_SIZE", record_single.serializedValueSize());
           tracer.newAttr("KEY",  record_single.key() != null ? record_single.key().toString() : "NULL");
           tracer.newAttr("VALUE", record_single.value() != null ? record_single.value().toString() : "NULL");
         } catch (java.lang.Exception e) {
@@ -76,7 +76,7 @@ __kafka() {
       )
   );
 
-  spy.add(spy.instrument("KAFKA_CONSUMMER")
+  spy.add(spy.instrument("KAFKA_CONSUMER")
       .onEnter(
           tracer.begin("KAFKA_RECEIVE"),
           spy.fetchThread("THREAD")

@@ -49,7 +49,7 @@ __javax_tnt4j_jms() {
         ? spy.subchain(spy.get("MAP_NAMES", "MSG", "mapNames"), _fetchMapTNTProcessor())
         : null;
 
-    modifyJMSmessage() {
+    modifyJMSMessage() {
         process(rec) {
             _log ? zorka.logInfo("Attributing message with correlator") : null;
             message = rec.get("MSG");
@@ -108,7 +108,7 @@ __javax_tnt4j_jms() {
             __tnt4j.getThread(),
             tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "JMS_RECEIVE"),
             spy.fetchArg("THIS", 0),
-         //   tnt4j._modifyJMSmessages(),
+         //   tnt4j._modifyJMSMessages(),
             _log ? spy.zorkaLog(_logLevel, "JMS", "######## ${THIS} ###### ${MSG.getJMSDestination} ##########onMessage####### ${RES} ###### ${APPL} ####### ${JK_CORR_RID} ") : null,
             spy.format("DESTINATION", "${MSG.getJMSDestination:unknown}"), 
             spy.call("RESULT", "MSG", "setStringProperty", (String) "MARIUS", (String) "MARIUS"),
@@ -140,7 +140,7 @@ __javax_tnt4j_jms() {
             tracer.attr("EVENT_TYPE", "SEND"),
             tracer.attr("EVENT_NAME", "SEND"),
             __tnt4j.getThread(),
-        //    tnt4j._modifyJMSmessages(),
+        //    tnt4j._modifyJMSMessages(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps
         )
         .onError(
@@ -173,7 +173,7 @@ __javax_tnt4j_jms() {
             spy.format("SEND", "SEND"),
             tracer.attr("EVENT_NAME", "SEND"),
             tracer.attr("EVENT_TYPE", "SEND"),
-         //   tnt4j._modifyJMSmessages(),
+         //   tnt4j._modifyJMSMessages(),
             javax_jms._fetchAttrs, javax_jms._fetchText, _fetchMapTNT, javax_jms._fetchProps,
             tracer.flags(tracer.SUBMIT_TRACE)
         )
@@ -193,7 +193,7 @@ __javax_tnt4j_jms() {
             spy.fetchArg("THIS", 0),
             __tnt4j.getThread(),
             __tnt4j.attrCorrelator(),
-            modifyJMSmessage(),
+            modifyJMSMessage(),
             _log ? spy.zorkaLog(_logLevel, "JMS", "#######################send3######### ${MSG.getClass}#####${THIS.getClass}######") : null,
             tracer.isInTrace("HTTP") ? null : tracer.begin("JMS_SEND2"),
             __tnt4j.attrAppl("JMS"),

@@ -24,24 +24,24 @@ zorka.require("sql.bsh", "tnt4j_comm.bsh");
 __tnt4j_sql() {
 
     _trace = true;
-	
-	    spy.add(
+
+    spy.add(
         spy.instrument("SQL_TNT4J_STREAMS_TRACKER")
             .onEnter(
                     spy.fetchArg("THIS", 0),
-					spy.fetchArg("ARG1", 1),
+                    spy.fetchArg("ARG1", 1),
                     tracer.isInTrace("HTTP") ? null : (tracer.isInTrace("SQL") ? null : tracer.begin("SQL")),
-					spy.format("SERVER", "SERVER"),
-					spy.format("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication|SERVER}"),
-					tracer.attr("APPL", "APPL"),
-				
+                    spy.format("SERVER", "SERVER"),
+                    spy.format("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication|SERVER}"),
+                    tracer.attr("APPL", "APPL"),
+
                     __tnt4j.attrCorrelator(),
                     tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
                     tracer.formatAttr("EVENT_TYPE", "SEND"),
                     tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
                     spy.format("SQL", "${THIS.sql|ARG1}"),
-					spy.format("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}"),
-					 spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID}  ${DB} ${SQL} ${THIS.class}"),
+                    spy.format("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}"),
+                    spy.zorkaLog("DEBUG", "SQL", "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID}  ${DB} ${SQL} ${THIS.class}"),
                     _trace
                         ? spy.subchain(
                             tracer.isInTrace("HTTP") ? null : tracer.begin("SQL", zorka.longCfg("sql.trace.time")),
@@ -51,34 +51,32 @@ __tnt4j_sql() {
                         : null
             )
             .onError(
-                    spy.fetchError("ERR"), 
+                    spy.fetchError("ERR"),
                     _trace ? tracer.flags(tracer.SUBMIT_TRACE) : null, 
                     sql._error_chain
             )
             .onSubmit(spy.strTime("TIME"), sql._slow_chain, sql._stats_chain)
             .include(
-				spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcStatement", "execut*")
+                spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcStatement", "execut*")
             )
     );
-	
 
     spy.add(
         spy.instrument("SQL_TNT4J_STREAMS_TRACKER2")
             .onEnter(
                     spy.fetchArg("THIS", 0),
-					
                     tracer.isInTrace("HTTP") ? null : (tracer.isInTrace("SQL") ? null : tracer.begin("SQL")),
-					spy.format("SERVER", "SERVER"),
-					spy.format("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication|SERVER}"),
-					tracer.attr("APPL", "APPL"),
-				
+                    spy.format("SERVER", "SERVER"),
+                    spy.format("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication|SERVER}"),
+                    tracer.attr("APPL", "APPL"),
+
                     __tnt4j.attrCorrelator(),
                     tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
                     tracer.formatAttr("EVENT_TYPE", "SEND"),
                     tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
                     spy.format("SQL", "${THIS.sql}"),
-					spy.format("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}"),
-					 spy.zorkaLog("DEBUG", "SQL", "########################execute2 ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID}  ${DB} ${SQL} ${THIS.class}"),
+                    spy.format("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}"),
+                    spy.zorkaLog("DEBUG", "SQL", "########################execute2 ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID}  ${DB} ${SQL} ${THIS.class}"),
                     _trace
                         ? spy.subchain(
                             tracer.isInTrace("HTTP") ? null : tracer.begin("SQL", zorka.longCfg("sql.trace.time")),
@@ -94,16 +92,15 @@ __tnt4j_sql() {
             )
             .onSubmit(spy.strTime("TIME"), sql._slow_chain, sql._stats_chain)
             .include(
-				spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "execut*"),
-				spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "execut*")
+                spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "execut*"),
+                spy.byMethod("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "execut*")
             )
     );
-											
-	
-	if (zorka.boolCfg("tracer")) {
-      tracer.exclude("oracle.**");
-      tracer.exclude("com.mysql.**");
-	} 
+
+    if (zorka.boolCfg("tracer")) {
+        tracer.exclude("oracle.**");
+        tracer.exclude("com.mysql.**");
+    }
 
     return this;
 }

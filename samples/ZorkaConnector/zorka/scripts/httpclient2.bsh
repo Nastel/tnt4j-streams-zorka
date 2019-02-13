@@ -63,7 +63,7 @@ __nastel_httpclient() {
   }
 
   spy.add(
-    spy.instrument("NASTEL_HTTPCLIENT_SEND")
+    spy.instrument("NASTEL_HTTP_CLIENT_SEND")
       .onEnter(
           spy.fetchArg("METHOD", 1),
           spy.fetchArg("CONNECTION", 0),
