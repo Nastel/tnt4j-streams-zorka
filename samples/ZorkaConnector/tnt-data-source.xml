@@ -274,7 +274,7 @@
         <field name="TrackingId" locator="TrackingId" locator-type="Label"/>
         <field name="ParentID" locator="ParentId" locator-type="Label"/>
         <!--<field name="Correlator" locator="JK_ZORKA_PARENT_ID" locator-type="Label"/>-->
-        <field name="Level" locator="Level" locator-type="Label"/>
+        <field name="Level" locator="Level" locator-type="Label" datatype="Number"/>
         <!--ommit all the traces -->
         <!--<filter name="Level Filter">-->
         <!--<expression handle="exclude" lang="groovy"><![CDATA[-->

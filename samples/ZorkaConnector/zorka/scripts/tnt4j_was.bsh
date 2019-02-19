@@ -128,7 +128,7 @@ __was() {
     return (javax.management.MBeanServer)this;
   }
 
-  _log = zorka.boolCfg("tnt4j.log", false);
+  _log = zorka.boolCfg("tnt4j.log", true);
   _logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
 
   pmi_register() {
@@ -248,17 +248,16 @@ __was() {
     .onEnter(spy.fetchArg("REQ", 1), spy.fetchArg("RESP", 2), spy.tlGet("IREQ", _ireq),
       spy.fetchArg("THIS", 0),
       spy.format("URI", "${IREQ.requestURI}"),
-      http._trace
-        ? spy.subchain(
-            http._uriQualifier,
-            __tnt4j.generateCommonCorrelator(),
-            spy.format("APP_HANDLE", "${THIS.webapp.applicationName}"),
-            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################Begin ${APPL_HANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}") : null,
-            tracer.begin("HTTP", zorka.longCfg("http.trace.time")),
-            tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
-            tracer.attr("URI", "URI"))
-        : null,
-      http._congestion ? spy.zorkaStats("java", http._mbean, "stats", "ALL", "T", null, spy.ACTION_ENTER) : null
+      tracer.begin("HTTP", zorka.longCfg("http.trace.time")),
+      tracer.attr("URI", "URI"),
+      http._uriQualifier,
+      __tnt4j.generateCommonCorrelator(),
+      spy.format("APPL_HANDLE", "${THIS.webapp.applicationName}"),
+      spy.tlSet("APPL_HANDLE",__tnt4j._APPLICATION),
+      tracer.formatAttr("APPL", "${APPL_HANDLE|DEF_APPL}"),
+      _log ? spy.zorkaLog(_logLevel, "HTTP", "########################Begin ${APPL_HANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}") : null,
+
+      tracer.formatAttr("EVENT_TYPE", "RECEIVE")
     )
     .onReturn(
         spy.put("ERR", ""),
@@ -274,16 +273,14 @@ __was() {
             http._params ? http.param_processor() : spy.put("PARAMS", ""),
             http._headers ? headers_processor(true, true) : null,
             http._cookies ? http.cookies_processor(true, true) : spy.put("COOKIES", ""),
-            spy.format("DEF_APPL", "PlantsByWebsphereDF"),
-            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################END !") : null,
-            tracer.formatAttr("APPL", "${APPL_HANDLE|DEF_APPL}"))
+            spy.format("DEF_APPL", "SERVER"),
+            _log ? spy.zorkaLog(_logLevel, "HTTP", "########################END !") : null)
         : null,
       http._slow_chain,
       spy.subchain(
         spy.valSetFilter("STATUS", http._errors),
         spy.markError(),
         http._error_chain),
-      http._stats ? spy.zorkaStats("java", http._mbean, "stats", "ALL", "T", null, http._action) : null,
       http._tags_chain
     )
     .onError(spy.fetchError("EX"), spy.format("ERR", "${EX}"), spy.format("STATUS", "ERR"),
@@ -338,9 +335,18 @@ __was() {
   if (zorka.boolCfg("tracer")) {
     tracer.exclude(
       "com.ibm.**",
-      "org.omg.CORBA.**",
+      "org.omg.**",
       "com.sun.**",
-      "jdk.internal.**"
+      "jdk.internal.**",
+      "org.ogsi.**", 
+      "sun.**",
+      "org.eclipse.**",
+      "org.w3c.**",
+      "org.ietf.**",
+      "org.osgi.**",
+      "commonj.**",
+      "org.osoa.**",
+      "openj9.**"
     );
   }
 

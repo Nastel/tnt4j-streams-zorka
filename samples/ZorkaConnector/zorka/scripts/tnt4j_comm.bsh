@@ -64,13 +64,19 @@ __tnt4j() {
      */
     attrAppl(defaultApplName) {
         process(rec) {
-            cachedApplName = _APPLICATION.get();
+            cachedApplName = _APPLICATION.get(); 
+            zorka.logInfo("######################## APPL: " + cachedApplName);
+
             if (cachedApplName == null) {
-                tracer.newAttr("APPL1", defaultApplName.toString());
-                rec.put("APPL1", defaultApplName.toString());
+                if (rec.get("APPL") == null) {
+                    tracer.newAttr("APPL", defaultApplName.toString());
+                    rec.put("APPL", defaultApplName.toString());
+                }
             } else {
-                tracer.newAttr("APPL1", cachedApplName);
-                rec.put("APPL1", cachedApplName);
+                if (rec.get("APPL") == null) {
+                    tracer.newAttr("APPL", cachedApplName);
+                    rec.put("APPL", cachedApplName);
+                }
             }
 
             return rec;
@@ -94,7 +100,8 @@ __tnt4j() {
     generateCommonCorrelator() {
         process(rec) {
             String rtid =  java.util.UUID.randomUUID().toString();
-            _log ? spy.zorkaLog(_logLevel, "WAS", "############################## CommonCorrelator: " + rtid): null;
+            zorka.logInfo("WAS ############################## CommonCorrelator: " + rtid);
+            rec.put("JK_CORR_RID", rtid);
             tracer.newAttr("JK_CORR_RID", rtid);
             _TRACKING_RECEIVE.set(rtid);
 
