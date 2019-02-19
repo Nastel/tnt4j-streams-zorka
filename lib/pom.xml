@@ -18,7 +18,7 @@
 
     <properties>
         <zico.version>1.0.16</zico.version>
-        <zorka.version>1.0.17</zorka.version>
+        <zorka.version>1.0.18</zorka.version>
     </properties>
 
     <build>
