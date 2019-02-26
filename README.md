@@ -1,11 +1,11 @@
 # tnt4j-streams-zorka
 TNT4J transaction &amp; method tracing streams for Java.
 
-TNT4J-Streams-Zorka is extension of TNT4J-Streams to give ability of streaming Zorka traces as activity events to [jKoolCloud](https://www.jkoolcloud.com).
+TNT4J-Streams-Zorka is an extension of TNT4J-Streams to provide the streaming of Zorka traces as activity events to [jKoolCloud](https://www.jkoolcloud.com).
 
 TNT4J-Streams-Zorka is under GPLv3 license as Zorka itself.
 
-This document covers just information specific to TNT4J-Streams-Zorka project.
+This document covers only information specific to TNT4J-Streams-Zorka project.
 Detailed information on TNT4J-Streams can be found in [README document](https://github.com/Nastel/tnt4j-streams/blob/master/README.md).
 
 Importing TNT4J-Streams-Zorka project into IDE
@@ -50,9 +50,9 @@ and JavaDocs.
 
 #### Zorka Connector
 
-This sample shows how to stream activity events from Zorka produced traces data. Zorka connector connect to Zico service as listener 
-(client) depending on defined configuration. Default is `localhost:8640`.
-Most basic way to use sample is to send Http request to Zorka monitored Tomcat server.
+This sample shows how to stream activity events from Zorka produced traces data. The Zorka connector connects to the Zico service 
+as a  listener (client) dependent on the  defined configuration. Default is `localhost:8640`.
+The most basic way to use the sample is to send an HTTP request to a Zorka monitored Tomcat server.
 
 Sample files can be found in [`samples/ZorkaConnector`](./samples/ZorkaConnector/) directory.
 
@@ -301,10 +301,10 @@ Sample stream configuration:
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
 
-        <!-- If trace records filtering leaving defined maximum number of entries required. `0` streams whole trace. -->
+        <!-- For trace records filtering [leaving ??], value of maximum number of event entries is required. A value of `0` streams the whole trace. -->
         <property name="MaxTraceEvents" value="100"/>
 
-        <!-- If trace records filtering by methods execution time using Bollinger Bands is required -->
+        <!-- For trace records filtering by methods execution time, use of Bollinger Bands is required -->
         <!--<property name="Bollinger_K_times" value="3"/> -->
         <!--<property name="Bollinger_N_period" value="20"/> -->
         <!--<property name="BollingerRecalculationPeriod" value="3000"/> -->
@@ -339,27 +339,25 @@ Sample stream configuration:
 Stream configuration states that `ZorkaConnector` referencing parsers `ZorkaHTTP`, `ZorkaSQL`, `ZorkaLDAP`, `ZorkaWebService`, `ZorkaJMS`, 
 `ZorkaWebSocket` and `ZorkaTrace` shall be used.
 
-`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property indicates that stream 
-should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map` data structure and puts it to buffer 
-queue to be processed by referenced parsers. Note that parsers uses attribute `tags` to map concrete parser with received trace over trace 
+`ZorkaConnector` connects to Zico service as configured using `Host` and `Port` properties. `HaltIfNoParser` property indicates that the stream 
+should skip unparseable entries. `ZorkaConnector` transforms received Zorka trace entries to `Map` data structure and puts it to a buffer 
+queue to be processed by the referenced parsers. Note that the parsers use attribute `tags` to map concrete [?? unclear] parser with received trace over trace 
 attribute `MARKER`.
 
-`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is `HTTP`, thus parser 
-`tags` value should be same.
+`ZorkaHTTP` parser is used to fill activity event fields from HTTP trace attributes map data. HTTP trace marker is `HTTP`, thus the parser 
+`tags` value should be the same.
 
-`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. SQL trace marker is `SQL`.
+`ZorkaSQL` parser is used to fill activity event fields from SQL trace attributes map data. The 'tags' value is set to match the SQL trace marker `SQL`.
 
-`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. LDAP trace marker is `LDAP`.
+`ZorkaLDAP` parser is used to fill activity event fields from LDAP trace attributes map data. The 'tags' value is set to match the LDAP trace marker `LDAP`.
 
-`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. Web Service trace marker is 
-`WS_TNT4J_STREAMS_TRACKER`.
+`ZorkaWebService` parser is used to fill activity event fields from Web Service trace attributes map data. The 'tags' value is set to match the Web Service trace marker `WS_TNT4J_STREAMS_TRACKER`.
 
-`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. JMS trace marker is `JMS_TNT4J_STREAMS_TRACKER`.
+`ZorkaJMS` parser is used to fill activity event fields from JMS trace attributes map data. The 'tags' value is set to match the JMS trace marker `JMS_TNT4J_STREAMS_TRACKER`.
 
-`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. WebSocket trace marker is 
-`WebSocket`.
+`ZorkaWebSocket` parser is used to fill activity event fields from WebSocket trace attributes map data. The 'tags' value is set to match the WebSocket trace marker `WebSocket`.
 
-`ZorkaTrace` parser is used to fill activity event fields from method call trace attributes map data. Method call trace marker is `TRACE`.
+`ZorkaTrace` parser is used to fill activity event fields from Java method call trace attributes map data. The 'tags' value is set to match the Java method call trace marker 'TRACE`.
 
 Activity event mapped fields:
 
@@ -367,27 +365,27 @@ Activity event mapped fields:
  * `StartTime` is mapped from trace attribute named `CLOCK`. Zorka returns this field as UNIX timestamp.
  * `EventName` is mapped from trace attribute named `MARKER`.
  * `ElapsedTime` is mapped from trace attribute named `METHOD_TIME`. Zorka returns this field as timestamp in nanoseconds.
- * `Class` is mapped from trace attribute named `CLASS`. It represents class name of object trace was taken from.
- * `Method` is mapped from trace attribute named `METHOD`. It represents method name trace was taken from.
+ * `Class` is mapped from trace attribute named `CLASS`. It represents class name of object the trace was taken from.
+ * `Method` is mapped from trace attribute named `METHOD`. It represents Java method name the trace was taken from.
  * `Correlator` is mapped from trace attributes named `JK_CORR_RID`, `JK_CORR_SID` and `CORRELATION`. `JK_CORR_RID` and `JK_CORR_SID` values 
- are retrieved from initial Http request (see ContextTracker from TNT4J API). `CORRELATION` value is retrieved from JMS message field 
+ are retrieved from initial HTTP request (see ContextTracker from TNT4J API). `CORRELATION` value is retrieved from JMS message field 
  `correlationId`.
- * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration then this field is 
+ * `Message` field may be mapped from different trace attribute values. If mapping is not defined in parser configuration, then this field is 
  filled with trace data as string.
- * `TrackingId` is mapped from trace attribute named `TrackingId`. It represents unique identifier of activity event.
- * `ParentId` is mapped from trace attribute named `ParentId`. It represents unique identifier of parent trace activity.
+ * `TrackingId` is mapped from trace attribute named `TrackingId`. It represents a unique identifier of the activity event.
+ * `ParentId` is mapped from trace attribute named `ParentId`. It represents a unique identifier of the parent trace activity.
 
 Additional fields can be mapped on user demand.
 
 Custom fields values defined in parser fields mapping can be found as activity event properties.
 
-**NOTE:** Stream stops only when critical runtime error/exception occurs or application gets terminated.
+**NOTE:** The stream stops only when a critical runtime error/exception occurs or an application gets terminated.
 
 ##### Zorka Connector as Java agent
 
-To run Zorka Connector sample using Zorka as attached Java Agent use `run-attach.bat` or `run-attach.sh` depending on your OS.
+To run the Zorka Connector sample using Zorka as an attached Java Agent, use `run-attach.bat` or `run-attach.sh` depending on your OS.
 
-To change Zorka home dir open `.bat` or `.sh` file and change first parameter of `zorka-attach` executable to actual path on your system.
+To change the Zorka home directory, open the `.bat` or `.sh` file and change the first parameter of `zorka-attach` executable to the actual path on your system.
 
 `zorka-attach` parameters: `zorka-attach zorkaAgentPath VMDescriptor`
  * zorkaAgentPath - Zorka agent jar (`zorka*.jar`) path. (Required)
@@ -405,14 +403,14 @@ Details on TNT4J-Streams related configuration can be found in TNT4J-Streams REA
  * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
  * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
  * MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means stream 
- whole stack trace. (Optional)
- * Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It means number of methods execution times values to use for averages 
- calculation. Setting `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
+ the whole stack trace. (Optional)
+ * Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It defines the number of 'method execution time' values to use for averages 
+ calculation. Setting a `0` or negative value means dynamic methods execution time filtering using Bollinger Bands is disabled. 
  Default value - `0`. (Optional)
-     * Bollinger_K_times - Bollinger Bands K times an N-period standard deviation above the exponentially moving average(nPeriod). It means 
-     how many times average value has to change to change bands width. Default value - `3`. (Optional, actual only if `Bollinger_N_period` 
+     * Bollinger_K_times - Defines an upper Bollinger Band at K times an N-period standard deviation above the exponentially moving average (n-Period) and a lower band at K times an N-period standard deviation below the exponentially moving average. It means 
+     how many times the average value has to change to change the bands width. Default value - `3`. (Optional; used only if `Bollinger_N_period` 
      is set)
-     * BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - `3000`. (Optional, actual only 
+     * BollingerRecalculationPeriod - Bollinger Bands recalculation period in milliseconds. Default value - `3000`. (Optional; used only 
      if `Bollinger_N_period` is set)
 
     sample:
@@ -431,8 +429,8 @@ Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/
 #### JMX Zabix data puller parameters
 
  * JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)
- * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
- * Port - port number of machine running Zico service to listen. Default value - `10056`. (Optional)
+ * Host - host name of the machine running the Zico agent-collector service. Default value - `localhost`. (Optional)
+ * Port - listener port number of the Zico agent-collector service. Default value - `10056`. (Optional)
  * CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - `every 15sec`. (Optional)
 
     sample:
@@ -469,7 +467,7 @@ defined dependencies automatically.
 **NOTE:** If you have build and installed TNT4J-Streams into your local maven repository, you don't need to install
 it manually.
 
-Some of required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
+Some of the required and optional dependencies may be not available in public [Maven Repository](http://repo.maven.apache.org/maven2/). In this 
 case we would recommend to download those dependencies manually into [`lib`](./lib/) directory and install into local maven repository by 
 running maven script [`lib/pom.xml`](./lib/pom.xml) using `initialize` goal.
 
@@ -480,7 +478,7 @@ What to download manually:
 * Zico-util
 * Zorka
 
-Download the above libraries and place into the `tnt4j-streams-zorka/lib` directory like this:
+Download the above libraries and place into the `tnt4j-streams-zorka/lib` directory as follows:
 ```
     lib
      + zorka
@@ -492,25 +490,23 @@ Download the above libraries and place into the `tnt4j-streams-zorka/lib` direct
 ```
 (O) marked libraries are optional
 
-**NOTE:** also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
+**NOTE:** Also see TNT4J-Streams README document chapter ['Manually installed dependencies'](https://github.com/Nastel/tnt4j-streams/blob/master/README.md#manually-installed-dependencies).
 
 ## Building
-   * to build project and make release assemblies run maven goals `clean package`
-   * to build project, make release assemblies and install to local repo run maven goals `clean install`
+   * To build the project and make release assemblies, run maven goals `clean package`
+   * To build the project, make release assemblies and install to local repo, run maven goals `clean install`
 
-Release assemblies are built to `../build/tnt4j-streams-zorka` directory.
+Release assemblies are built in directory `../build/tnt4j-streams-zorka`.
 
-**NOTE:** sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
-missing dependencies try to delete local maven repository by hand: e.g., on MS Windows delete contents of `c:\Users\[username]\.m2\repository` 
-directory.
+**NOTE:** Sometimes maven fails to correctly handle dependencies. If dependency configuration looks fine, but maven still complains about 
+missing dependencies, try to delete the local maven repository by hand: e.g., on MS Windows delete contents of directory `c:\Users\[username]\.m2\repository`.
 
-So resuming build process quick "how to build" steps would be like this:
-1. download `zico-util.jar` and `zorka.jar` to `tnt4j-streams-zorka/lib/zorka/{version}/` directory.
-2. install manually managed dependencies from `tnt4j-streams-zorka/lib` directory running `mvn initialize`.
-3. if `tnt4j-streams` not built yet build it: run `mvn clean install` for a [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
-file located in `tnt4j-streams` directory.
-4. now you can build `tnt4j-streams-zorka`: run `mvn clean install` for a [`pom.xml`](./pom.xml) file located in `tnt4j-streams-zorka` 
-directory.
+Summarizing the build process, the quick "how to build" steps would be:
+1. Download `zico-util.jar` and `zorka.jar` to directory `tnt4j-streams-zorka/lib/zorka/{version}/`.
+2. Install manually managed dependencies from directory `tnt4j-streams-zorka/lib` running `mvn initialize`.
+3. If `tnt4j-streams` was not built yet, build it: run `mvn clean install` from the project object model file [`pom.xml`](https://github.com/Nastel/tnt4j-streams/blob/master/pom.xml) 
+located in `tnt4j-streams` directory.
+4. Now you can build `tnt4j-streams-zorka`: run `mvn clean install` from file [`pom.xml`](./pom.xml) located in directory `tnt4j-streams-zorka`.
 
 ## Running samples
 
@@ -524,7 +520,7 @@ Testing of TNT4J-Streams-Zorka
 * [Mockito](http://mockito.org/)
 
 ## Testing using maven
-Maven tests run is disabled by default. To enable Maven to run tests set Maven command line argument 
+Maven tests run is disabled by default. To enable Maven to run tests, set Maven command line argument 
 `-DskipTests=false`.
 
 ## Running manually from IDE
