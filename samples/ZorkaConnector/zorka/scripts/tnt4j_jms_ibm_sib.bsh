@@ -1,0 +1,85 @@
+/*
+ * Copyright 2014-2019 JKOOL, LLC.
+ *
+ * This file is part of TNT4J-Streams-Zorka.
+ *
+ * TNT4J-Streams-Zorka is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TNT4J-Streams-Zorka is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+zorka.require("tnt4j_comm.bsh", "tnt4j_jms.bsh");
+
+ _log = zorka.boolCfg("tnt4j.log", false);
+ _logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
+
+__javax_tnt4j_jms_ibm_sib() {
+    spy.add(spy.instrument("JMS_TNT4J_STREAMS_IBM_SIB")
+        .onEnter(
+            spy.fetchArg("MSG", 1),
+            spy.fetchArg("THIS", 0),
+            __tnt4j.getThread(),
+            __tnt4j.attrCorrelator(),
+            _log ? spy.zorkaLog(_logLevel, "JMS", "#######################SEND SIB######### ${MSG.getClass}#####${THIS.getClass}######") : null,
+            tracer.isInTrace("HTTP") ? null : tracer.begin("JMS_SEND2"),
+            __tnt4j.attrAppl("JMS"),
+            tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "JMS_SEND2"),
+            spy.call("RES", "THIS", "getDestinationAddress"),
+            spy.format("DESTINATION", "${RES.getDestinationName:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"),
+            tracer.attr("JanusMessageSignature","JanusMessageSignature"),
+            spy.format("SEND", "SEND"),
+            tracer.attr("EVENT_NAME", "SEND"),
+            tracer.attr("EVENT_TYPE", "SEND"),
+            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
+            javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
+            tracer.flags(tracer.SUBMIT_TRACE)
+        )
+        .include(
+            spy.byMethod(0, "com.ibm.ws.sib.processor.impl.ProducerSessionImpl", "send", "void", "com.ibm.wsspi.sib.core.SIBusMessage", "com.ibm.wsspi.sib.core.SITransaction")
+        )
+    );
+
+    spy.add(spy.instrument("JMS_TNT4J_STREAMS_IBM_SIB2")
+        .onEnter(
+            spy.fetchArg("MSG", 1),
+            spy.fetchArg("THIS", 0),
+            __tnt4j.getThread(),
+            __tnt4j.attrCorrelator(),
+            _log ? spy.zorkaLog(_logLevel, "JMS", "#######################SEND SIB######### ${MSG.getClass}#####${THIS.getClass}######") : null,
+            tracer.isInTrace("HTTP") ? null : tracer.begin("JMS_SEND2"),
+            __tnt4j.attrAppl("JMS"),
+            tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "JMS_SEND2"),
+            spy.call("RES", "THIS", "getDestinationAddress"),
+            spy.format("DESTINATION", "${RES.getDestinationName:unknown}"),
+            tracer.attr("DESTINATION","DESTINATION"),
+            tracer.attr("JanusMessageSignature","JanusMessageSignature"),
+            spy.format("SEND", "SEND"),
+            tracer.attr("EVENT_NAME", "SEND"),
+            tracer.attr("EVENT_TYPE", "SEND"),
+            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
+            javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
+            tracer.flags(tracer.SUBMIT_TRACE)
+        )
+        .include(
+            spy.byInterfaceAndMethod(0, "com.ibm.websphere.sib.api.jms.JmsMsgProducer", "send", "void", "javax.jms.Destination", "javax.jms.Message",       "int", "int", "long"),
+            spy.byMethod(0, "com.ibm.ws.sib.api.jms.impl.JmsMsgProducerImpl", "send", "void", "javax.jms.Destination", "javax.jms.Message"),
+            spy.byMethod(0, "com.ibm.ws.sib.api.jms.impl.JmsMsgProducerImpl", "send", "void", "javax.jms.Destination", "javax.jms.Message", "int", "int", "long"),
+            spy.byMethod(0, "com.ibm.ws.sib.api.jms.impl.JmsQueueSenderImpl", "send", "void", "javax.jms.Queue", "javax.jms.Message", "int", "int", "long"),
+            spy.byMethod(0, "com.ibm.ws.sib.api.jms.impl.JmsQueueSenderImpl", "send", "void", "javax.jms.Queue", "javax.jms.Message")
+        )
+    );
+
+    return this;
+}
+
+ __javax_tnt4j_jms_ibm_sib = __javax_tnt4j_jms_ibm_sib();
