@@ -289,10 +289,10 @@
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
 
-        <!-- If trace records filtering leaving defined maximum number of entries required. `0` streams whole trace. -->
+        <!-- For trace records depth filtering, producing defined maximum number of trace stack entries events. A value of `0` streams the whole trace. -->
         <property name="MaxTraceEvents" value="100"/>
 
-        <!-- If trace records filtering by methods execution time using Bollinger Bands is required -->
+        <!-- For trace records filtering by methods execution time, use of Bollinger Bands is required -->
         <!--<property name="Bollinger_K_times" value="3"/> -->
         <!--<property name="Bollinger_N_period" value="20"/> -->
         <!--<property name="BollingerRecalculationPeriod" value="3000"/> -->
@@ -309,5 +309,4 @@
         <parser-ref name="ZorkaTrace" tags="TRACE"/>
         <parser-ref name="ZorkaKafka" tags="KAFKA_RECEIVE,KAFKA_SEND"/>
     </stream>
-
 </tnt-data-source>
