@@ -50,15 +50,14 @@ and JavaDocs.
 
 #### Zorka Connector
 
-This sample shows how to stream activity events from Zorka produced traces data. The Zorka connector connects to the Zico service 
-as a  listener (client) dependent on the defined configuration. Default is `localhost:8640`. [1]
-The most basic way to use the sample is to send an HTTP request to a Zorka monitored Tomcat server.
+This sample shows how to stream activity events from Zorka produced traces data. The Zorka connector connects to the Zico [1] service 
+as a  listener (client) dependent on the defined configuration. Default is `localhost:8640`. The most basic way to use the sample is to 
+send an HTTP request to a Zorka monitored Tomcat server.
 
-**NOTE [1]:** Interesting derivation of the name Zico: Zico is the nickname of the Zorka data collector, which collects data 
-from Zorka agents. The collector listener port number 8640 decimal is hex 0x21C0, in which the '2' looks like the letter 'Z' 
-and the '1' looks like the letter 'I'. Thus, the hex number looks like the word 'ZICO' and the collector is referred to as 
-'ZICO', 'Zico' or 'zico'.
-Ref: http://zorka.io/p/docs/install/monitor/zico/
+**NOTE [1]:** Interesting derivation of the name Zico: Zico is the nickname of the Zorka data collector, which collects data from Zorka 
+agents. The collector listener port number 8640 decimal is hex 0x21C0, in which the '2' looks like the letter 'Z' and the '1' looks like the 
+letter 'I'. Thus, the hex number looks like the word 'ZICO' and the collector is referred to as 'ZICO', 'Zico' or 'zico'.
+See [Zico install manual](http://zorka.io/p/docs/install/monitor/zico/).
 
 Sample files can be found in [`samples/ZorkaConnector`](./samples/ZorkaConnector/) directory.
 
