@@ -51,8 +51,14 @@ and JavaDocs.
 #### Zorka Connector
 
 This sample shows how to stream activity events from Zorka produced traces data. The Zorka connector connects to the Zico service 
-as a  listener (client) dependent on the  defined configuration. Default is `localhost:8640`.
+as a  listener (client) dependent on the defined configuration. Default is `localhost:8640`. [1]
 The most basic way to use the sample is to send an HTTP request to a Zorka monitored Tomcat server.
+
+**NOTE [1]:** Interesting derivation of the name Zico: Zico is the nickname of the Zorka data collector, which collects data 
+from Zorka agents. The collector listener port number 8640 decimal is hex 0x21C0, in which the '2' looks like the letter 'Z' 
+and the '1' looks like the letter 'I'. Thus, the hex number looks like the word 'ZICO' and the collector is referred to as 
+'ZICO', 'Zico' or 'zico'.
+Ref: http://zorka.io/p/docs/install/monitor/zico/
 
 Sample files can be found in [`samples/ZorkaConnector`](./samples/ZorkaConnector/) directory.
 
@@ -351,7 +357,7 @@ Sample stream configuration:
     <stream name="ZorkaStream" class="com.jkoolcloud.tnt4j.streams.inputs.ZorkaConnector">
         <property name="HaltIfNoParser" value="false"/>
 
-        <!-- For trace records depth filtering, producing defined maximum number of trace stack entries events. A value of `0` streams the whole trace. -->
+        <!-- For trace records depth filtering, define the maximum number of stack trace entry events. A value of `0` streams the whole trace. -->
         <property name="MaxTraceEvents" value="100"/>
 
         <!-- For trace records filtering by methods execution time, use of Bollinger Bands is required -->
@@ -445,8 +451,8 @@ Details on TNT4J-Streams related configuration can be found in TNT4J-Streams REA
 
 #### Zorka connector parameters
 
- * Host - host name of machine running Zico service to listen. Default value - `localhost`. (Optional)
- * Port - port number of machine running Zico service to listen. Default value - `8640`. (Optional)
+ * Host - host name of machine running the Zico collector. Default value - `localhost`. (Optional)
+ * Port - listener port number of the Zico collector. Default value - `8640`. (Optional)
  * MaxTraceEvents - maximum number of events to stream for single stack trace. Default value - `100`. Value `0` (or negative) means stream 
  the whole stack trace. (Optional)
  * Bollinger_N_period - Bollinger Bands N-period moving average (EMA). It defines the number of 'method execution time' values to use for 
@@ -474,8 +480,8 @@ Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/
 #### JMX Zabix data puller parameters
 
  * JMXQuery - Zabbix JMX query expression to get desired JMX beans attributes. (Required)
- * Host - host name of the machine running the Zico agent-collector service. Default value - `localhost`. (Optional)
- * Port - listener port number of the Zico agent-collector service. Default value - `10056`. (Optional)
+ * Host - host name of the machine running the Zabix server. Default value - `localhost`. (Optional)
+ * Port - listener port number of the Zabix server for receiving data from Zabix agents and proxies. Default value - `10056`. (Optional)
  * CronSchedExpr - Cron expression to define Zabbix queries invocation scheduler. Default value - `every 15sec`. (Optional)
 
     sample:
