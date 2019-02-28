@@ -486,7 +486,7 @@ Also see ['Generic streams parameters'](https://github.com/Nastel/tnt4j-streams/
     sample:
 ```xml
     <property name="Host" value="some.host.name"/>
-    <property name="Host" value="9953"/>
+    <property name="Port" value="9953"/>
     <property name="CronSchedExpr" value="0/15 * * 1/1 * ? *"/>
     <property name="JMXQuery">
         <![CDATA[
