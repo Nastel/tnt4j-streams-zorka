@@ -252,12 +252,12 @@ __was() {
       tracer.attr("URI", "URI"),
       http._uriQualifier,
       __tnt4j.generateCommonCorrelator(),
+      spy.format("DEF_APPL", "SERVER"),
       spy.format("APPL_HANDLE", "${THIS.webapp.applicationName}"),
       spy.tlSet("APPL_HANDLE",__tnt4j._APPLICATION),
-      tracer.formatAttr("APPL", "${APPL_HANDLE|DEF_APPL}"),
       _log ? spy.zorkaLog(_logLevel, "HTTP", "########################Begin ${APPL_HANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}") : null,
-
-      tracer.formatAttr("EVENT_TYPE", "RECEIVE")
+      __tnt4j.attrAppl("WAS"),
+      __tnt4j.attributeTNT4J("HTTP","RECEIVE","HTTP")
     )
     .onReturn(
         spy.put("ERR", ""),
@@ -273,7 +273,6 @@ __was() {
             http._params ? http.param_processor() : spy.put("PARAMS", ""),
             http._headers ? headers_processor(true, true) : null,
             http._cookies ? http.cookies_processor(true, true) : spy.put("COOKIES", ""),
-            spy.format("DEF_APPL", "SERVER"),
             _log ? spy.zorkaLog(_logLevel, "HTTP", "########################END !") : null)
         : null,
       http._slow_chain,
@@ -303,7 +302,7 @@ __was() {
           spy.fetchArg("MDESC", 2), spy.fetchArg("ARGS", 4),
           ejb._trace ? tracer.begin("EJB", zorka.longCfg("ejb.trace.time")) : null,
           ejb._trace ? tracer.formatAttr("METHOD", "${MDESC.name}") : null,
-          ejb._trace ? tracer.formatAttr("EVENT_TYPE", "RECEIVE") : null,
+          ejb._trace ? __tnt4j.attributeTNT4J("HTTP", "RECEIVE", "EJB") : null,
           ejb._trace ? tracer.formatAttr("CLASS", "${MDESC.declaringClass.name}") : null)
       .onError(
           ejb._trace ? tracer.flags(tracer.SUBMIT_TRACE) : null,

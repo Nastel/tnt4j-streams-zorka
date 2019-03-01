@@ -202,7 +202,10 @@ __javax_tnt4j_jms() {
             )
         )
         .onReturn(
+            spy.fetchRetVal("MSG"),
             __tnt4j.getThread(),
+            __tnt4j.attrCorrelator(),
+            __tnt4j.attrAppl("JMS"),
             spy.format("RECEIVE", "RECEIVE"),
             tracer.attr("EVENT_NAME", "RECEIVE"),
             tracer.attr("EVENT_TYPE", "RECEIVE"),

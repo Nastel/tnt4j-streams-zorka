@@ -59,13 +59,33 @@ __tnt4j() {
     }
 
     /**
+     * Atributes Trace with required fields for TNT4-Streams: MARKER, EVENT_TYPE, EVENT_NAME
+     *
+     */
+    attributeTNT4J(marker, eventType, eventName) {
+        process(rec) {
+            rec.put("MARKER", marker);
+            rec.put("EVENT_TYPE", eventType);
+            rec.put("EVENT_NAME", eventName);
+            tracer.newAttr("MARKER", marker);
+            tracer.newAttr("EVENT_TYPE", eventType);
+            tracer.newAttr("EVENT_NAME", eventName);
+
+            zorka.logDebug("Will trace " + rec.get(".CTX").getShortClassName() + " " + rec.get(".CTX").getMethodName()  + " for TNT4J with marker: " + marker + " eventType: " + eventType + " eventName: " + eventName);
+            return rec;
+        }
+
+        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+    }
+
+    /**
      *  Adds a trace attribute with application name
      *
      */
     attrAppl(defaultApplName) {
         process(rec) {
             cachedApplName = _APPLICATION.get(); 
-            zorka.logInfo("######################## APPL: " + cachedApplName);
+            zorka.logDebug("######################## APPL: " + cachedApplName);
 
             if (cachedApplName == null) {
                 if (rec.get("APPL") == null) {
@@ -100,7 +120,7 @@ __tnt4j() {
     generateCommonCorrelator() {
         process(rec) {
             String rtid =  java.util.UUID.randomUUID().toString();
-            zorka.logInfo("WAS ############################## CommonCorrelator: " + rtid);
+            zorka.logDebug("WAS ############################## CommonCorrelator: " + rtid);
             rec.put("JK_CORR_RID", rtid);
             tracer.newAttr("JK_CORR_RID", rtid);
             _TRACKING_RECEIVE.set(rtid);
@@ -133,7 +153,7 @@ __tnt4j() {
 
     printTrace() {
         process(rec) {
-            _log ? zorka.logInfo("GETTING trace") : null;
+            _log ? zorka.logDebug("GETTING trace") : null;
             stackTrace = Thread.currentThread().getStackTrace();
 
             for (i = 0; i < stackTrace.length; i++) {

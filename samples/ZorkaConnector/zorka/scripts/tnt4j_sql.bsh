@@ -62,8 +62,8 @@ __tnt4j_sql() {
                     tracer.attr("APPL", "APPL"),
 
                     __tnt4j.attrCorrelator(),
+                    __tnt4j.attributeTNT4J("SQL","SEND","SQL"),
                     tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
-                    tracer.formatAttr("EVENT_TYPE", "SEND"),
                     tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
                     spy.format("SQL", "${THIS.sql|ARG1}"),
                     spy.format("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName|THIS.__mcf.dataSource.dataSourceJndiName}"), // TODO 8.5.5.0 uses different names
@@ -97,10 +97,8 @@ __tnt4j_sql() {
                     spy.format("SERVER", "SERVER"),
                     spy.format("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication|SERVER}"),
                     tracer.attr("APPL", "APPL"),
-
                     __tnt4j.attrCorrelator(),
-                    tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "SQL"),
-                    tracer.formatAttr("EVENT_TYPE", "SEND"),
+                    __tnt4j.attributeTNT4J("SQL","SEND","SQL"),
                     tracer.isInTrace("HTTP") ? null : tracer.flags(tracer.SUBMIT_TRACE),
                     spy.format("SQL", "${THIS.sql}"),
                     spy.tlGet("PARAMS", _parameters),

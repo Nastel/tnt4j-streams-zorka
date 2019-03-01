@@ -19,8 +19,8 @@
 
 zorka.require("tnt4j_comm.bsh", "tnt4j_jms.bsh");
 
- _log = zorka.boolCfg("tnt4j.log", false);
- _logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
+_log = zorka.boolCfg("tnt4j.log", false);
+_logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
 
 __javax_tnt4j_jms_ibm_sib() {
     spy.add(spy.instrument("JMS_TNT4J_STREAMS_IBM_SIB")
@@ -29,17 +29,15 @@ __javax_tnt4j_jms_ibm_sib() {
             spy.fetchArg("THIS", 0),
             __tnt4j.getThread(),
             __tnt4j.attrCorrelator(),
+            __tnt4j.attrAppl("JMS"),
+            __tnt4j.attributeTNT4J("JMS_SEND","SEND","SEND"),
             _log ? spy.zorkaLog(_logLevel, "JMS", "#######################SEND SIB######### ${MSG.getClass}#####${THIS.getClass}######") : null,
             tracer.isInTrace("HTTP") ? null : tracer.begin("JMS_SEND2"),
-            __tnt4j.attrAppl("JMS"),
             tracer.isInTrace("HTTP") ? null : tracer.formatAttr("MARKER", "JMS_SEND2"),
             spy.call("RES", "THIS", "getDestinationAddress"),
             spy.format("DESTINATION", "${RES.getDestinationName:unknown}"),
             tracer.attr("DESTINATION","DESTINATION"),
             tracer.attr("JanusMessageSignature","JanusMessageSignature"),
-            spy.format("SEND", "SEND"),
-            tracer.attr("EVENT_NAME", "SEND"),
-            tracer.attr("EVENT_TYPE", "SEND"),
             javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
             javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
             tracer.flags(tracer.SUBMIT_TRACE)
@@ -64,8 +62,7 @@ __javax_tnt4j_jms_ibm_sib() {
             tracer.attr("DESTINATION","DESTINATION"),
             tracer.attr("JanusMessageSignature","JanusMessageSignature"),
             spy.format("SEND", "SEND"),
-            tracer.attr("EVENT_NAME", "SEND"),
-            tracer.attr("EVENT_TYPE", "SEND"),
+            __tnt4j.attributeTNT4J("JMS_SEND","SEND","SEND"),
             javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
             javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
             tracer.flags(tracer.SUBMIT_TRACE)
