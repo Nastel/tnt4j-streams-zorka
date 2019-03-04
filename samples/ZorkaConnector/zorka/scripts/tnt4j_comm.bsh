@@ -59,7 +59,7 @@ __tnt4j() {
     }
 
     /**
-     * Atributes Trace with required fields for TNT4-Streams: MARKER, EVENT_TYPE, EVENT_NAME
+     * Attributes Trace with required fields for TNT4-Streams: MARKER, EVENT_TYPE, EVENT_NAME
      *
      */
     attributeTNT4J(marker, eventType, eventName) {
@@ -132,7 +132,7 @@ __tnt4j() {
     }
 
     /**
-     *  Adds a trace attribute with application name UUID to correlate variuos application calls
+     *  Adds a trace attribute with application name UUID to correlate various application calls
      *
      */
     attrCorrelator() {
