@@ -50,7 +50,7 @@
                transparent="true"/>
         <field name="Message" locator="MQGACF_ACTIVITY_TRACE.MQBACF_MESSAGE_DATA" locator-type="Label" datatype="Binary">
             <field-transform name="MsgPayloadToString" lang="groovy"><![CDATA[
-                WmqUtils.getString($fieldValue, ${CodedCharSetValue},true)
+                WmqUtils.getString($fieldValue, ${CodedCharSetValue}, WmqUtils.MQ_BIN_STR_STRIP_DLH_XQH)
             ]]></field-transform>
             <parser-ref name="XML_Data_Parser" aggregation="Merge"/>
         </field>
@@ -257,9 +257,9 @@
 
         <!-- provide application name without path for tracking -->
         <field name="ProgramName" locator="MQCACF_APPL_NAME" locator-type="Label">
-            <field-transform name="pgmName" lang="groovy">
+            <field-transform name="pgmName" lang="groovy"><![CDATA[
                 Utils.getFileName($fieldValue)
-            </field-transform>
+            ]]></field-transform>
         </field>
 
         <field name="ChannelType" locator="MQIACH_CHANNEL_TYPE" locator-type="Label">
