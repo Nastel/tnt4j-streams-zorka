@@ -17,31 +17,26 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require("tnt4j_base_tomcat.bsh", "ldap.bsh");
+zorka.require ("tnt4j_base_tomcat.bsh", "ldap.bsh");
 
 // This script gets TNT4J Correlation IDs
 
-__tnt4j_ldap() {
+__tnt4j_ldap () {
 
-    spy.add(spy.instrument("LDAP_TNT4J_STREAMS_TRACKER")
-        .onEnter(
-            spy.fetchArg("NAME", 1),
-            spy.fetchArg("FILTER", 2),
-            spy.tlGet("JK_CORR_SID", tnt4j._JK_CORR_SID),
-            spy.tlGet("JK_CORR_RID", tnt4j._JK_CORR_RID),
-            tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
-            tracer.attr("JK_CORR_SID", "JK_CORR_SID")
-        )
-        .include(
-            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "javax.naming.Name"),
-            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String",
-                "javax.naming.directory.Attributes"),
-            spy.byMethod(0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String",
-                "javax.naming.directory.SearchControls")
-        )
-    );
+  spy.add (spy.instrument ("LDAP_TNT4J_STREAMS_TRACKER")
+                   .onEnter (spy.fetchArg ("NAME", 1),
+                             spy.fetchArg ("FILTER", 2),
+                             spy.tlGet ("JK_CORR_SID", tnt4j._JK_CORR_SID),
+                             spy.tlGet ("JK_CORR_RID", tnt4j._JK_CORR_RID),
+                             tracer.attr ("JK_CORR_RID", "JK_CORR_RID"),
+                             tracer.attr ("JK_CORR_SID", "JK_CORR_SID"))
+                   .include (spy.byMethod (0, "javax.naming.directory.InitialDirContext", "search", null, "javax.naming.Name"),
+                             spy.byMethod (0, "javax.naming.directory.InitialDirContext", "search", null, "String",
+                                           "javax.naming.directory.Attributes"),
+                             spy.byMethod (0, "javax.naming.directory.InitialDirContext", "search", null, "String", "String",
+                                           "javax.naming.directory.SearchControls")));
 
-    return this;
+  return this;
 }
 
-tnt4j_ldap = __tnt4j_ldap();
+tnt4j_ldap = __tnt4j_ldap ();

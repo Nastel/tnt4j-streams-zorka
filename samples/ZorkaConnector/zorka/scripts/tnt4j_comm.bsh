@@ -19,166 +19,175 @@
 
 // zorka.require();
 
-__tnt4j() {
+__tnt4j () {
 
-    // Logging helpers
-    _log = zorka.boolCfg("tnt4j.log", true);
-    _logLevel = zorka.stringCfg("tnt4j.log.level", "DEBUG");
+  // Logging helpers
+  _log = zorka.boolCfg ("tnt4j.log", true);
+  _logLevel = zorka.stringCfg ("tnt4j.log.level", "DEBUG");
 
-    // Application resolving
+  // Application resolving
 
-    _APPLICATION = new ThreadLocal();
+  _APPLICATION = new ThreadLocal ();
 
-    /**
-     *  Sets the application from the webserver request URI
-     *
-     */
-    resolveAppl() {
-        process(rec) {
-            req  = rec.get("REQ");
-            if (req != null) {
-                hdrs = req.getHeaders("Referer");
-                if (hdrs != null) {
-                    i = 0;
-                    for (hdr : hdrs) {
-                        try {
-                            java.net.URI uris = new java.net.URI(hdr);
-                            String appl = java.nio.file.Paths.get(uris.getPath()).getName(0).toString();
-                            rec.put("APPL_HANDLE", appl);
-                            _APPLICATION.set(appl);
-                        } catch (Exception e) {
-                        }
-                        break;
-                    }
-                }
+  /**
+   *  Sets the application from the webserver request URI
+   **/
+  resolveAppl () {
+    process (rec) {
+      req = rec.get ("REQ");
+      if (req != null)
+      {
+        hdrs = req.getHeaders ("Referer");
+        if (hdrs != null)
+        {
+          i = 0;
+          for (hdr : hdrs)
+          {
+            try
+            {
+              java.net.URI uris = new java.net.URI (hdr);
+              String appl = java.nio.file.Paths.get (uris.getPath ()).getName (0).toString ();
+              rec.put ("APPL_HANDLE", appl);
+              _APPLICATION.set (appl);
             }
-
-            return rec;
+            catch (Exception e)
+            {}
+            break;
+          }
         }
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+      }
+
+      return rec;
+    }
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
+
+  /**
+   * Attributes Trace with required fields for TNT4-Streams: MARKER, EVENT_TYPE, EVENT_NAME
+   **/
+  attributeTNT4J (marker, eventType, eventName) {
+    process (rec) {
+      rec.put ("MARKER", marker);
+      rec.put ("EVENT_TYPE", eventType);
+      rec.put ("EVENT_NAME", eventName);
+      tracer.newAttr ("MARKER", marker);
+      tracer.newAttr ("EVENT_TYPE", eventType);
+      tracer.newAttr ("EVENT_NAME", eventName);
+
+      zorka.logDebug (
+              "Will trace " + rec.get (".CTX").getShortClassName () + " " + rec.get (".CTX").getMethodName () + " for TNT4J with marker: " +
+              marker + " eventType: " + eventType + " eventName: " + eventName);
+      return rec;
     }
 
-    /**
-     * Attributes Trace with required fields for TNT4-Streams: MARKER, EVENT_TYPE, EVENT_NAME
-     *
-     */
-    attributeTNT4J(marker, eventType, eventName) {
-        process(rec) {
-            rec.put("MARKER", marker);
-            rec.put("EVENT_TYPE", eventType);
-            rec.put("EVENT_NAME", eventName);
-            tracer.newAttr("MARKER", marker);
-            tracer.newAttr("EVENT_TYPE", eventType);
-            tracer.newAttr("EVENT_NAME", eventName);
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-            zorka.logDebug("Will trace " + rec.get(".CTX").getShortClassName() + " " + rec.get(".CTX").getMethodName()  + " for TNT4J with marker: " + marker + " eventType: " + eventType + " eventName: " + eventName);
-            return rec;
+  /**
+   *  Adds a trace attribute with application name
+   **/
+  attrAppl (defaultApplName) {
+    process (rec) {
+      cachedApplName = _APPLICATION.get ();
+      zorka.logDebug ("######################## APPL: " + cachedApplName);
+
+      if (cachedApplName == null)
+      {
+        if (rec.get ("APPL") == null)
+        {
+          tracer.newAttr ("APPL", defaultApplName.toString ());
+          rec.put ("APPL", defaultApplName.toString ());
         }
-
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
-    }
-
-    /**
-     *  Adds a trace attribute with application name
-     *
-     */
-    attrAppl(defaultApplName) {
-        process(rec) {
-            cachedApplName = _APPLICATION.get(); 
-            zorka.logDebug("######################## APPL: " + cachedApplName);
-
-            if (cachedApplName == null) {
-                if (rec.get("APPL") == null) {
-                    tracer.newAttr("APPL", defaultApplName.toString());
-                    rec.put("APPL", defaultApplName.toString());
-                }
-            } else {
-                if (rec.get("APPL") == null) {
-                    tracer.newAttr("APPL", cachedApplName);
-                    rec.put("APPL", cachedApplName);
-                }
-            }
-
-            return rec;
+      }
+      else
+      {
+        if (rec.get ("APPL") == null)
+        {
+          tracer.newAttr ("APPL", cachedApplName);
+          rec.put ("APPL", cachedApplName);
         }
+      }
 
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+      return rec;
     }
 
-    clearAppl() {
-        _APPLICATION = new ThreadLocal();
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
+
+  clearAppl () {
+    _APPLICATION = new ThreadLocal ();
+  }
+
+  // Common correlator feature
+
+  /**
+   *  Generates new UUID to correlate various application calls
+   **/
+  _TRACKING_RECEIVE = new ThreadLocal ();
+
+  generateCommonCorrelator () {
+    process (rec) {
+      String rtid = java.util.UUID.randomUUID ().toString ();
+      zorka.logDebug ("WAS ############################## CommonCorrelator: " + rtid);
+      rec.put ("JK_CORR_RID", rtid);
+      tracer.newAttr ("JK_CORR_RID", rtid);
+      _TRACKING_RECEIVE.set (rtid);
+
+      return rec;
     }
 
-    // Common correlator feature
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-    /**
-     *  Generates new UUID to correlate various application calls
-     *
-     */
-    _TRACKING_RECEIVE = new ThreadLocal();
+  /**
+   *  Adds a trace attribute with application name UUID to correlate various application calls
+   **/
+  attrCorrelator () {
+    process (rec) {
+      uuid = _TRACKING_RECEIVE.get ();
+      if (uuid != null)
+      {
+        tracer.newAttr ("JK_CORR_RID", uuid);
+        rec.put ("JK_CORR_RID", uuid);
+      }
 
-    generateCommonCorrelator() {
-        process(rec) {
-            String rtid =  java.util.UUID.randomUUID().toString();
-            zorka.logDebug("WAS ############################## CommonCorrelator: " + rtid);
-            rec.put("JK_CORR_RID", rtid);
-            tracer.newAttr("JK_CORR_RID", rtid);
-            _TRACKING_RECEIVE.set(rtid);
-
-            return rec;
-        }
-
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+      return rec;
     }
 
-    /**
-     *  Adds a trace attribute with application name UUID to correlate various application calls
-     *
-     */
-    attrCorrelator() {
-        process(rec) {
-            uuid = _TRACKING_RECEIVE.get();
-            if (uuid != null) {
-                tracer.newAttr("JK_CORR_RID", uuid);
-                rec.put("JK_CORR_RID", uuid);
-            }
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-            return rec;
-        }
+  // Other helpers
 
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+  printTrace () {
+    process (rec) {
+      _log ? zorka.logDebug ("GETTING trace") : null;
+      stackTrace = Thread.currentThread ().getStackTrace ();
+
+      for (i = 0; i < stackTrace.length; i++)
+      {
+        zorka.logInfo (stackTrace [i].toString ());
+      }
+
+      return rec;
     }
 
-    // Other helpers
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-    printTrace() {
-        process(rec) {
-            _log ? zorka.logDebug("GETTING trace") : null;
-            stackTrace = Thread.currentThread().getStackTrace();
+  getThread () {
+    process (rec) {
+      thread = Thread.currentThread ().getName ();
+      tracer.newAttr ("THREAD", thread);
+      _log ? spy.zorkaLog (_logLevel, "WAS", "##############################" + thread) : null;
 
-            for (i = 0; i < stackTrace.length; i++) {
-                zorka.logInfo(stackTrace[i].toString());
-            }
-
-            return rec;
-        }
-
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+      return rec;
     }
 
-    getThread() {
-        process(rec) {
-            thread = Thread.currentThread().getName();
-            tracer.newAttr("THREAD",thread);
-            _log ? spy.zorkaLog(_logLevel, "WAS", "##############################" + thread): null;
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-            return rec;
-        }
-
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
-    }
-
-    return this;
+  return this;
 }
 
- __tnt4j = __tnt4j();
+__tnt4j = __tnt4j ();

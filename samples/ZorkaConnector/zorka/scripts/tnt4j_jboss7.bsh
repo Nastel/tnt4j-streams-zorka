@@ -1,0 +1,389 @@
+/*
+ * Copyright 2014-2018 JKOOL, LLC.
+ *
+ * This file is part of TNT4J-Streams-Zorka.
+ *
+ * TNT4J-Streams-Zorka is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TNT4J-Streams-Zorka is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+zorka.require ("zabbix.bsh",
+               "ejb.bsh",
+               "javax.bsh",
+               "jsf.bsh",
+               "libs.bsh",
+               "audit.bsh",
+               "javax/jms.bsh",
+               "tnt4j_base_tomcat.bsh",
+               "apache/apache.bsh",
+               "apache/cxf.bsh",
+               "google/libs.bsh",
+               "jboss/hibernate.bsh",
+               "tnt4j_undertow.bsh",
+               "jboss/weld.bsh",
+               "jdbc/h2.bsh");
+
+__jboss7 () {
+
+  // Basic servlet statistics
+  __servlets () {
+
+    discovery () {
+      return zabbix.discovery ("java", "jboss.as:subsystem=web,*", "subsystem", "deployment", "servlet");
+    }
+
+    requests (deployment, servlet) {
+      return zorka.jmx ("java", "jboss.as:subsystem=web,deployment=" + deployment + ",servlet=" + servlet, "requestCount");
+    }
+
+    time (deployment, servlet, horizon) {
+      return zorka.rate ("java", "jboss.as:subsystem=web,deployment=" + deployment + ",servlet=" + servlet, "processingTime",
+                         "requestCount", horizon);
+    }
+
+    return this;
+  }
+
+  servlets = __servlets ();
+
+  // Basic session statistics
+  __sessions () {
+
+    discovery () {
+      return zabbix.discovery ("java", "jboss.as:subsystem=web,deployment=*", "subsystem", "deployment");
+    }
+
+    stat (deployment, attr) {
+      return zorka.jmx ("java", "jboss.as:subsystem=web,deployment=" + deployment, attr);
+    }
+
+    return this;
+  }
+
+  sessions = __sessions ();
+
+  // Basic data source statistics
+  __datasources () {
+    discovery () {
+      return zabbix.discovery ("java", "jboss.as:subsystem=datasources,data-source=*", "subsystem", "data-source");
+    }
+
+    url (datasource) {
+      return zorka.jmx ("java", "jboss.as:subsystem=datasources,data-source=" + datasource, "connectionUrl");
+    }
+
+    jndi (datasource) {
+      return zorka.jmx ("java", "jboss.as:subsystem=datasources,data-source=" + datasource, "jndiName");
+    }
+
+    // TODO find out how to get statistics
+
+    return this;
+  }
+
+  datasources = __datasources ();
+
+  __ejb3 () {
+
+    discovery (component) {
+      return zabbix.discovery ("java", "jboss.as:subsystem=ejb3,*", "subsystem", "deployment", "stateless-session-bean");
+    }
+
+    slsb (deployment, bean, attr) {
+      return zorka.jmx ("java", "jboss.as:subsystem=ejb3,deployment=" + deployment + ",stateless-session-bean=" + bean, attr);
+    }
+
+    sls_time (deployment, bean, horiz) {
+      return zorka.rate ("java", "jboss.as:subsystem=ejb3,deployment=" + deployment + ",stateless-session-bean=" + bean,
+                         "executionTime", "invocations", horiz);
+    }
+
+    sls_wait (deployment, bean, horiz) {
+      return zorka.rate ("java", "jboss.as:subsystem=ejb3,deployment=" + deployment + ",stateless-session-bean=" + bean,
+                         "waitTime", "invocations", horiz);
+    }
+
+    return this;
+  }
+
+  ejb3 = __ejb3 ();
+
+  __jpa () {
+
+    discovery (component) {
+      return zabbix.discovery ("java", "jboss.as:subsystem=jpa,*", "subsystem", "deployment", "hibernate-persistence-unit");
+    }
+
+    hpu (deployment, unit, attr) {
+      return zorka.jmx ("java", "jboss.as:subsystem=jpa,deployment=" + deployment + ",hibernate-persistence-unit=" + unit, attr);
+    }
+
+    return this;
+  }
+
+  jpa = __jpa ();
+
+  // JBoss Management Controller - for accessing
+
+  _modelNodeClass = null;
+
+  __mcreg () {
+    controller = null;
+    nodeclass = null;
+    process (rec) {
+      synchronized (super)
+      {
+        if (super.controller == null)
+        {
+          mc = rec.get ("THIS");
+          super.controller = mc;
+          super.nodeclass = mc.getClass ().getClassLoader ().loadClass ("org.jboss.dmr.ModelNode");
+          zorka.logInfo ("Intercepted reference to JBoss ModelController. DMR queries are ready to go.");
+        }
+      }
+      return rec;
+    }
+    return this;
+  }
+
+  mcreg = __mcreg ();
+
+  spy.add (spy.instance ("JBOSS7_MC_REGISTER")
+                   .onEnter (spy.fetchArg ("THIS", 0), (com.jitlogic.zorka.core.spy.SpyProcessor) mcreg)
+                   .include (spy.byMethod (0, "org.jboss.as.controller.ModelControllerImpl", "finshBoot", "void"),   // nasty typo in 7.0.2
+                             spy.byMethod (0, "org.jboss.as.controller.ModelControllerImpl", "finishBoot", "void")));
+
+  dmr_op (path, opname, akey, aval) {
+    op = mcreg.nodeclass.newInstance ();
+    op.get ("operation").set (opname);
+    addr = op.get ("address");
+
+    for (String seg : path.split (path.substring (0, 1)))
+    {
+      if (seg.contains ("="))
+      {
+        s = seg.split ("=");
+        addr.add (s [0], s [1]);
+      }
+    }
+
+    if (akey != null)
+    {
+      op.get (akey).set (aval);
+    }
+
+    return op;
+  }
+
+  dmr (path, attr) {
+    op = dmr_op (path, "read-attribute", "name", attr);
+    ret = mcreg.controller.execute (op, null, null, null);
+
+    if ("success".equals (ret.get ("outcome").asString ()))
+    {
+      return ret.get ("result").asString ();
+    }
+    else
+    {
+      zorka.logError ("Cannot get DMR value " + ret);
+      return null;
+    }
+  }
+
+  dmr_scan1 (path, name) {
+    op = dmr_op (path, "read-children-names", "child-type", name);
+    ret = mcreg.controller.execute (op, null, null, null);
+
+    data = util.list ();
+    for (elem : ret.get ("result").asList ())
+    {
+      data.add (util.map ("{#NAME}", elem.asString ()));
+    }
+    return data;
+  }
+
+  dmr_scan1 (path) {
+    op = dmr_op (path, "read-children-types", null, null);
+    ret = mcreg.controller.execute (op, null, null, null);
+
+    data = util.list ();
+    if ("success".equals (ret.get ("outcome").asString ()))
+    {
+      for (elem : ret.get ("result").asList ())
+      {
+        for (d : dmr_scan1 (path, elem.asString ()))
+        {
+          d.put ("{#TYPE}", elem.asString ());
+          data.add (d);
+        }
+      }
+      return data;
+    }
+    else
+    {
+      zorka.logError ("Cannot get DMR children types " + ret);
+      return null;
+    }
+
+  }
+
+  dmr_discovery (path) {
+    return util.json (util.map ("data", dmr_scan1 (path)));
+  }
+
+  dmr_discovery (path, type) {
+    return util.json (util.map ("data", dmr_scan1 (path, type)));
+  }
+
+  // Catch MX mbean server initialization and register JBoss MBean Server here ...
+
+  __mbsRegister () {
+    jbossMbs = null;
+
+    process (record) {
+      synchronized (super)
+      {
+        if (super.jbossMbs == null)
+        {
+          mbs = java.lang.management.ManagementFactory.getPlatformMBeanServer ();
+          zorka.registerMbs ("java", mbs);
+          super.jbossMbs = mbs;
+          zorka.logInfo ("Registered platform mbean server as 'java'");
+        }
+      }
+      return record;
+    }
+    return this;
+  }
+
+  spy.add (spy.instance ("JBOSS7_MBS_REGISTER")
+                   .onReturn ((com.jitlogic.zorka.core.spy.SpyProcessor) __mbsRegister ())
+                   .include (spy.byMethod (spy.AC_STATIC, "org.jboss.modules.ModuleLoader", "installMBeanServer", "void")));
+
+  if (zorka.boolCfg ("ejb"))
+  {
+
+    // EJB tracing for JBoss 7
+
+    spy.add (spy.instrument ("JBOSS7_EJB")
+                     .onEnter (spy.fetchArg ("MDESC", 2), spy.fetchArg ("ARGS", 3),
+                               ejb._trace ? tracer.begin ("EJB", zorka.longCfg ("ejb.trace.time")) : null,
+                               ejb._trace ? tracer.formatAttr ("METHOD", "${MDESC.name}") : null,
+                               ejb._trace ? tracer.formatAttr ("CLASS", "${MDESC.declaringClass.name}") : null)
+                     .onError (ejb._trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
+                               spy.fetchError ("ERR"),
+                               spy.format ("MSG", "${ERR.message}"),
+                               spy.strTime ("TIME"),
+                               ejb._error_chain)
+                     .onReturn (ejb._params ? spy.fetchRetVal ("RET") : spy.put ("RET", ""))
+                     .onSubmit (ejb._params ? ejb.arg_processor () : spy.put ("PARAMS", ""),
+                                ejb._trace ? tracer.attr ("RET", "RET") : null,
+                                ejb._stats ? spy.zorkaStats ("java", ejb._mbean, "byMethod", "${CLASS}.${METHOD}") : null,
+                                ejb._stats ? spy.zorkaStats ("java", ejb._mbean, "stats", "ALL") : null,
+                                spy.strTime ("TIME"),
+                                ejb._slow_chain)
+                     .include (spy.byMethod ("org.jboss.as.ejb3.inflow.AbstractInvocationHandler", "invoke"),
+                               spy.byMethod ("org.jboss.as.ee.component.ProxyInvocationHandler", "invoke"),
+                               spy.byMethod ("org.jboss.as.cmp.component.CmpEntityBeanInvocationHandler", "invoke"),
+                               spy.byMethod ("org.jboss.invocation.InterceptorInvocationHandler", "invoke")));
+
+  }
+
+  if (zorka.boolCfg ("tracer"))
+  {
+    tracer.exclude ("100:org.jboss.jms.client.delegate.ClientClusteredConnectionFactoryDelegate",
+                    "org.jboss.modules.**",
+                    "org.jboss.logging.**",
+                    "org.jboss.logmanager.**",
+                    "org.jboss.as.weld.webtier.jsf.**",
+                    "org.jboss.vfs.**",
+                    "org.jboss.modules.ConcurrentClassLoader");
+  }
+
+  if (zorka.boolCfg ("audit.log.logins"))
+  {
+
+    zorka.logInfo ("Enabling AUTHENTICATION audit for JBoss7 ...");
+
+    sdefEjbLogin = spy.instrument ("JBOSS7_AUDIT_EJB_LOGIN")
+            .onEnter (spy.fetchArg ("CTX", 1))
+            .onReturn (spy.fetchRetVal ("RET"),
+                       spy.put ("ACTION", "AUTHENTICATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("PRINCIPAL", "==", null),
+                                     spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod ("org.jboss.as.security.service.SimpleSecurityManager", "authenticate"));
+
+    audit.audit (sdefEjbLogin, "AUTHENTICATION", "${ACTION} result=${CTX.subjectInfo.authenticatedSubject | ERROR}");
+
+    sdefWebLogin = spy.instrument ("JBOSS7_AUDIT_WEB_LOGIN")
+            .onEnter (spy.fetchArg ("USERNAME", 1))
+            .onReturn (spy.fetchRetVal ("PRINCIPAL"),
+                       spy.put ("ACTION", "AUTHENTICATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("PRINCIPAL", "==", null),
+                                     spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod ("org.jboss.as.web.security.JBossWebRealm", "authenticate"));
+
+    audit.audit (sdefWebLogin, "AUTHENTICATION", "${ACTION} who=${USERNAME} result=${PRINCIPAL | ERROR}");
+  }
+
+  if (zorka.boolCfg ("audit.log.authorizations"))
+  {
+
+    zorka.logInfo ("Enabling AUTHORIZATION audit for JBoss ...");
+
+    sdefEjbAuthorize = spy.instrument ("JBOSS7_AUDIT_EJB_AUTHORIZE")
+            .onEnter (spy.fetchArg ("THIS", 0),
+                      spy.fetchArg ("METHOD", 4),
+                      spy.fetchArg ("CTX_ID", 5))
+            .onReturn (spy.fetchRetVal ("RET"),
+                       spy.put ("ACTION", "AUTHORIZATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("RET", "==", false),
+                                     spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod ("org.jboss.as.security.service.SimpleSecurityManager", "authorize"));
+
+    audit.audit (sdefEjbAuthorize, "AUTHORIZATION",
+                 "${ACTION} who=${THIS.callerPrincipal.name} type=EJB what=${METHOD.declaringClass.name}.${METHOD.name}() ctx=${CTX_ID}");
+
+    sdefWebAuthorize = spy.instrument ("JBOSS7_AUDIT_WEB_AUTHORIZE")
+            .onEnter (spy.fetchArg ("REQ", 1))
+            .onReturn (spy.fetchRetVal ("RET"),
+                       spy.put ("ACTION", "AUTHORIZATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("RET", "==", false),
+                                     spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod ("org.jboss.as.web.security.JBossWebRealm", "hasResourcePermission"));
+
+    audit.audit (sdefWebAuthorize, "AUTHORIZATION",
+                 "${ACTION} who=${REQ.remoteUser} type=HTTP what=${REQ.requestURI}");
+  }
+
+  if (zorka.boolCfg ("zabbix.active"))
+  {
+    zabbix.tagMetadata ("WILDFLY");
+  }
+
+  return this;
+}
+
+jboss7 = __jboss7 ();

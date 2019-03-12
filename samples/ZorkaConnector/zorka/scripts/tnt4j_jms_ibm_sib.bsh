@@ -38,7 +38,7 @@ __javax_tnt4j_jms_ibm_sib() {
             spy.format("DESTINATION", "${RES.getDestinationName:unknown}"),
             tracer.attr("DESTINATION","DESTINATION"),
             tracer.attr("JanusMessageSignature","JanusMessageSignature"),
-            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
+            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT,
             javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
             tracer.flags(tracer.SUBMIT_TRACE)
         )
@@ -63,7 +63,7 @@ __javax_tnt4j_jms_ibm_sib() {
             tracer.attr("JanusMessageSignature","JanusMessageSignature"),
             spy.format("SEND", "SEND"),
             __tnt4j.attributeTNT4J("JMS_SEND","SEND","SEND"),
-            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT, 
+            javax_jms._fetchAttrs, javax__tnt4j_jms._fetchMapTNT,
             javax__tnt4j_jms._fetchPropsProcessorWMQ(), javax__tnt4j_jms._fetchAttrsWMQ,
             tracer.flags(tracer.SUBMIT_TRACE)
         )

@@ -19,89 +19,75 @@
 
 // This script gets TNT4J Correlation IDs
 
-zorka.require(
-  "tracer.bsh"
-);
+zorka.require ("tracer.bsh");
 
-__kafka() {
+__kafka () {
 
-  zorka.defCfg("tnt4j.log", "no");
-  _log = zorka.boolCfg("tnt4j.log");
+  zorka.defCfg ("tnt4j.log", "no");
+  _log = zorka.boolCfg ("tnt4j.log");
 
-  messages_processor() {
-    process(rec) {
-      recs = rec.get("RECORDS");
-      if (req != null) {
-        try {
-          zorka.logDebug(rec.toString());
-          record_single = (org.apache.kafka.clients.consumer.ConsumerRecord) recs.iterator().next();
+  messages_processor () {
+    process (rec) {
+      recs = rec.get ("RECORDS");
+      if (req != null)
+      {
+        try
+        {
+          zorka.logDebug (rec.toString ());
+          record_single = (org.apache.kafka.clients.consumer.ConsumerRecord) recs.iterator ().next ();
 
-          tracer.newAttr("TOPIC", record_single.topic());
-          tracer.newAttr("PARTITION", record_single.partition());
-          tracer.newAttr("OFFSET", record_single.offset());
-          tracer.newAttr(record_single.timestampType().toString(), record_single.timestamp());
-          tracer.newAttr("CHECKSUM", record_single.checksum());
-          tracer.newAttr("SERIALIZED_KEY_SIZE", record_single.serializedKeySize());
-          tracer.newAttr("SERIALIZED_VALUE_SIZE", record_single.serializedValueSize());
-          tracer.newAttr("KEY",  record_single.key() != null ? record_single.key().toString() : "NULL");
-          tracer.newAttr("VALUE", record_single.value() != null ? record_single.value().toString() : "NULL");
-        } catch (java.lang.Exception e) {
-          tracer.newAttr("EXCEPTION", e.getMessage());
+          tracer.newAttr ("TOPIC", record_single.topic ());
+          tracer.newAttr ("PARTITION", record_single.partition ());
+          tracer.newAttr ("OFFSET", record_single.offset ());
+          tracer.newAttr (record_single.timestampType ().toString (), record_single.timestamp ());
+          tracer.newAttr ("CHECKSUM", record_single.checksum ());
+          tracer.newAttr ("SERIALIZED_KEY_SIZE", record_single.serializedKeySize ());
+          tracer.newAttr ("SERIALIZED_VALUE_SIZE", record_single.serializedValueSize ());
+          tracer.newAttr ("KEY", record_single.key () != null ? record_single.key ().toString () : "NULL");
+          tracer.newAttr ("VALUE", record_single.value () != null ? record_single.value ().toString () : "NULL");
+        }
+        catch (java.lang.Exception e)
+        {
+          tracer.newAttr ("EXCEPTION", e.getMessage ());
         }
       }
       return rec;
     }
-    return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
   }
 
-  spy.add(spy.instrument("KAFKA PRODUCER")
-      .onEnter(
-          tracer.begin("KAFKA_SEND"),
-          spy.fetchArg("REC", 1),
-          tracer.formatAttr("TOPIC", "${REC.topic()}"),
-          tracer.formatAttr("PARTITION", "${REC.partition()}"),
-          tracer.formatAttr("KEY", "${REC.key()}"),
-          tracer.formatAttr("VALUE", "${REC.value()}"),
-          tracer.formatAttr("EVENT_TYPE", "SEND"),
-          _log ? spy.zorkaLog("DEBUG", "KAFKA", "########################KAFKA SEND2 ####################") : null
-      )
-      .onReturn(
-          tracer.flags(tracer.SUBMIT_TRACE)
-      )
-      .onError(
-          tracer.flags(tracer.SUBMIT_TRACE)
-      )
-      .include(
-          spy.byMethod("org.apache.kafka.clients.producer.KafkaProducer", "send")
-      )
-  );
+  spy.add (spy.instrument ("KAFKA PRODUCER")
+                   .onEnter (tracer.begin ("KAFKA_SEND"),
+                             spy.fetchArg ("REC", 1),
+                             tracer.formatAttr ("TOPIC", "${REC.topic ()}"),
+                             tracer.formatAttr ("PARTITION", "${REC.partition ()}"),
+                             tracer.formatAttr ("KEY", "${REC.key ()}"),
+                             tracer.formatAttr ("VALUE", "${REC.value ()}"),
+                             tracer.formatAttr ("EVENT_TYPE", "SEND"),
+                             _log ? spy.zorkaLog ("DEBUG", "KAFKA", "########################KAFKA SEND2 ####################") : null)
+                   .onReturn (tracer.flags (tracer.SUBMIT_TRACE))
+                   .onError (tracer.flags (tracer.SUBMIT_TRACE))
+                   .include (spy.byMethod ("org.apache.kafka.clients.producer.KafkaProducer", "send")));
 
-  spy.add(spy.instrument("KAFKA_CONSUMER")
-      .onEnter(
-          tracer.begin("KAFKA_RECEIVE"),
-          spy.fetchThread("THREAD")
-      )
-      .onReturn(
-          spy.fetchRetVal("RECORDS"),
-          tracer.flags(tracer.SUBMIT_TRACE),
-          _log ? spy.zorkaLog("DEBUG", "KAFKA", "########################KAFKA RECEIVE ${RECORDS.count()} ####################") : null,
-          messages_processor(),
-          tracer.formatAttr("EVENT_TYPE", "RECEIVE"),
-          tracer.formatAttr("COUNT", "${RECORDS.count()}")
-      )
-      .onError(
-          tracer.flags(tracer.SUBMIT_TRACE)
-      )
-      .include(
-          spy.byMethod("org.apache.kafka.clients.consumer.KafkaConsumer", "poll")
-      )
-  );
+  spy.add (spy.instrument ("KAFKA_CONSUMER")
+                   .onEnter (tracer.begin ("KAFKA_RECEIVE"),
+                             spy.fetchThread ("THREAD"))
+                   .onReturn (spy.fetchRetVal ("RECORDS"),
+                              tracer.flags (tracer.SUBMIT_TRACE),
+                              _log ? spy.zorkaLog ("DEBUG", "KAFKA",
+                                                   "########################KAFKA RECEIVE ${RECORDS.count ()} ####################") : null,
+                              messages_processor (),
+                              tracer.formatAttr ("EVENT_TYPE", "RECEIVE"),
+                              tracer.formatAttr ("COUNT", "${RECORDS.count ()}"))
+                   .onError (tracer.flags (tracer.SUBMIT_TRACE))
+                   .include (spy.byMethod ("org.apache.kafka.clients.consumer.KafkaConsumer", "poll")));
 
-  tracer.exclude("sun.reflect.**", "org.apache.hadoop.**",
-         "org.apache.kafka.**", "sun.nio.**", "org.slf4j.**", "org.apache.log4j.**",  "org.infinispan.**", "com.fasterxml.**", "org.nustaq.**", "org.apache.commons.**", "com.google.**");
-  tracer.include("org.apache.kafka.clients.consumer.*", "org.apache.kafka.clients.producer.*");
+  tracer.exclude ("sun.reflect.**", "org.apache.hadoop.**",
+                  "org.apache.kafka.**", "sun.nio.**", "org.slf4j.**", "org.apache.log4j.**", "org.infinispan.**", "com.fasterxml.**",
+                  "org.nustaq.**", "org.apache.commons.**", "com.google.**");
+  tracer.include ("org.apache.kafka.clients.consumer.*", "org.apache.kafka.clients.producer.*");
 
   return this;
 }
 
-kafka = __kafka();
+kafka = __kafka ();

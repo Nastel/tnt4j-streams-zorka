@@ -31,7 +31,7 @@ __javax_tnt4j_jms() {
           text = "";
           while (names.hasMoreElements()) {
             name = names.nextElement();
-            text = text + name + "=" + msg.getObject(name) + ", "; 
+            text = text + name + "=" + msg.getObject(name) + ", ";
           }
           zorka.logInfo("######################## TEXT: " + text);
           tracer.newAttr("TEXT", text);
@@ -111,7 +111,7 @@ __javax_tnt4j_jms() {
 
          // _modifyJMSMessages(),
             _log ? spy.zorkaLog(_logLevel, "JMS", "######## ${THIS} ###### ${MSG.getJMSDestination} ##########onMessage####### ${RES} ###### ${APPL} ####### ${JK_CORR_RID} ") : null,
-            spy.format("DESTINATION", "${MSG.getJMSDestination:unknown}"), 
+            spy.format("DESTINATION", "${MSG.getJMSDestination:unknown}"),
             spy.call("RESULT", "MSG", "setStringProperty", (String) "MARIUS", (String) "MARIUS"),
             tracer.attr("DESTINATION","DESTINATION"),
             spy.format("RECEIVE", "RECEIVE"),

@@ -17,67 +17,210 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require("tracer.bsh", "apache/tomcat.bsh");
+zorka.require ("zabbix.bsh",
+               "http.bsh",
+               "tnt4j_comm.bsh",
+               "audit.bsh");
 
-// This script gets TNT4J Correlation IDs
+catalina__tnt4j () {
 
-__tnt4j() {
+  _log = zorka.boolCfg ("tnt4j.log", true);
+  _logLevel = zorka.stringCfg ("tnt4j.log.level", "DEBUG");
 
-    _JK_CORR_SID = new ThreadLocal();
-    _JK_CORR_RID = new ThreadLocal();
-    _JK_ZORKA_PARENT_ID = new ThreadLocal();
-    _JK_TRACKING_ID = new ThreadLocal();
+  headers_processor () {
 
-    _attributeTntCorrIds() {
-        return (com.jitlogic.zorka.core.spy.SpyProcessor) spy.subchain(
-            spy.tlGet("JK_CORR_RID", _JK_CORR_RID),
-            spy.tlGet("JK_CORR_SID", _JK_CORR_SID),
-            spy.tlGet("JK_ZORKA_PARENT_ID", _JK_ZORKA_PARENT_ID),
-            tracer.attr("JK_CORR_RID", "JK_CORR_RID"),
-            tracer.attr("JK_CORR_SID", "JK_CORR_SID"),
-            tracer.attr("JK_ZORKA_PARENT_ID", "JK_ZORKA_PARENT_ID")
-        );
-    }
+    _iprefix = zorka.stringCfg ("http.headers.iprefix");
+    _oprefix = zorka.stringCfg ("http.headers.oprefix");
+    _matcher = util.stringMatcher (zorka.listCfg ("http.headers.include"), zorka.listCfg ("http.headers.exclude"));
+    _maxlen = zorka.intCfg ("http.headers.maxlen");
 
-    attributes_processor() {
-        process(rec) {
-            request = rec.get("REQ");
-            if (req != null) {
-                sid = request.getSession().getAttribute("JK_CORR_SID");
-                _JK_CORR_SID.set(sid);
-                rid = request.getSession().getAttribute("JK_CORR_RID");
-                if (rid == null) {
-                    rid = java.util.UUID.randomUUID();
-                }
-                _JK_CORR_RID.set(rid);
-                pid = request.getSession().getAttribute("JK_ZORKA_PARENT_ID");
-                _JK_ZORKA_PARENT_ID.set(pid);
+    process (rec) {
+
+      req = rec.get ("REQ");
+      if (http._trace && req != null && req.getHeaderNames () != null)
+      {
+        for (name : req.getHeaderNames ())
+        {
+          hdrs = req.getHeaders (name);
+          if (hdrs != null)
+          {
+            i = 0;
+            for (hdr : hdrs)
+            {
+              if (hdr.length () > _maxlen)
+              {
+                hdr = hdr.substring (0, _maxlen) + "...";
+              }
+              if (i == 0)
+              {
+                tracer.newAttr (_iprefix + name, hdr);
+              }
+              else
+              {
+                tracer.newAttr (_iprefix + i + "_" + name, hdr);
+              }
+              i++;
             }
-            return rec;
+          }
         }
-        return (com.jitlogic.zorka.core.spy.SpyProcessor)this;
+      }
+
+      resp = rec.get ("RESP");
+      if (resp != null)
+      {
+        headers = resp.getCoyoteResponse ().getMimeHeaders ();
+        for (name : headers.names ())
+        {
+          i = 0;
+          for (hdr : headers.values (name))
+          {
+            if (hdr.length () > _maxlen)
+            {
+              hdr = hdr.substring (0, _maxlen) + "...";
+            }
+            if (i == 0)
+            {
+              tracer.newAttr (_oprefix + name, hdr);
+            }
+            else
+            {
+              tracer.newAttr (_oprefix + i + "_" + name, hdr);
+            }
+          }
+        }
+        location = headers.getHeader ("Location");
+        if (http._trace && location != null)
+        {
+          tracer.newAttr ("REDIRECT", location);
+          rec.put ("REDIRECT", location);
+        }
+      }
+
+      return rec;
     }
 
-    spy.add(spy.instrument("CATALINA_TNT4J_STREAMS_TRACKER")
-        .onEnter(
-            spy.fetchArg("REQ", 1),
-            spy.fetchArg("RESP", 2),
-            spy.call("REQ", "CONTEXT_PATH", "getContextPath"),
-            tracer.attr("CONTEXT_PATH", "CONTEXT_PATH"),
-            attributes_processor(),
-            spy.format("URI", "${REQ.request.requestURI}"),
-            tracer.attr("URI", "URI")
-         )
-        .onReturn(
-            spy.zorkaLog("DEBUG", "CORRELATORS FETCHING", "ON RETURN"),
-            spy.call("RESP", "RESULT", "addHeader", "ZorkaHeader", "MY_SUPER_ID"),
-            this._attributeTntCorrIds(),
-            tracer.flags(tracer.SUBMIT_TRACE)
-        )
-        .include(spy.byMethod("org.apache.catalina.core.StandardEngineValve", "invoke"))
-    );
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
 
-    return this;
+  _JK_CORR_SID = new ThreadLocal ();
+  _JK_CORR_RID = new ThreadLocal ();
+  _JK_ZORKA_PARENT_ID = new ThreadLocal ();
+  _JK_TRACKING_ID = new ThreadLocal ();
+
+  attributes_processor () {
+    process (rec) {
+      request = rec.get ("REQ");
+      if (req != null)
+      {
+        sid = request.getSession ().getAttribute ("JK_CORR_SID");
+        _JK_CORR_SID.set (sid);
+        rid = request.getSession ().getAttribute ("JK_CORR_RID");
+        if (rid == null)
+        {
+          rid = java.util.UUID.randomUUID ();
+        }
+        _JK_CORR_RID.set (rid);
+        pid = request.getSession ().getAttribute ("JK_ZORKA_PARENT_ID");
+        _JK_ZORKA_PARENT_ID.set (pid);
+      }
+      return rec;
+    }
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
+
+  _attributeTntCorrIds () {
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) spy.subchain (spy.tlGet ("JK_CORR_RID", _JK_CORR_RID),
+                                                                    spy.tlGet ("JK_CORR_SID", _JK_CORR_SID),
+                                                                    spy.tlGet ("JK_ZORKA_PARENT_ID", _JK_ZORKA_PARENT_ID),
+                                                                    tracer.attr ("JK_CORR_RID", "JK_CORR_RID"),
+                                                                    tracer.attr ("JK_CORR_SID", "JK_CORR_SID"),
+                                                                    tracer.attr ("JK_ZORKA_PARENT_ID", "JK_ZORKA_PARENT_ID"));
+  }
+
+  spy.add (spy.instrument ("CATALINA_TNT4J_STREAMS_TRACKER")
+                   .onEnter (spy.fetchArg ("REQ", 1),
+                             spy.fetchArg ("RESP", 2),
+                             spy.call ("REQ", "CONTEXT_PATH", "getContextPath"),
+                             tracer.attr ("CONTEXT_PATH", "CONTEXT_PATH"),
+                             attributes_processor (),
+                             spy.format ("URI", "${REQ.request.requestURI}"),
+                             spy.format ("APPL_HANDLE", "${URI}"),
+                             spy.tlSet ("APPL_HANDLE", __tnt4j._APPLICATION),
+                             spy.zorkaLog ("DEBUG", "HTTP",
+                                           "########################Begin ${APPL_HANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}"),
+                             __tnt4j.attrAppl ("CATALINA"),
+                             tracer.attr ("URI", "URI"))
+                   .onReturn (spy.zorkaLog ("DEBUG", "CORRELATORS FETCHING", "ON RETURN"),
+                              spy.call ("RESP", "RESULT", "addHeader", "ZorkaHeader", "MY_SUPER_ID"),
+                              this._attributeTntCorrIds (),
+                              tracer.flags (tracer.SUBMIT_TRACE))
+                   .include (spy.byMethod ("org.apache.catalina.core.StandardEngineValve", "invoke")));
+
+  if (zorka.boolCfg ("audit.log.logins"))
+  {
+    zorka.logInfo ("Enabling AUTHENTICATION audit for Catalina ...");
+
+    sdefWebLogin = spy.instrument ("CATALINA_AUDIT_WEB_LOGIN")
+            .onEnter (spy.fetchArg ("REQ", 1))
+            .onReturn (spy.fetchRetVal ("RET"),
+                       spy.put ("ACTION", "AUTHENTICATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("RET", "==", false),
+                                     spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHENTICATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod (0, "org.apache.catalina.authenticator.*Authenticator", "authenticate",
+                                    "boolean", "org.apache.catalina.connector.Request"));
+
+    audit.audit (sdefWebLogin, "AUTHENTICATION", "${ACTION} who=${REQ.remoteUser}");
+  }
+
+  if (zorka.boolCfg ("audit.log.authorizations"))
+  {
+    zorka.logInfo ("Enabling AUTHORIZATION audit for Catalina ...");
+
+    sdefWebAuthorize = spy.instrument ("CATALINA_AUDIT_WEB_AUTHORIZE")
+            .onEnter (spy.fetchArg ("REQ", 1))
+            .onReturn (spy.fetchRetVal ("RET"),
+                       spy.put ("ACTION", "AUTHORIZATION_SUCCESS"),
+                       spy.subchain (spy.vcmp ("RET", "==", false),
+                                     spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                                     spy.markError ()))
+            .onError (spy.put ("ACTION", "AUTHORIZATION_FAILURE"),
+                      spy.fetchError ("ERROR"))
+            .include (spy.byMethod ("org.jboss.web.tomcat.security.JBossWebRealm", "hasResourcePermission"));
+
+    audit.audit (sdefWebAuthorize, "AUTHORIZATION", "${ACTION} who=${REQ.remoteUser} type=HTTP what=${REQ.requestURI}");
+  }
+
+  if (zorka.boolCfg ("zabbix.active"))
+  {
+    zabbix.tagMetadata ("CATALINA");
+  }
+
+  if (zorka.boolCfg ("tracer"))
+  {
+    tracer.exclude ("org.apache.tomcat.util.**",
+                    "org.apache.naming.resources.**",
+                    "org.apache.naming.StringManager",
+                    "org.apache.catalina.security.**",
+                    "org.apache.catalina.core.ApplicationCont**",
+                    "org.apache.catalina.core.ContainerBase/fireContainerEvent",
+                    "org.apache.catalina.core.StandardWrap**",
+                    "org.apache.catalina.core.StandardContext",
+                    "org.apache.catalina.connector.**", // TODO but this is sometimes useful for resolving connectivity problems
+                    "org.apache.catalina.deploy.Security**",
+                    "org.apache.catalina.loader.WebappClassLoaderBase/*",
+                    "org.apache.catalina.session.StandardSession",
+                    "org.apache.catalina.session.StandardSessionFacade",
+                    "org.apache.catalina.util.**",
+                    "org.apache.coyote.Request",
+                    "org.apache.coyote.Response",
+                    "org.apache.catalina.core.ApplicationHttpRequest",
+                    "org.apache.catalina.loader.WebappClassLoader");
+  }
+
+  return this;
 }
 
-tnt4j = __tnt4j();
+catalina = catalina__tnt4j ();

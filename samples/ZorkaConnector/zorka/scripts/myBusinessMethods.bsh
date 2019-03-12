@@ -19,21 +19,29 @@
 
 // This script gets TNT4J Correlation IDs
 
-__my_business() {
+__my_bussines () {
 
-    spy.add(spy.instrument("BUSINESS_METHODS")
-        .onEnter(
-            tracer.flags(tracer.ALL_METHODS)
-        )
-        .include(
-            spy.byClass("com.slabs.**")
-        )
-    );
+  spy.add (spy.instrument ("BUSSINES_METHODS")
+                   .onEnter (tracer.flags (tracer.ALL_METHODS),
+                             tracer.formatAttr ("APPLICATION", "TRUE"))
+                   .include (
+                           //spy.byClass("com.ibm.websphere.samples.pbw.**"),
+                           spy.byClass ("com.nastel.bank.**")));
 
-    tracer.include("com.slabs.**");
-    tracer.exclude("java.**", "com.sun.faces.**", "net.**", "org.apache.**", "javax**", "sun.net", "org.primefaces.**" );
+  spy.add (spy.instrument ("TRACK_USER")
+                   .onEnter (spy.fetchArg ("EMAIL", 0),
+                             spy.zorkaLog ("INFO", "BANK_USER", "####################### ${EMAIL} ####################"),
+                             tracer.formatAttr ("USER", "${EMAIL}"))
+                   .include (spy.byMethod (0, "com.nastel.bank.DbUtils", "getBalance", "float", "java.lang.String")));
 
-    return this;
+  tracer.exclude ("java.**", "com.sun.faces.**", "net.**", "org.apache.**", "javax**", "sun.net", "org.primefaces.**", "com.jprofiler.**",
+                  "com.ibm.mq.jmqi.**", "com.ibm.mq.MQManagedConnectionJ11", "org.infinispan.**", "org.jboss.**", "com.sun.**", "io.**",
+                  "com.ibm.**", "org.wildfly.**", "org.objectweb.**", "com.arjuna.**", "jdk.**", "org.codehaus.**", "org.omg.**");
+  tracer.include ("com.nastel.bank.**");
+  tracer.include ("java.lang.**/currentTimeMillis");
+  tracer.include ("com.nastel.bank.**");
+
+  return this;
 }
 
-my_business = __my_business();
+my_bussines = __my_bussines ();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 JKOOL, LLC.
+ * Copyright 2014-2016 JKOOL, LLC.
  *
  * This file is part of TNT4J-Streams-Zorka.
  *
@@ -17,7 +17,7 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require ("sql.bsh", "tnt4j_comm.bsh");
+zorka.require ("tnt4j_comm.bsh", "jdbc/mysql.bsh");
 
 // This script gets TNT4J Correlation IDs
 
@@ -30,40 +30,42 @@ __tnt4j_sql () {
 
   _parameters = new ThreadLocal ();
 
-  parameter_processor () {
-    process (rec) {
-      synchronized (super)
-      {
-        values = _parameters.get ();
-        param = rec.get ("PARAM");
-        value = rec.get ("VALUE");
-        String newValue = null;
-        if (values == null || values == "")
-        {
-          newValue = String.valueOf (param == null ? "null" : param) + "=" + String.valueOf (value == null ? "null" : value);
-        }
-        else
-        {
-          newValue =
-                  values + ", " + String.valueOf (param == null ? "null" : param) + "=" + String.valueOf (value == null ? "null" : value);
-        }
-        _parameters.set (newValue);
-        rec.put ("NEW_VALUES", newValue);
-      }
 
-      return rec;
-    }
-    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
-  }
+  spy.add (spy.instrument ("MYSQL_1")
+                   .onEnter (spy.fetchArg ("THIS", 0),
+                             spy.fetchArg ("ARG1", 1),
+                             tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
+                             spy.format ("SERVER", "SERVER"),
+                             tracer.attr ("APPL", "APPL"),
+                             __tnt4j.attrCorrelator (),
+                             __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
+                             __tnt4j.attrAppl ("SERVER"),
+                             tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
+                             tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
+                             spy.format ("SQL", "${THIS.sql | ARG1}"),
+                             spy.format ("DB", "${THIS.connection.database}"),
+                             _log ? spy.zorkaLog ("DEBUG", "SQL",
+                                                  "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${THIS.class}") :
+                             null,
+                             _trace ?
+                             spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
+                                           tracer.attr ("SQL", "SQL"),
+                                           __tnt4j.getThread (),
+                                           tracer.attr ("DB", "DB")) : null)
+                   .onError (spy.fetchError ("ERR"),
+                             _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
+                             sql._error_chain)
+                   .onSubmit (spy.strTime ("TIME"), sql._slow_chain, sql._stats_chain)
+                   .include (spy.byMethod (spy.AC_PUBLIC, "com.mysql.jdbc.StatementImpl", "execut*", null, "String")));
 
-  spy.add (spy.instrument ("SQL_TNT4J_STREAMS_TRACKER")
+  spy.add (spy.instrument ("MYSQL_2")
                    .onEnter (spy.fetchArg ("THIS", 0),
                              spy.fetchArg ("ARG1", 1),
                              tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
                              spy.format ("SERVER", "SERVER"),
                              spy.format ("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}"),
                              tracer.attr ("APPL", "APPL"),
-
+                             __tnt4j.attrAppl ("SERVER"),
                              __tnt4j.attrCorrelator (),
                              __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
                              tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
@@ -84,61 +86,12 @@ __tnt4j_sql () {
                              _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
                              sql._error_chain)
                    .onSubmit (spy.strTime ("TIME"), sql._slow_chain, sql._stats_chain)
-                   .include (spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcStatement", "execut*")));
-
-  spy.add (spy.instrument ("SQL_TNT4J_STREAMS_TRACKER2")
-                   .onEnter (spy.fetchArg ("THIS", 0),
-                             tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
-                             spy.format ("SERVER", "SERVER"),
-                             spy.format ("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}"),
-                             tracer.attr ("APPL", "APPL"),
-                             __tnt4j.attrCorrelator (),
-                             __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
-                             tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
-                             spy.format ("SQL", "${THIS.sql}"),
-                             spy.tlGet ("PARAMS", _parameters),
-                             spy.format ("ARGUMENTS", "${PARAMS}"),
-                             tracer.formatAttr ("ARGUMENTS", "${ARGUMENTS}"),
-                             spy.format ("DB", "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}"),
-                             // TODO 8.5.5.0 uses different names
-                             _log ? spy.zorkaLog ("DEBUG", "SQL",
-                                                  "########################execute2 ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${ARGUMENTS} ${THIS.class}") :
-                             null,
-                             _trace ?
-                             spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
-                                           tracer.attr ("SQL", "SQL"),
-                                           __tnt4j.getThread (),
-                                           tracer.attr ("DB", "DB")) : null)
-                   .onError (spy.fetchError ("ERR"),
-                             _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
-                             sql._error_chain)
-                   .onSubmit (spy.strTime ("TIME"),
-                              sql._slow_chain, sql._stats_chain,
-                              spy.tlRemove (_parameters))
-                   .include (spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "execut*"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "execut*")));
-
-  spy.add (spy.instrument ("SQL_TNT4J_PARAMS_TRACKER")
-                   .onEnter (spy.fetchArg ("PARAM", 1),
-                             spy.fetchArg ("VALUE", 2),
-                             parameter_processor ())
-                   .include (spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setString"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setString"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setInt"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setInt"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setLong"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setLong"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setFloat"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setFloat"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setTime"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setTime"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setTimestamp"),
-                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setFloat")
-
-                   ));
-
-  tracer.exclude ("oracle.**");
-  tracer.exclude ("com.mysql.**");
+                   .include (spy.byMethod ("com.mysql.jdbc.PreparedStatement", "execut*"),
+                             spy.byMethod ("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
+                             spy.byMethod ("com.mysql.jdbc.CallableStatement", "execut*"),
+                             spy.byMethod ("com.mysql.jdbc.JDBC4CallableStatement", "execut*"),
+                             spy.byMethod ("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
+                             spy.byMethod ("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")));
 
   return this;
 }
