@@ -306,27 +306,15 @@ public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> imple
 
 			Map<String, Object> markerEvent = new HashMap<>(markerActivity);
 
-			String eventID;
-			if (markerEvent.get(StreamFieldType.TrackingId.name()) == null) {
-				eventID = DefaultUUIDFactory.getInstance().newUUID();
-				markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
-			} else {
-				eventID = String.valueOf(markerEvent.get(StreamFieldType.TrackingId.name()));
-			}
-
-			markerEvent.put(StreamFieldType.TrackingId.name(), eventID);
+			markerEvent.put(StreamFieldType.TrackingId.name(), DefaultUUIDFactory.getInstance().newUUID());
 			markerEvent.put(StreamFieldType.ParentId.name(), parentUUID);
 
+			OpType declaredEventType = null;
 			try {
-				OpType declaredEventType = OpType.valueOf(zorkaActivityRecord.get(TNT4J_PROP_EV_TYPE));
-				if (declaredEventType == null) {
-					markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
-				} else {
-					markerEvent.put(TNT4J_PROP_EV_TYPE, declaredEventType);
-				}
-			} catch (NullPointerException e) {
-				markerEvent.put(TNT4J_PROP_EV_TYPE, OpType.EVENT.name());
+				declaredEventType = OpType.valueOf(zorkaActivityRecord.get(TNT4J_PROP_EV_TYPE));
+			} catch (Exception e) {
 			}
+			markerEvent.put(TNT4J_PROP_EV_TYPE, declaredEventType == null ? OpType.EVENT.name() : declaredEventType);
 
 			addInputToBuffer(markerEvent);
 		}
