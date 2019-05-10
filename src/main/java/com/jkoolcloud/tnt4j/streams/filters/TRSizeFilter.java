@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import org.apache.commons.collections4.MapUtils;
 
 import com.jitlogic.zorka.common.tracedata.TraceRecord;
-import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.streams.utils.LoggerUtils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
 
 /**
@@ -36,7 +36,7 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
  * @version $Revision: 1 $
  */
 public class TRSizeFilter implements TraceRecordFilter {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(TRSizeFilter.class);
+	private static final EventSink LOGGER = LoggerUtils.getLoggerSink(TRSizeFilter.class);
 
 	private int maxTraceEvents;
 

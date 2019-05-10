@@ -32,8 +32,8 @@ import javax.xml.bind.Unmarshaller;
 import com.jitlogic.zorka.common.tracedata.SymbolRegistry;
 import com.jitlogic.zorka.common.tracedata.TraceRecord;
 import com.jkoolcloud.tnt4j.core.OpLevel;
-import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
+import com.jkoolcloud.tnt4j.streams.utils.LoggerUtils;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
@@ -47,7 +47,7 @@ import com.jkoolcloud.tnt4j.utils.MathUtils;
  * @see MathUtils
  */
 public class TRDynamicFilter implements TraceRecordFilter {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(TRDynamicFilter.class);
+	private static final EventSink LOGGER = LoggerUtils.getLoggerSink(TRDynamicFilter.class);
 
 	private static final int AUTO_PERSIST_TIME_FACTOR = 50;
 	private static final String METHOD_REGISTRY_F_NAME = "methodRegistry.xml"; // NON-NLS
@@ -74,8 +74,7 @@ public class TRDynamicFilter implements TraceRecordFilter {
 	 * @see MathUtils#getBBLow(List, int, int)
 	 * @see SymbolRegistry
 	 */
-	public TRDynamicFilter(final int nPeriod, final int kTimes, final long bbThreadRecalcTime,
-			SymbolRegistry symbolRegistry) {
+	public TRDynamicFilter(int nPeriod, int kTimes, long bbThreadRecalcTime, SymbolRegistry symbolRegistry) {
 		super();
 		this.nPeriod = nPeriod;
 		this.symbolRegistry = symbolRegistry;

@@ -42,7 +42,6 @@ import com.jitlogic.zorka.common.zico.ZicoException;
 import com.jitlogic.zorka.common.zico.ZicoPacket;
 import com.jkoolcloud.tnt4j.core.OpLevel;
 import com.jkoolcloud.tnt4j.core.OpType;
-import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.ZorkaStreamProperties;
@@ -51,6 +50,7 @@ import com.jkoolcloud.tnt4j.streams.filters.TRDynamicFilter;
 import com.jkoolcloud.tnt4j.streams.filters.TRSizeFilter;
 import com.jkoolcloud.tnt4j.streams.filters.TraceRecordFilter;
 import com.jkoolcloud.tnt4j.streams.parsers.ActivityMapParser;
+import com.jkoolcloud.tnt4j.streams.utils.LoggerUtils;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaUtils;
@@ -89,7 +89,7 @@ import com.jkoolcloud.tnt4j.uuid.DefaultUUIDFactory;
  * @see com.jitlogic.zico.core.ZicoService
  */
 public class ZorkaConnector extends AbstractBufferedStream<Map<String, ?>> implements ZicoDataProcessor {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(ZorkaConnector.class);
+	private static final EventSink LOGGER = LoggerUtils.getLoggerSink(ZorkaConnector.class);
 
 	private static final int CONNECTION_TIMEOUT = (int) TimeUnit.SECONDS.toMillis(10);
 	private static final int MAX_THREADS = 5;

@@ -30,10 +30,10 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import com.jkoolcloud.tnt4j.core.OpLevel;
-import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.jkoolcloud.tnt4j.streams.configure.StreamProperties;
 import com.jkoolcloud.tnt4j.streams.configure.ZorkaStreamProperties;
+import com.jkoolcloud.tnt4j.streams.utils.LoggerUtils;
 import com.jkoolcloud.tnt4j.streams.utils.StreamsResources;
 import com.jkoolcloud.tnt4j.streams.utils.Utils;
 import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
@@ -62,7 +62,7 @@ import com.jkoolcloud.tnt4j.streams.utils.ZorkaConstants;
  * @see com.jkoolcloud.tnt4j.streams.parsers.ActivityParser#isDataClassSupported(Object)
  */
 public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, String>> {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(JMXZabbixDataPuller.class);
+	private static final EventSink LOGGER = LoggerUtils.getLoggerSink(JMXZabbixDataPuller.class);
 
 	private static final String DEFAULT_QUARTZ_EXPRESSION = "0/15 * * 1/1 * ? *"; // NON-NLS
 	private static final String DEFAULT_HOSTNAME = "localhost"; // NON-NLS

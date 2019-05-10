@@ -30,7 +30,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import com.jitlogic.zorka.agent.AgentMain;
 import com.jkoolcloud.tnt4j.core.OpLevel;
-import com.jkoolcloud.tnt4j.sink.DefaultEventSinkFactory;
 import com.jkoolcloud.tnt4j.sink.EventSink;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
@@ -43,7 +42,7 @@ import com.sun.tools.attach.VirtualMachineDescriptor;
  * @version $Revision: 1 $
  */
 public final class ZorkaAttach {
-	private static final EventSink LOGGER = DefaultEventSinkFactory.defaultEventSink(ZorkaAttach.class);
+	private static final EventSink LOGGER = LoggerUtils.getLoggerSink(ZorkaAttach.class);
 
 	private ZorkaAttach() {
 	}
