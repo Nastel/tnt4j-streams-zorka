@@ -1,0 +1,125 @@
+/*
+ * Copyright 2014-2018 JKOOL, LLC.
+ *
+ * This file is part of TNT4J-Streams-Zorka.
+ *
+ * TNT4J-Streams-Zorka is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TNT4J-Streams-Zorka is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+zorka.require ("tracer.bsh",
+               "traps.bsh",
+               "sql.bsh");
+
+__sql_tnt4j () {
+
+  _trace = true;
+  _log = zorka.boolCfg ("tnt4j.log", false);
+  _logLevel = zorka.stringCfg ("tnt4j.log.level", "DEBUG");
+
+  _parameters = new ThreadLocal ();
+
+  parameter_processor () {
+    process (rec) {
+      synchronized (super)
+      {
+        values = _parameters.get ();
+        param = rec.get ("PARAM");
+        value = rec.get ("VALUE");
+        String newValue = null;
+        if (values == null || values == "")
+        {
+          newValue = String.valueOf (param == null ? "null" : param) + "=" + String.valueOf (value == null ? "null" : value);
+        }
+        else
+        {
+          newValue =
+                  values + ", " + String.valueOf (param == null ? "null" : param) + "=" + String.valueOf (value == null ? "null" : value);
+        }
+        _parameters.set (newValue);
+        rec.put ("NEW_VALUES", newValue);
+      }
+
+      return rec;
+    }
+    return (com.jitlogic.zorka.core.spy.SpyProcessor) this;
+  }
+
+  _instrumentStmt (name, dbform, appl) {
+    return spy.instrument (name)
+            .onEnter (spy.fetchArg ("THIS", 0),
+                      spy.fetchArg ("ARG1", 1),
+
+                      tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
+
+                      spy.format ("SERVER", "SERVER"),
+                      spy.format ("APPL", appl),
+                      tracer.attr ("APPL", "APPL"),
+
+                      __tnt4j.attrCorrelator (),
+                      __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
+                      tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
+                      tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
+                      spy.format ("SQL", "${THIS.sql | ARG1}"),
+                      spy.format ("DB", dbform),
+                      _log ? spy.zorkaLog ("DEBUG", "SQL",
+                                           "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${THIS.class}") :
+                      null,
+
+                      _trace ? spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
+                                             tracer.attr ("SQL", "SQL"),
+                                             __tnt4j.getThread (),
+                                             tracer.attr ("DB", "DB")) : null)
+
+            .onError (spy.fetchError ("ERR"),
+                      _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
+                      sql._error_chain)
+            .onSubmit (spy.strTime ("TIME"), sql._slow_chain, sql._stats_chain);
+
+  }
+
+  _instrumentPStmt (name, dbform, sqlform, appl) {
+    return spy.instrument (name)
+            .onEnter (spy.fetchArg ("THIS", 0),
+                      tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
+                      spy.format ("SERVER", "SERVER"),
+                      spy.format ("APPL", appl),
+                      tracer.attr ("APPL", "APPL"),
+                      __tnt4j.attrCorrelator (),
+                      __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
+                      tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
+                      spy.format ("SQL", sqlform),
+                      spy.tlGet ("PARAMS", _parameters),
+                      spy.format ("ARGUMENTS", "${PARAMS}"),
+                      tracer.formatAttr ("ARGUMENTS", "${ARGUMENTS}"),
+                      spy.format ("DB", dbform),
+
+                      _log ? spy.zorkaLog ("DEBUG", "SQL",
+                                           "########################execute2 ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${ARGUMENTS} ${THIS.class}") :
+                      null,
+                      _trace ? spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
+                                             tracer.attr ("SQL", "SQL"),
+                                             __tnt4j.getThread (),
+                                             tracer.attr ("DB", "DB")) : null)
+            .onError (spy.fetchError ("ERR"),
+                      _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
+                      sql._error_chain)
+            .onSubmit (spy.strTime ("TIME"),
+                       sql._slow_chain, sql._stats_chain,
+                       spy.tlRemove (_parameters));
+  }
+
+  return this;
+}
+
+sql_tnt4j = __sql_tnt4j ();

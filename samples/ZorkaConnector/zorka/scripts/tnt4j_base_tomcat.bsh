@@ -20,6 +20,8 @@
 zorka.require ("zabbix.bsh",
                "http.bsh",
                "tnt4j_comm.bsh",
+               "apache/apache.bsh",
+               "apache/catalina.bsh",
                "audit.bsh");
 
 catalina__tnt4j () {
@@ -144,7 +146,8 @@ catalina__tnt4j () {
                              tracer.attr ("CONTEXT_PATH", "CONTEXT_PATH"),
                              attributes_processor (),
                              spy.format ("URI", "${REQ.request.requestURI}"),
-                             spy.format ("APPL_HANDLE", "${URI}"),
+                             __tnt4j.resolveApplFromURI (),
+                             spy.format ("APPL_HANDLE", "${URI_APPL | URI}"),
                              spy.tlSet ("APPL_HANDLE", __tnt4j._APPLICATION),
                              spy.zorkaLog ("DEBUG", "HTTP",
                                            "########################Begin ${APPL_HANDLE} ${URI} ${JK_CORR_RID} ${JK_CORR_RID}"),

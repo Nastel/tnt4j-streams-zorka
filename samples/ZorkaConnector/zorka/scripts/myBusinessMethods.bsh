@@ -19,9 +19,9 @@
 
 // This script gets TNT4J Correlation IDs
 
-__my_bussines () {
+__my_business () {
 
-  spy.add (spy.instrument ("BUSSINES_METHODS")
+  spy.add (spy.instrument ("BUSINESS_METHODS")
                    .onEnter (tracer.flags (tracer.ALL_METHODS),
                              tracer.formatAttr ("APPLICATION", "TRUE"))
                    .include (
@@ -44,4 +44,4 @@ __my_bussines () {
   return this;
 }
 
-my_bussines = __my_bussines ();
+my_business = __my_business ();

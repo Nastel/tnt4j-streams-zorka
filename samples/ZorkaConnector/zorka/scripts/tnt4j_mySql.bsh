@@ -17,75 +17,15 @@
  * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-zorka.require ("tnt4j_comm.bsh", "jdbc/mysql.bsh");
-
-// This script gets TNT4J Correlation IDs
-
-__tnt4j_sql () {
-
-  _trace = true;
-
-  _log = zorka.boolCfg ("tnt4j.log", false);
-  _logLevel = zorka.stringCfg ("tnt4j.log.level", "DEBUG");
-
-  _parameters = new ThreadLocal ();
+zorka.require ("tnt4j_comm_sql.bsh");
 
 
-  spy.add (spy.instrument ("MYSQL_1")
-                   .onEnter (spy.fetchArg ("THIS", 0),
-                             spy.fetchArg ("ARG1", 1),
-                             tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
-                             spy.format ("SERVER", "SERVER"),
-                             tracer.attr ("APPL", "APPL"),
-                             __tnt4j.attrCorrelator (),
-                             __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
-                             __tnt4j.attrAppl ("SERVER"),
-                             tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
-                             tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
-                             spy.format ("SQL", "${THIS.sql | ARG1}"),
-                             spy.format ("DB", "${THIS.connection.database}"),
-                             _log ? spy.zorkaLog ("DEBUG", "SQL",
-                                                  "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${THIS.class}") :
-                             null,
-                             _trace ?
-                             spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
-                                           tracer.attr ("SQL", "SQL"),
-                                           __tnt4j.getThread (),
-                                           tracer.attr ("DB", "DB")) : null)
-                   .onError (spy.fetchError ("ERR"),
-                             _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
-                             sql._error_chain)
-                   .onSubmit (spy.strTime ("TIME"), sql._slow_chain, sql._stats_chain)
+__mysql () {
+
+  spy.add (sql_tnt4j._instrumentStmt ("MYSQL_1", "${THIS.connection.database}", "SERVER")
                    .include (spy.byMethod (spy.AC_PUBLIC, "com.mysql.jdbc.StatementImpl", "execut*", null, "String")));
 
-  spy.add (spy.instrument ("MYSQL_2")
-                   .onEnter (spy.fetchArg ("THIS", 0),
-                             spy.fetchArg ("ARG1", 1),
-                             tracer.isInTrace ("HTTP") ? null : (tracer.isInTrace ("SQL") ? null : tracer.begin ("SQL")),
-                             spy.format ("SERVER", "SERVER"),
-                             spy.format ("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}"),
-                             tracer.attr ("APPL", "APPL"),
-                             __tnt4j.attrAppl ("SERVER"),
-                             __tnt4j.attrCorrelator (),
-                             __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
-                             tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
-                             tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
-                             spy.format ("SQL", "${THIS.sql | ARG1}"),
-                             spy.format ("DB",
-                                         "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName | THIS.__mcf.dataSource.dataSourceJndiName}"),
-                             // TODO 8.5.5.0 uses different names
-                             _log ? spy.zorkaLog ("DEBUG", "SQL",
-                                                  "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${THIS.class}") :
-                             null,
-                             _trace ?
-                             spy.subchain (tracer.isInTrace ("HTTP") ? null : tracer.begin ("SQL", zorka.longCfg ("sql.trace.time")),
-                                           tracer.attr ("SQL", "SQL"),
-                                           __tnt4j.getThread (),
-                                           tracer.attr ("DB", "DB")) : null)
-                   .onError (spy.fetchError ("ERR"),
-                             _trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
-                             sql._error_chain)
-                   .onSubmit (spy.strTime ("TIME"), sql._slow_chain, sql._stats_chain)
+  spy.add (sql_tnt4j._instrumentPStmt ("MYSQL_2", "${THIS.connection.database}", "${THIS.originalSql}", "SERVER")
                    .include (spy.byMethod ("com.mysql.jdbc.PreparedStatement", "execut*"),
                              spy.byMethod ("com.mysql.jdbc.JDBC4PreparedStatement", "execut*"),
                              spy.byMethod ("com.mysql.jdbc.CallableStatement", "execut*"),
@@ -93,7 +33,13 @@ __tnt4j_sql () {
                              spy.byMethod ("com.mysql.jdbc.ServerPreparedStatement", "execut*"),
                              spy.byMethod ("com.mysql.jdbc.JDBC4ServerPreparedStatement", "execut*")));
 
+
+  if (zorka.boolCfg ("tracer"))
+  {
+    tracer.exclude ("com.mysql.**");
+  }
+
   return this;
 }
 
-tnt4j_sql = __tnt4j_sql ();
+mysql = __mysql ();

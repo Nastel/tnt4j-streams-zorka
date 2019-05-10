@@ -1,0 +1,62 @@
+/*
+ * Copyright 2014-2018 JKOOL, LLC.
+ *
+ * This file is part of TNT4J-Streams-Zorka.
+ *
+ * TNT4J-Streams-Zorka is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TNT4J-Streams-Zorka is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+zorka.require ("tnt4j_comm_sql.bsh");
+
+__wasjdbc () {
+
+  spy.add (sql_tnt4j._instrumentStmt ("WASJDBC_SQL_1",
+                                      "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName | THIS.__mcf.dataSource.dataSourceJndiName}",
+                                      "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}")             // TODO 8.5.5.0 uses different names
+                   .include (spy.byMethod (spy.AC_PUBLIC, "com.ibm.ws.rsadapter.jdbc.**", "execut*", null, "String")));
+
+  spy.add (sql_tnt4j._instrumentPStmt ("WASJDBC_SQL_2",
+                                       "${THIS.parentWrapper.mcf.dataSource.dataSourceJndiName}",
+                                       "${THIS.sql}",               // TODO 8.5.5.0 uses different names
+                                       "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}")
+                   .include (spy.byMethod (spy.AC_PUBLIC, "com.ibm.ws.rsadapter.jdbc.**", "execut*", null, spy.SM_NOARGS)));
+
+
+
+  spy.add (spy.instrument ("SQL_TNT4J_PARAMS_TRACKER")
+                   .onEnter (spy.fetchArg ("PARAM", 1),
+                             spy.fetchArg ("VALUE", 2),
+                             sql_tnt4j.parameter_processor ())
+                   .include (spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setString"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setString"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setInt"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setInt"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setLong"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setLong"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setFloat"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setFloat"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setTime"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setTime"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcPreparedStatement", "setTimestamp"),
+                             spy.byMethod ("com.ibm.ws.rsadapter.jdbc.WSJdbcCallableStatement", "setFloat")
+
+  ));
+
+  tracer.exclude ("oracle.**");
+  tracer.exclude ("com.mysql.**");
+
+  return this;
+}
+
+wasjdbc = __wasjdbc ();

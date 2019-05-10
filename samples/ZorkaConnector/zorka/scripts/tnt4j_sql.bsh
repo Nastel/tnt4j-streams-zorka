@@ -63,7 +63,7 @@ __tnt4j_sql () {
                              spy.format ("SERVER", "SERVER"),
                              spy.format ("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}"),
                              tracer.attr ("APPL", "APPL"),
-
+                             __tnt4j.attrAppl("SERVER"),
                              __tnt4j.attrCorrelator (),
                              __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
                              tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
@@ -92,6 +92,7 @@ __tnt4j_sql () {
                              spy.format ("SERVER", "SERVER"),
                              spy.format ("APPL", "${THIS.parentWrapper.j2eeNameObj.ivApplication | SERVER}"),
                              tracer.attr ("APPL", "APPL"),
+                             __tnt4j.attrAppl("SERVER"),
                              __tnt4j.attrCorrelator (),
                              __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
                              tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),

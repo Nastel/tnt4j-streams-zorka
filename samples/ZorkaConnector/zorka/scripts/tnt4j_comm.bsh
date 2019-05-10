@@ -30,9 +30,9 @@ __tnt4j () {
   _APPLICATION = new ThreadLocal ();
 
   /**
-   *  Sets the application from the webserver request URI
+   *  Sets the application from the web server request URI
    **/
-  resolveAppl () {
+  resolveApplFromURI () {
     process (rec) {
       req = rec.get ("REQ");
       if (req != null)
@@ -47,8 +47,7 @@ __tnt4j () {
             {
               java.net.URI uris = new java.net.URI (hdr);
               String appl = java.nio.file.Paths.get (uris.getPath ()).getName (0).toString ();
-              rec.put ("APPL_HANDLE", appl);
-              _APPLICATION.set (appl);
+              rec.put ("URI_APPL", appl);
             }
             catch (Exception e)
             {}
