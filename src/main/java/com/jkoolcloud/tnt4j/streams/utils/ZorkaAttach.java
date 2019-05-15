@@ -92,7 +92,7 @@ public final class ZorkaAttach {
 					try {
 						File pathFile = new File(
 								ZorkaAttach.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-						String agentPath = pathFile.getAbsolutePath();
+						String agentPath = pathFile.getCanonicalPath();
 						LOGGER.log(OpLevel.INFO, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 								"ZorkaAttach.attaching.agent", agentPath, rVM.displayName());
 						vm.loadAgent(agentPath, agentJarPath);
@@ -134,7 +134,7 @@ public final class ZorkaAttach {
 	 * @see AgentMain#premain(String, Instrumentation)
 	 */
 	public static void agentmain(String zorkaHomePath, Instrumentation inst) throws Exception {
-		String zorkaDirPath = new File(zorkaHomePath).getAbsolutePath();
+		String zorkaDirPath = new File(zorkaHomePath).getCanonicalPath();
 		System.setProperty("zorka.home.dir", zorkaDirPath);
 		LOGGER.log(OpLevel.DEBUG, StreamsResources.getBundle(ZorkaConstants.RESOURCE_BUNDLE_NAME),
 				"ZorkaAttach.zorka.path", zorkaDirPath);
