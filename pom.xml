@@ -320,7 +320,7 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>2.3.0</version>
+            <version>2.3.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -357,14 +357,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.6.9</version>
+            <version>2.27.0</version>
             <scope>test</scope>
         </dependency>
         <!-- may be used instead of mockito -->
         <!--<dependency>-->
         <!--<groupId>org.jmockit</groupId>-->
         <!--<artifactId>jmockit</artifactId>-->
-        <!--<version>1.27</version>-->
+        <!--<version>1.46</version>-->
         <!--<scope>test</scope>-->
         <!--</dependency>-->
         <!--<dependency>-->
