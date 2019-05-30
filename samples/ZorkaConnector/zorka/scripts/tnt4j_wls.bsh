@@ -1,0 +1,136 @@
+/*
+ * Copyright 2014-2018 JKOOL, LLC.
+ *
+ * This file is part of TNT4J-Streams-Zorka.
+ *
+ * TNT4J-Streams-Zorka is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TNT4J-Streams-Zorka is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TNT4J-Streams-Zorka.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+zorka.require ("zabbix.bsh",
+               "ejb.bsh",
+               "jvm.bsh",
+               "jsf.bsh",
+               "http.bsh",
+               "javax.bsh",
+               "libs.bsh",
+               "javax/jms.bsh",
+               "apache/apache.bsh",
+               "apache/cxf.bsh",
+               "eclipse/eclipse.bsh",
+               "google/libs.bsh",
+               "jboss/hibernate.bsh",
+               "jboss/weld.bsh",
+               "tnt4j_comm.bsh");
+
+__wls () {
+
+  spy.zorkaLog ("DEBUG", "WLS", "########################Adding SUBMIT ####################");
+  spy.add (spy.instrument ("WLS_HTTP")
+                   .onEnter (spy.fetchArg ("REQ", 1), spy.fetchArg ("RESP", 2),
+                             spy.format ("URI", "${REQ.requestURI}"),
+                             http._trace ? spy.subchain (http._uriQualifier,
+                                                         tracer.begin ("HTTP", zorka.longCfg ("http.trace.time")),
+                                                         tracer.attr ("URI", "URI")) : null,
+                             __tnt4j.generateCommonCorrelator (),
+                             __tnt4j.attrAppl ("WebSphere"),
+                             __tnt4j.resolveApplFromURI (),
+                             __tnt4j.attributeTNT4J ("HTTP", "RECEIVE", "HTTP"),
+                             http._congestion ? spy.zorkaStats ("java", http._mbean, "stats", "ALL", "T", null, spy.ACTION_ENTER) : null)
+                   .onError (spy.fetchError ("EX"), spy.format ("ERR", "${EX}"),
+                             http._trace ? spy.subchain (http._uriQualifier,
+                                                         tracer.flags (tracer.SUBMIT_TRACE),
+                                                         tracer.attr ("ERR", "ERR")) : null)
+                   .onSubmit (spy.strTime ("TIME"),
+                              spy.zorkaLog ("DEBUG", "WLS", "########################WLS SUBMIT ####################"),
+                              spy.format ("STATUS", "${RESP.status}"),
+                              spy.get ("USER", "REQ", "remoteUser"),
+                              http._trace ? spy.subchain (http._uriQualifier,
+                                                          tracer.attr ("STATUS", "STATUS"),
+                                                          tracer.filterBy ("STATUS", null, http._errors, null, null),
+                                                          tracer.attr ("USER", "USER"),
+                                                          http._params ? http.param_processor () : null,
+                                                          http._cookies ? http.cookies_processor (true, false) : null,
+                                                          http._headers ? http.headers_processor (true, true) : null) : null,
+                              http._slow_chain,
+                              http._error ? spy.subchain (spy.valSetFilter ("STATUS", http._errors),
+                                                          spy.markError (),
+                                                          http._error_chain) : null,
+                              http._stats ? spy.zorkaStats ("java", http._mbean, "stats", "ALL", "T", null, http._action) : null,
+                              http._tags_chain)
+                   .include (
+          spy.byMethod (0, "weblogic.servlet.internal.WebAppServletContext", "execute", "ServletRequestImp", "ServletResponseImpl"),
+          spy.byMethod (0, "weblogic.servlet.internal.WebAppServletContext", "execute", null),
+          spy.byMethod ("weblogic.servlet.internal.WebAppServletContext", "execute")
+
+  ));
+
+
+  spy.add (spy.instrument ("WLS_EJB")
+                   .onEnter (spy.fetchArg ("IWRAP", 2), spy.fetchArg ("ARGS", 3),
+                             spy.zorkaLog ("DEBUG", "WLS", "########################WLS ENTER EJB ####################"),
+                             __tnt4j.generateCommonCorrelator (),
+                             __tnt4j.attrAppl ("WebSphere"),
+                             __tnt4j.resolveApplFromURI (),
+                             __tnt4j.attributeTNT4J ("HTTP", "RECEIVE", "HTTP"),
+                             ejb._trace ? tracer.begin ("EJB", zorka.longCfg ("ejb.trace.time")) : null,
+                             ejb._trace ? tracer.formatAttr ("METHOD", "${IWRAP.methodDescriptor.method.name}") : null,
+                             ejb._trace ? tracer.formatAttr ("CLASS", "${IWRAP.methodDescriptor.method.declaringClass.name}") : null)
+                   .onError (ejb._trace ? tracer.flags (tracer.SUBMIT_TRACE) : null,
+                             spy.fetchError ("ERR"),
+                             spy.format ("MSG", "${ERR.message}"),
+                             spy.strTime ("TIME"),
+                             ejb._error_chain)
+                   .onReturn (ejb._params ? spy.fetchRetVal ("RET") : spy.put ("RET", ""))
+                   .onSubmit (ejb._params ? (com.jitlogic.zorka.core.spy.SpyProcessor) (ejb.arg_processor ()) : spy.put ("PARAMS", ""),
+                              ejb._trace ? tracer.attr ("RET", "RET") : null,
+                              ejb._stats ? spy.zorkaStats ("java", ejb._mbean, "byMethod", "${CLASS}.${METHOD}") : null,
+                              ejb._stats ? spy.zorkaStats ("java", ejb._mbean, "stats", "ALL") : null,
+                              ejb._tags_chain,
+                              spy.longerThan (zorka.longCfg ("ejb.slow.time")),
+                              spy.strTime ("TIME"),
+                              ejb._slow_chain)
+                   .include (spy.byMethod (0, "weblogic.ejb.container.internal.SessionLocalMethodInvoker", "invoke", null),
+                             spy.byMethod (0, "weblogic.ejb.container.internal.SessionRemoteMethodInvoker", "invoke", null)));
+
+  if (zorka.boolCfg ("tracer"))
+  {
+    tracer.exclude ("com.bea.console.handles.**",
+                    "com.bea.jsptools.**",
+                    "com.bea.netuix.**",
+                    "com.bea.p13n.util.**",
+                    "com.bea.portlet.adapter.NetuiActionHandler",
+                    "com.bea.portlet.GenericURL",
+                    "com.bea.staxb.**",
+                    "com.bea.xbean.**",
+                    "com.bea.xml.**",
+
+                    "com.octetstring.**",
+
+                    "com.oracle.injection.**"
+
+    );
+  }
+
+  if (zorka.boolCfg ("zabbix.active"))
+  {
+    zabbix.tagMetadata ("WEBLOGIC");
+  }
+
+  jvm.autoregister ();
+
+  return this;
+}
+spy.zorkaLog ("DEBUG", "WLS", "########################WLS INIT ####################");
+
+wls = __wls ();
