@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 JKOOL, LLC.
+ * Copyright 2014-2019 JKOOL, LLC.
  *
  * This file is part of TNT4J-Streams-Zorka.
  *
@@ -93,10 +93,10 @@ public class ZorkaConnectorTest {
 	@Ignore
 	public void testLoadMultipleDataFiles() throws Exception {
 		File rootdir = new File("/tmp/traces"); // NON-NLS
-		for (final String d : rootdir.list()) {
-			final File dir = new File(rootdir, d);
+		for (String d : rootdir.list()) {
+			File dir = new File(rootdir, d);
 			if (!VERBOTEN.contains(d) && dir.isDirectory()) {
-				for (final String f : dir.list()) {
+				for (String f : dir.list()) {
 					if (f.matches("^trace.ztr.*")) { // NON-NLS
 						System.out.println("Submitting: " + new File(dir, f)); // NON-NLS
 						submissions++;
