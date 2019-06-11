@@ -421,7 +421,7 @@
 
         <!-- these are required if connecting remote or removed for local connection -->
         <!-- <property name="Channel" value="SYSTEM.DEF.CLNTCONN"/> -->
-        <property name="Host" value="172.16.6.54"/>
+        <property name="Host" value="172.16.6.56"/>
         <property name="Port" value="1415"/>
 
         <!-- user and password as required by the MQ Queue Manager -->
