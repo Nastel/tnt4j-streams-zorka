@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 JKOOL, LLC.
+ * Copyright 2014-2019 JKOOL, LLC.
  *
  * This file is part of TNT4J-Streams-Zorka.
  *
@@ -70,7 +70,7 @@ __sql_tnt4j () {
                       __tnt4j.attributeTNT4J ("SQL", "SEND", "SQL"),
                       tracer.isInTrace ("HTTP") ? null : tracer.formatAttr ("MARKER", "SQL"),
                       tracer.isInTrace ("HTTP") ? null : tracer.flags (tracer.SUBMIT_TRACE),
-                      spy.format ("SQL", "${THIS.sql | ARG1}"),
+                      spy.format ("SQL", "${ARG1 | THIS.sql}"),
                       spy.format ("DB", dbform),
                       _log ? spy.zorkaLog ("DEBUG", "SQL",
                                            "########################execute ############# ${APPL} ####### ${JK_CORR_RID} ${JK_CORR_RID} ${DB} ${SQL} ${THIS.class}") :
