@@ -218,7 +218,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 
 			JMXZabbixDataPuller stream = (JMXZabbixDataPuller) dataMap.get(JOB_PROP_STREAM_KEY);
 			String host = dataMap.getString(JOB_PROP_HOST_KEY);
-			Integer socketPort = dataMap.getInt(JOB_PROP_PORT_KEY);
+			int socketPort = dataMap.getInt(JOB_PROP_PORT_KEY);
 			List<String> jmxQueries = (List<String>) dataMap.get(JOB_PROP_JMX_QUERIES_KEY);
 
 			Map<String, String> inputData = new HashMap<>();
@@ -253,7 +253,7 @@ public class JMXZabbixDataPuller extends AbstractBufferedStream<Map<String, Stri
 		}
 
 		private static InputStream mkIS(Object... args) {
-			byte buf[] = new byte[2048];
+			byte[] buf = new byte[2048];
 			int pos = 0;
 			for (Object arg : args) {
 				if (arg instanceof String) {
